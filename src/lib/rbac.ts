@@ -37,3 +37,15 @@ export async function requireApplicationReviewer(): Promise<SessionUser> {
   if (!canReviewApplications(user.role)) redirect("/admin");
   return user;
 }
+
+/** Roles allowed to manage other users' roles. */
+export function canManageRoles(role: Role) {
+  return role === "FOUNDER" || role === "SUPER_ADMIN";
+}
+
+/** Require role-management privileges. */
+export async function requireRoleManager(): Promise<SessionUser> {
+  const user = await requireStaff();
+  if (!canManageRoles(user.role)) redirect("/admin");
+  return user;
+}

@@ -102,7 +102,7 @@ async function main() {
         role: "FOUNDER",
         emailVerifiedAt: new Date(),
         profile: {
-          create: { fullName: `${name} — UCA Founder` },
+          create: { fullName: name },
         },
       },
     });
