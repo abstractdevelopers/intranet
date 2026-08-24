@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
@@ -45,7 +46,8 @@ export default async function AssignmentsPage() {
           assignments.map((assignment) => {
             const latest = assignment.submissions[0];
             return (
-              <Card key={assignment.id} className="flex flex-wrap items-center justify-between gap-4 p-4">
+              <Link key={assignment.id} href={`/student/assignments/${assignment.id}`} className="block">
+              <Card className="flex flex-wrap items-center justify-between gap-4 p-4 transition-colors hover:border-brand-1/40">
                 <div>
                   <p className="text-sm font-semibold">{assignment.title}</p>
                   <p className="mt-0.5 text-xs text-text-muted">
@@ -68,6 +70,7 @@ export default async function AssignmentsPage() {
                   )}
                 </div>
               </Card>
+              </Link>
             );
           })
         )}

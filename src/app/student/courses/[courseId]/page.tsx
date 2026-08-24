@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
@@ -65,7 +66,7 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
     <div className="mx-auto max-w-4xl space-y-8">
       {/* Course hero */}
       <section className="hero-band rounded-2xl p-6 md:p-8" aria-label="Course">
-        <CrestBackground className="pointer-events-none absolute -right-8 -top-10 h-52 w-52 text-white/10" />
+        <CrestBackground className="pointer-events-none absolute -right-10 -top-6 h-40 w-auto opacity-10" />
         <div className="relative flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <CourseMark slug={enrollment.course.slug} size="lg" />
@@ -165,28 +166,38 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
                       {mod.lessons.map((lesson) => {
                         const done = Boolean(lesson.progress[0]?.completedAt);
                         return (
-                          <li key={lesson.id} className="flex items-center justify-between py-2.5">
-                            <span className="flex items-center gap-2.5">
-                              {done ? (
-                                <IconCheckCircle className="h-4.5 w-4.5 text-brand-1 dark:text-brand-3" />
-                              ) : (
-                                <IconPlay className="h-4.5 w-4.5 text-text-muted" />
-                              )}
-                              <span className={done ? "text-text-muted" : ""}>{lesson.title}</span>
-                            </span>
-                            {lesson.durationMin ? (
-                              <span className="text-xs text-text-muted">{lesson.durationMin} min</span>
-                            ) : null}
+                          <li key={lesson.id}>
+                            <Link
+                              href={`/student/courses/${courseId}/modules/${mod.id}/lessons/${lesson.id}`}
+                              className="flex items-center justify-between rounded-md px-2 py-2.5 transition-colors hover:bg-surface-2"
+                            >
+                              <span className="flex items-center gap-2.5">
+                                {done ? (
+                                  <IconCheckCircle className="h-4.5 w-4.5 text-brand-1 dark:text-brand-3" />
+                                ) : (
+                                  <IconPlay className="h-4.5 w-4.5 text-text-muted" />
+                                )}
+                                <span className={done ? "text-text-muted" : ""}>{lesson.title}</span>
+                              </span>
+                              {lesson.durationMin ? (
+                                <span className="text-xs text-text-muted">{lesson.durationMin} min</span>
+                              ) : null}
+                            </Link>
                           </li>
                         );
                       })}
                       {mod.assignments.map((a) => (
-                        <li key={a.id} className="flex items-center justify-between py-2.5">
-                          <span className="flex items-center gap-2.5">
-                            <IconAssignments className="h-4.5 w-4.5 text-text-muted" />
-                            {a.title}
-                          </span>
-                          <span className="text-xs text-text-muted">Assignment · {a.maxScore} pts</span>
+                        <li key={a.id}>
+                          <Link
+                            href={`/student/assignments/${a.id}`}
+                            className="flex items-center justify-between rounded-md px-2 py-2.5 transition-colors hover:bg-surface-2"
+                          >
+                            <span className="flex items-center gap-2.5">
+                              <IconAssignments className="h-4.5 w-4.5 text-text-muted" />
+                              {a.title}
+                            </span>
+                            <span className="text-xs text-text-muted">Assignment · {a.maxScore} pts</span>
+                          </Link>
                         </li>
                       ))}
                     </ul>

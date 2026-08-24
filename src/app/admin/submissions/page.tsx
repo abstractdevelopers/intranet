@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireStaff } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
@@ -27,7 +28,8 @@ export default async function SubmissionsPage() {
           <EmptyState title="No submissions yet" body="Student submissions awaiting review will appear here." />
         ) : (
           submissions.map((s) => (
-            <Card key={s.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
+            <Link key={s.id} href={`/admin/submissions/${s.id}`} className="block">
+            <Card className="flex flex-wrap items-center justify-between gap-3 p-4 transition-colors hover:border-brand-1/40">
               <div>
                 <p className="text-sm font-semibold">{s.assignment.title}</p>
                 <p className="mt-0.5 text-xs text-text-muted">
@@ -40,6 +42,7 @@ export default async function SubmissionsPage() {
                 {s.grade ? <span className="text-sm font-semibold">{s.grade.score} / {s.grade.maxScore}</span> : null}
               </div>
             </Card>
+            </Link>
           ))
         )}
       </div>

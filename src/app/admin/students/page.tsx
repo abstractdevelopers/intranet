@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireStaff } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
@@ -55,7 +56,8 @@ export default async function StudentsPage({
           <EmptyState title="No students found" body={query ? "Try a different search." : "Students will appear here once they sign up."} />
         ) : (
           students.map((student) => (
-            <Card key={student.id} className="p-4">
+            <Link key={student.id} href={`/admin/students/${student.id}`} className="block">
+            <Card className="p-4 transition-colors hover:border-brand-1/40">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold">{student.profile?.fullName ?? "—"}</p>
@@ -73,6 +75,7 @@ export default async function StudentsPage({
                 </div>
               ) : null}
             </Card>
+            </Link>
           ))
         )}
       </div>

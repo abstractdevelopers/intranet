@@ -1,48 +1,32 @@
-import type { SVGProps } from "react";
+type LogoProps = { className?: string };
+
+const LOGO_SRC = "/uca-logo.png";
+const LOGO_W = 517;
+const LOGO_H = 320;
 
 /**
- * The official UCA monogram — geometric block letterforms.
- * Rendered in currentColor so it adapts to the theme:
- * dark ink on light surfaces, white on dark/hero surfaces.
+ * The official UCA monogram (white PNG, transparent background).
+ * `invert` turns the white mark into brand ink for light surfaces.
  */
-function Monogram({
-  strokeWidth = 5,
-  ...props
-}: Omit<SVGProps<SVGSVGElement>, "strokeWidth"> & { strokeWidth?: number }) {
+export function Crest({ className = "h-8 w-auto", invert = false }: LogoProps & { invert?: boolean }) {
   return (
-    <svg
-      viewBox="0 0 126 60"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="square"
-      strokeLinejoin="miter"
-      aria-hidden
-      {...props}
-    >
-      {/* U — open-top ribbon with perspective lip */}
-      <path d="M10 22 V 40 L 34 50 V 8" />
-      <path d="M10 22 L 20 15" />
-      {/* C — open square */}
-      <path d="M76 14 H 54 V 50 H 76" />
-      {/* A — diagonal, top, right wall, crossbar */}
-      <path d="M86 50 L 98 14 H 116 V 50" />
-      <path d="M92 36 H 101" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={LOGO_SRC}
+      alt="UCA"
+      width={LOGO_W}
+      height={LOGO_H}
+      className={`${className}${invert ? " dark:invert-0 invert" : ""}`}
+    />
   );
 }
 
-/** The UCA logo mark. Color comes from context (currentColor). */
-export function Crest({ className = "h-8 w-auto" }: { className?: string }) {
-  return <Monogram className={className} />;
-}
-
-/** Logo + wordmark lockup. */
+/** Logo + wordmark lockup for portal headers. */
 export function BrandLockup({ subtitle }: { subtitle?: string }) {
   return (
-    <span className="flex items-center gap-2.5 text-text dark:text-white">
-      <Crest className="h-8 w-auto shrink-0" />
-      <span className="leading-tight">
+    <span className="flex items-center gap-2.5">
+      <Crest className="h-7 w-auto shrink-0" invert />
+      <span className="leading-tight text-text dark:text-white">
         <span className="block text-[15px] font-bold tracking-tight">UCA Sandbox</span>
         {subtitle ? (
           <span className="block text-[11px] font-medium text-text-muted">{subtitle}</span>
@@ -52,7 +36,10 @@ export function BrandLockup({ subtitle }: { subtitle?: string }) {
   );
 }
 
-/** Faint monogram watermark for hero surfaces. */
-export function CrestBackground(props: Omit<SVGProps<SVGSVGElement>, "strokeWidth">) {
-  return <Monogram strokeWidth={1.5} {...props} />;
+/** Faint monogram watermark for hero surfaces (white at low opacity). */
+export function CrestBackground({ className = "" }: { className?: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={LOGO_SRC} alt="" width={LOGO_W} height={LOGO_H} aria-hidden className={className} />
+  );
 }

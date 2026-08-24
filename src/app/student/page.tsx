@@ -41,7 +41,6 @@ export default async function StudentDashboard() {
         take: 5,
       }),
       db.announcement.findMany({
-        where: { audience: "ACADEMY" },
         orderBy: { createdAt: "desc" },
         take: 3,
       }),
@@ -70,7 +69,7 @@ export default async function StudentDashboard() {
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Academy hero band */}
       <section className="hero-band rounded-2xl p-6 md:p-8" aria-label="Welcome">
-        <CrestBackground className="pointer-events-none absolute -right-8 -top-10 h-56 w-56 text-white/10" />
+        <CrestBackground className="pointer-events-none absolute -right-10 -top-6 h-44 w-auto opacity-10" />
         <div className="relative flex flex-wrap items-center justify-between gap-6">
           <div className="min-w-0">
             <p className="hero-eyebrow text-[11px] font-semibold uppercase tracking-[0.18em]">
