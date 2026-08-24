@@ -25,6 +25,16 @@ Never rename it to "LMS" / "Academy Portal" as the product identity.
 - Prices live in the DB; subscription items are per-course. Never hardcode ₦45,000.
 - Server-side authorization everywhere; middleware is routing-only.
 
+## Design system
+- `src/components/icons.tsx` — custom stroke SVG icon set (35 icons); never add emoji or generic icons
+- `src/components/crest.tsx` — `Crest` (UCA shield mark), `BrandLockup`, `CrestBackground` (watermark)
+- `src/components/course-mark.tsx` — brand-gradient course tile; icons mapped by course slug
+- `src/components/ui/progress-ring.tsx` — SVG progress ring
+- `.eyebrow` (uppercase editorial label) and `.hero-band` (deep purple gradient hero) in globals.css
+- Editorial pattern: eyebrow + numbered sections ("01 — Your Academy Program")
+- Workspace is a distinct product area: dark surface, grid texture, mono terminal accent
+- Milestones computed from real data in `src/lib/milestones.ts` — never fabricate
+
 ## Conventions
 
 - Roles/statuses are string enums in `src/lib/constants.ts` (kept as String columns for portability).

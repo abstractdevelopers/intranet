@@ -49,3 +49,42 @@ body {
   background: var(--color-brand-3);
   color: var(--color-ink);
 }
+
+/* ---------------------------------------------------------------------------
+   Editorial academy styles
+   --------------------------------------------------------------------------- */
+
+/* Eyebrow label — the small uppercase editorial marker above sections. */
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-brand-1);
+}
+.dark .eyebrow {
+  color: var(--color-brand-3);
+}
+
+/* Hero band — a deep brand surface with a subtle crest watermark. */
+.hero-band {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 160% at 85% -20%, rgba(230, 169, 255, 0.22), transparent 55%),
+    linear-gradient(135deg, #570e83 0%, #410b61 55%, #2d0745 100%);
+  color: #f6f1f8;
+}
+.hero-band .hero-eyebrow {
+  color: var(--color-brand-3);
+}
+.hero-band .hero-muted {
+  color: rgba(246, 241, 248, 0.72);
+}
+
+/* Hairline rule used with editorial numbered sections. */
+.rule {
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
+

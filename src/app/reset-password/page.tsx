@@ -39,7 +39,7 @@ function ResetForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <AuthLayout title="Choose a new password">
+    <AuthLayout title="Choose a new password" subtitle="Set a new password for your account.">
       <Suspense>
         <ResetForm />
       </Suspense>

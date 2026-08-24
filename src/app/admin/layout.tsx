@@ -1,25 +1,59 @@
 import { requireStaff } from "@/lib/rbac";
-import { PortalShell } from "@/components/portal-shell";
+import { PortalShell, type NavSection } from "@/components/portal-shell";
+import {
+  IconDashboard,
+  IconStudents,
+  IconApplications,
+  IconEnrollments,
+  IconCourses,
+  IconAssignments,
+  IconFile,
+  IconAnnouncement,
+  IconCalendar,
+  IconAnalytics,
+  IconAudit,
+  IconSettings,
+} from "@/components/icons";
 
-const NAV = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/students", label: "Students" },
-  { href: "/admin/applications", label: "Applications" },
-  { href: "/admin/enrollments", label: "Enrollments" },
-  { href: "/admin/courses", label: "Courses" },
-  { href: "/admin/assignments", label: "Assignments" },
-  { href: "/admin/submissions", label: "Submissions" },
-  { href: "/admin/announcements", label: "Announcements" },
-  { href: "/admin/calendar", label: "Calendar" },
-  { href: "/admin/analytics", label: "Analytics" },
-  { href: "/admin/audit-logs", label: "Audit Logs" },
-  { href: "/admin/settings", label: "Settings" },
+const SECTIONS: NavSection[] = [
+  {
+    label: "Operate",
+    items: [
+      { href: "/admin", label: "Dashboard", icon: IconDashboard },
+      { href: "/admin/applications", label: "Applications", icon: IconApplications },
+      { href: "/admin/students", label: "Students", icon: IconStudents },
+      { href: "/admin/enrollments", label: "Enrollments", icon: IconEnrollments },
+    ],
+  },
+  {
+    label: "Teach",
+    items: [
+      { href: "/admin/courses", label: "Courses", icon: IconCourses },
+      { href: "/admin/assignments", label: "Assignments", icon: IconAssignments },
+      { href: "/admin/submissions", label: "Submissions", icon: IconFile },
+      { href: "/admin/announcements", label: "Announcements", icon: IconAnnouncement },
+      { href: "/admin/calendar", label: "Calendar", icon: IconCalendar },
+    ],
+  },
+  {
+    label: "Academy",
+    items: [
+      { href: "/admin/analytics", label: "Analytics", icon: IconAnalytics },
+      { href: "/admin/audit-logs", label: "Audit Logs", icon: IconAudit },
+      { href: "/admin/settings", label: "Settings", icon: IconSettings },
+    ],
+  },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await requireStaff();
   return (
-    <PortalShell brand="Admin Portal" nav={NAV} userName={user.fullName} userRole={user.role.replaceAll("_", " ")}>
+    <PortalShell
+      portal="Admin Portal"
+      sections={SECTIONS}
+      userName={user.fullName}
+      userRole={user.role.replaceAll("_", " ")}
+    >
       {children}
     </PortalShell>
   );
