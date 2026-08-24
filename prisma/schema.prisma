@@ -1,13 +1,16 @@
 // UCA Sandbox — data model
-// SQLite is used for local development; swap the provider + DATABASE_URL for Postgres in production.
+// PostgreSQL (Supabase-compatible).
+// DATABASE_URL  — pooled connection (Supabase pooler, port 6543) used at runtime.
+// DIRECT_URL    — direct connection (port 5432) used by Prisma Migrate.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ---------------------------------------------------------------------------

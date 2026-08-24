@@ -9,9 +9,12 @@ Never rename it to "LMS" / "Academy Portal" as the product identity.
 
 - `npm run dev` — dev server
 - `npm run build` / `npm start` — production
+- `docker compose up -d` — local Postgres 16
 - `npm run db:migrate` — prisma migrate dev
 - `npm run db:seed` — seed 6 courses + founder (admin@ucasandbox.com / ChangeMe123!)
+- `npm run db:deploy` — prisma migrate deploy (production)
 - Prisma 6 is pinned intentionally (Prisma 7 changed datasource config; do not upgrade casually)
+- Database is PostgreSQL (Supabase-compatible): DATABASE_URL = pooled runtime, DIRECT_URL = migrations
 
 ## Non-negotiable business rules (enforced in src/lib/enrollment.ts)
 
@@ -23,7 +26,7 @@ Never rename it to "LMS" / "Academy Portal" as the product identity.
 
 ## Conventions
 
-- Roles/statuses are string enums in `src/lib/constants.ts` (SQLite has no enums).
+- Roles/statuses are string enums in `src/lib/constants.ts` (kept as String columns for portability).
 - Theme: class-based dark mode, tokens in `src/app/globals.css` (@theme), Poppins via next/font.
 - UI primitives in `src/components/ui/` — reuse them; both themes always.
 - Friendly client errors; technical details only in server logs.
