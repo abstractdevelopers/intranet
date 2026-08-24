@@ -84,10 +84,10 @@ This creates the six courses and your founder account.
 - The pooled Supabase connection is used at runtime; Prisma Migrate uses the
   direct connection automatically via `directUrl`.
 
-The seed creates a founder account:
+The seed creates founder account(s):
 
-- Email: `admin@ucasandbox.com`
-- Password: `ChangeMe123!` (override with `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`)
+- Default: `admin@ucasandbox.com` / `ChangeMe123!`
+- Override with `SEED_ADMIN_EMAILS` (comma-separated) and `SEED_ADMIN_PASSWORD`
 
 In development, email verification and password-reset links are printed to the
 server log (email delivery plugs in later).

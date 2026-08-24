@@ -76,27 +76,41 @@ async function main() {
     });
   }
 
-  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? "admin@ucasandbox.com";
+  const adminEmails = (
+    process.env.SEED_ADMIN_EMAILS ??
+    process.env.SEED_ADMIN_EMAIL ??
+    "admin@ucasandbox.com"
+  )
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
   const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? "ChangeMe123!";
   const passwordHash = await bcrypt.hash(adminPassword, 12);
 
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: { role: "FOUNDER" },
-    create: {
-      email: adminEmail,
-      passwordHash,
-      role: "FOUNDER",
-      emailVerifiedAt: new Date(),
-      profile: {
-        create: { fullName: "UCA Founder" },
+  for (const email of adminEmails) {
+    const name = email
+      .split("@")[0]
+      .split(/[._-]/)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+    await prisma.user.upsert({
+      where: { email },
+      update: { role: "FOUNDER" },
+      create: {
+        email,
+        passwordHash,
+        role: "FOUNDER",
+        emailVerifiedAt: new Date(),
+        profile: {
+          create: { fullName: `${name} — UCA Founder` },
+        },
       },
-    },
-  });
+    });
+  }
 
   console.log("Seed complete:");
   console.log(`  Courses: ${COURSES.length} (₦${MONTHLY_PRICE_NGN.toLocaleString()}/month each)`);
-  console.log(`  Founder account: ${adminEmail}`);
+  console.log(`  Founder accounts: ${adminEmails.join(", ")}`);
 }
 
 main()
