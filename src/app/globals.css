@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* UCA Sandbox brand */
+  --color-brand-1: #570e83; /* primary purple */
+  --color-brand-2: #410b61; /* deep purple */
+  --color-brand-3: #e6a9ff; /* light accent purple */
+  --color-ink: #0d070b;    /* official deep black */
+
+  /* Light mode surfaces */
+  --color-bg: #faf9fb;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f0f7;
+  --color-border: #e7e0ec;
+  --color-text: #0d070b;
+  --color-text-muted: #6b6470;
+}
+
+.dark {
+  --color-bg: #0d070b;
+  --color-surface: #170f1b;
+  --color-surface-2: #221429;
+  --color-border: #322040;
+  --color-text: #f6f1f8;
+  --color-text-muted: #a89db0;
+}
+
+:root {
+  color-scheme: light;
+}
+
+.dark:root,
+.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-brand-3);
+  color: var(--color-ink);
+}
