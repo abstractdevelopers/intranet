@@ -104,6 +104,19 @@ export default async function ModuleEditorPage({
         <Badge tone={statusTone(mod.status)}>{mod.status.toLowerCase()}</Badge>
       </header>
 
+      {mod.lessons.length === 0 && mod.assignments.length === 0 ? (
+        <div className="rounded-xl border border-brand-1/30 bg-brand-3/10 p-5">
+          <p className="text-sm font-bold">Module created — here&apos;s what&apos;s next</p>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-text-muted">
+            <li>Add lessons below (reading content, a YouTube video ID, duration).</li>
+            <li>Attach resources to each lesson (links, or PDFs — stored protected, read in-app).</li>
+            <li>Add the week&apos;s assignment (deadline, submission types, attempts).</li>
+            <li>Set the module to <span className="font-semibold text-text">Published</span> — students won&apos;t see drafts.</li>
+            <li>Set a release date, or leave it empty for immediate access.</li>
+          </ol>
+        </div>
+      ) : null}
+
       <section>
         <p className="eyebrow">Module settings</p>
         <Card className="mt-3 p-6">

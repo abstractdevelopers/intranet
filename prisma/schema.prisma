@@ -41,6 +41,7 @@ model User {
   progress             LessonProgress[]
   notifications        Notification[]
   announcements        Announcement[]
+  events               Event[]
   subscription         Subscription?
   payments             Payment[]
   certificates         Certificate[]
@@ -117,6 +118,7 @@ model Course {
   electiveRequests  Application[]
   modules           Module[]
   announcements     Announcement[]
+  events            Event[]
   subscriptionItems SubscriptionItem[]
   certificates      Certificate[]
 
@@ -359,6 +361,20 @@ model Notification {
   createdAt DateTime  @default(now())
 
   @@index([userId, readAt])
+}
+
+model Event {
+  id        String    @id @default(cuid())
+  title     String
+  date      DateTime
+  audience  String    @default("ACADEMY") // ACADEMY | COURSE
+  courseId  String?
+  course    Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdBy String
+  creator   User      @relation(fields: [createdBy], references: [id])
+  createdAt DateTime  @default(now())
+
+  @@index([date])
 }
 
 model Announcement {

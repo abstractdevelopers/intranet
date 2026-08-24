@@ -81,14 +81,13 @@ export function LessonView({
           <p className="eyebrow">Resources</p>
           <ul className="mt-3 space-y-2">
             {resources.map((r) => {
-              const href =
-                r.type === "PDF" && r.documentId ? `/api/documents/${r.documentId}` : (r.url ?? "#");
+              const isPdf = r.type === "PDF" && r.documentId;
+              const href = isPdf ? `/student/documents/${r.documentId}` : (r.url ?? "#");
               return (
                 <li key={r.id}>
                   <a
                     href={href}
-                    target="_blank"
-                    rel="noreferrer"
+                    {...(isPdf ? {} : { target: "_blank", rel: "noreferrer" })}
                     className="flex items-center gap-3 rounded-lg border border-border bg-surface px-4 py-3 transition-colors hover:border-brand-1/40"
                   >
                     <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand-3/25 text-brand-1 dark:text-brand-3">
