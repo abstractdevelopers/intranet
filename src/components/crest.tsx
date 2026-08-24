@@ -1,43 +1,47 @@
 import type { SVGProps } from "react";
 
 /**
- * The UCA crest — the academy's proprietary mark.
- * A forward-leaning shield carrying the UCA monogram and a milestone notch.
+ * The official UCA monogram — geometric block letterforms.
+ * Rendered in currentColor so it adapts to the theme:
+ * dark ink on light surfaces, white on dark/hero surfaces.
  */
-export function Crest({ className = "h-8 w-8" }: { className?: string }) {
+function Monogram({
+  strokeWidth = 5,
+  ...props
+}: Omit<SVGProps<SVGSVGElement>, "strokeWidth"> & { strokeWidth?: number }) {
   return (
-    <svg viewBox="0 0 40 44" className={className} aria-hidden>
-      <path
-        d="M20 1.5 37 8v13c0 10.5-7 18.2-17 21.5C10 39.2 3 31.5 3 21V8l17-6.5Z"
-        fill="#570E83"
-      />
-      <path
-        d="M20 4.8 34 10.2V21c0 8.8-5.7 15.4-14 18.4C11.7 36.4 6 29.8 6 21V10.2L20 4.8Z"
-        fill="#410B61"
-      />
-      <text
-        x="20"
-        y="23.5"
-        textAnchor="middle"
-        fontFamily="Poppins, sans-serif"
-        fontWeight={700}
-        fontSize="11"
-        fill="#E6A9FF"
-        letterSpacing="0.5"
-      >
-        UCA
-      </text>
-      <path d="M13 28.5h14" stroke="#E6A9FF" strokeWidth="1.4" strokeLinecap="round" />
-      <path d="M17 32h6" stroke="#E6A9FF" strokeWidth="1.4" strokeLinecap="round" opacity="0.6" />
+    <svg
+      viewBox="0 0 126 60"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="square"
+      strokeLinejoin="miter"
+      aria-hidden
+      {...props}
+    >
+      {/* U — open-top ribbon with perspective lip */}
+      <path d="M10 22 V 40 L 34 50 V 8" />
+      <path d="M10 22 L 20 15" />
+      {/* C — open square */}
+      <path d="M76 14 H 54 V 50 H 76" />
+      {/* A — diagonal, top, right wall, crossbar */}
+      <path d="M86 50 L 98 14 H 116 V 50" />
+      <path d="M92 36 H 101" />
     </svg>
   );
 }
 
-/** Crest + wordmark lockup. */
+/** The UCA logo mark. Color comes from context (currentColor). */
+export function Crest({ className = "h-8 w-auto" }: { className?: string }) {
+  return <Monogram className={className} />;
+}
+
+/** Logo + wordmark lockup. */
 export function BrandLockup({ subtitle }: { subtitle?: string }) {
   return (
-    <span className="flex items-center gap-2.5">
-      <Crest className="h-9 w-9 shrink-0" />
+    <span className="flex items-center gap-2.5 text-text dark:text-white">
+      <Crest className="h-8 w-auto shrink-0" />
       <span className="leading-tight">
         <span className="block text-[15px] font-bold tracking-tight">UCA Sandbox</span>
         {subtitle ? (
@@ -48,14 +52,7 @@ export function BrandLockup({ subtitle }: { subtitle?: string }) {
   );
 }
 
-export function CrestBackground(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 40 44" fill="none" aria-hidden {...props}>
-      <path
-        d="M20 1.5 37 8v13c0 10.5-7 18.2-17 21.5C10 39.2 3 31.5 3 21V8l17-6.5Z"
-        stroke="currentColor"
-        strokeWidth="0.75"
-      />
-    </svg>
-  );
+/** Faint monogram watermark for hero surfaces. */
+export function CrestBackground(props: Omit<SVGProps<SVGSVGElement>, "strokeWidth">) {
+  return <Monogram strokeWidth={1.5} {...props} />;
 }

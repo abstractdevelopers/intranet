@@ -8,18 +8,18 @@ export type Milestone = {
   achievedAt?: Date | null;
 };
 
-/**
- * Compute a student's academy milestones from real data.
- * Never fabricate: a milestone is achieved only when the underlying record exists.
- */
-export async function getMilestones(userId: string): Promise<Milestone[]> {
-  const [enrollments, lessonDone, submissions, grades] = await Promise.all([
-    db.enrollment.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
-    db.lessonProgress.count({ where: { userId, completedAt: { not: null } } }),
-    db.assignmentSubmission.count({ where: { userId } }),
-    db.grade.count({ where: { submission: { userId } } }),
-  ]);
+type EnrollmentLike = { enrollmentType: string; status: string; createdAt: Date };
 
+/**
+ * Build milestones from already-fetched data. Never fabricate:
+ * a milestone is achieved only when the underlying record exists.
+ */
+export function buildMilestones(
+  enrollments: EnrollmentLike[],
+  lessonDone: number,
+  submissions: number,
+  grades: number
+): Milestone[] {
   const enrolled = enrollments.length > 0;
   const electiveApproved = enrollments.some(
     (e) => e.enrollmentType === "ELECTIVE" && e.status === "ACCEPTED"
@@ -65,4 +65,19 @@ export async function getMilestones(userId: string): Promise<Milestone[]> {
       achieved: anyCompleted,
     },
   ];
+}
+
+/** Fetch-and-build convenience used by pages that don't already have the data. */
+export async function getMilestones(userId: string): Promise<Milestone[]> {
+  const [enrollments, lessonDone, submissions, grades] = await Promise.all([
+    db.enrollment.findMany({
+      where: { userId },
+      select: { enrollmentType: true, status: true, createdAt: true },
+      orderBy: { createdAt: "asc" },
+    }),
+    db.lessonProgress.count({ where: { userId, completedAt: { not: null } } }),
+    db.assignmentSubmission.count({ where: { userId } }),
+    db.grade.count({ where: { submission: { userId } } }),
+  ]);
+  return buildMilestones(enrollments, lessonDone, submissions, grades);
 }

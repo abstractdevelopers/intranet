@@ -17,7 +17,7 @@ export function AuthLayout({
       {/* Brand panel — the academy's front door */}
       <div className="hero-band hidden w-[42%] flex-col justify-between p-10 lg:flex">
         <Link href="/" className="flex items-center gap-2.5" aria-label="UCA Sandbox home">
-          <Crest className="h-9 w-9" />
+          <Crest className="h-8 w-auto text-white" />
           <span className="text-lg font-bold tracking-tight text-white">UCA Sandbox</span>
         </Link>
         <div className="relative">
@@ -59,8 +59,8 @@ export function AuthLayout({
       {/* Form panel */}
       <div className="flex flex-1 flex-col">
         <div className="flex items-center justify-between px-6 py-4 lg:justify-end">
-          <Link href="/" className="flex items-center gap-2 lg:hidden" aria-label="UCA Sandbox home">
-            <Crest className="h-8 w-8" />
+          <Link href="/" className="flex items-center gap-2 text-ink lg:hidden dark:text-white" aria-label="UCA Sandbox home">
+            <Crest className="h-7 w-auto" />
             <span className="font-bold tracking-tight">UCA Sandbox</span>
           </Link>
           <ThemeToggle />

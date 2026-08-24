@@ -11,47 +11,36 @@ export type CourseProgress = {
   percent: number;
 };
 
-/** Compute a student's real progress for one course from lessons and submissions. */
+/** Compute a student's real progress for one course — exactly 3 queries, no loops. */
 export async function getCourseProgress(userId: string, courseId: string): Promise<CourseProgress> {
-  const modules = await db.module.findMany({
-    where: { courseId, status: "PUBLISHED" },
-    include: { lessons: { select: { id: true } }, assignments: { select: { id: true } } },
-  });
-
-  const lessonIds = modules.flatMap((m) => m.lessons.map((l) => l.id));
-  const assignmentIds = modules.flatMap((m) => m.assignments.map((a) => a.id));
-
-  const [completedLessons, submissions] = await Promise.all([
-    lessonIds.length
-      ? db.lessonProgress.count({
-          where: { userId, lessonId: { in: lessonIds }, completedAt: { not: null } },
-        })
-      : 0,
-    assignmentIds.length
-      ? db.assignmentSubmission.findMany({
-          where: { userId, assignmentId: { in: assignmentIds } },
-          select: { assignmentId: true },
-          distinct: ["assignmentId"],
-        })
-      : [],
+  const [modules, completions, submissions] = await Promise.all([
+    db.module.findMany({
+      where: { courseId, status: "PUBLISHED" },
+      include: { lessons: { select: { id: true } }, assignments: { select: { id: true } } },
+    }),
+    db.lessonProgress.findMany({
+      where: { userId, completedAt: { not: null }, lesson: { module: { courseId } } },
+      select: { lessonId: true },
+    }),
+    db.assignmentSubmission.findMany({
+      where: { userId, assignment: { module: { courseId } } },
+      select: { assignmentId: true },
+      distinct: ["assignmentId"],
+    }),
   ]);
 
-  const totalLessons = lessonIds.length;
-  const totalAssignments = assignmentIds.length;
-  const totalModules = modules.length;
-
-  // A module is complete when all of its lessons are complete.
+  const completedSet = new Set(completions.map((c) => c.lessonId));
+  let completedLessons = 0;
   let completedModules = 0;
+  let totalLessons = 0;
+  let totalAssignments = 0;
   for (const m of modules) {
-    if (m.lessons.length === 0) continue;
-    const done = await db.lessonProgress.count({
-      where: {
-        userId,
-        lessonId: { in: m.lessons.map((l) => l.id) },
-        completedAt: { not: null },
-      },
-    });
-    if (done === m.lessons.length) completedModules += 1;
+    const lessonIds = m.lessons.map((l) => l.id);
+    totalLessons += lessonIds.length;
+    totalAssignments += m.assignments.length;
+    const done = lessonIds.filter((id) => completedSet.has(id)).length;
+    completedLessons += done;
+    if (lessonIds.length > 0 && done === lessonIds.length) completedModules += 1;
   }
 
   const totalUnits = totalLessons + totalAssignments;
@@ -62,7 +51,7 @@ export async function getCourseProgress(userId: string, courseId: string): Promi
     courseId,
     totalLessons,
     completedLessons,
-    totalModules,
+    totalModules: modules.length,
     completedModules,
     totalAssignments,
     submittedAssignments: submissions.length,

@@ -18,7 +18,7 @@ import {
   IconAnnouncement,
 } from "@/components/icons";
 import { getCourseProgress } from "@/lib/progress";
-import { getMilestones } from "@/lib/milestones";
+import { buildMilestones } from "@/lib/milestones";
 import { formatNaira, formatDate } from "@/lib/format";
 import { subscriptionMonthlyTotal } from "@/lib/enrollment";
 
@@ -27,7 +27,8 @@ export const metadata = { title: "Dashboard" };
 export default async function StudentDashboard() {
   const user = await requireStudent();
 
-  const [enrollments, notifications, announcements, subscription, application, milestones] =
+  // Single parallel batch — every query goes out at once over the shared connection.
+  const [enrollments, notifications, announcements, subscription, application, lessonDone, submissions, grades] =
     await Promise.all([
       db.enrollment.findMany({
         where: { userId: user.id },
@@ -46,11 +47,16 @@ export default async function StudentDashboard() {
       }),
       db.subscription.findUnique({ where: { userId: user.id }, include: { items: true } }),
       db.application.findFirst({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-      getMilestones(user.id),
+      db.lessonProgress.count({ where: { userId: user.id, completedAt: { not: null } } }),
+      db.assignmentSubmission.count({ where: { userId: user.id } }),
+      db.grade.count({ where: { submission: { userId: user.id } } }),
     ]);
+  const milestones = buildMilestones(enrollments, lessonDone, submissions, grades);
 
   const accepted = enrollments.filter((e) => e.status === "ACCEPTED");
-  const progress = await Promise.all(accepted.map((e) => getCourseProgress(user.id, e.courseId)));
+  const progress = await Promise.all(
+    accepted.map((e) => getCourseProgress(user.id, e.courseId))
+  );
   const progressByCourse = new Map(progress.map((p) => [p.courseId, p]));
   const overallPercent =
     progress.length === 0

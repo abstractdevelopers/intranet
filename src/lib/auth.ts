@@ -1,3 +1,4 @@
+import { cache } from "react";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
@@ -46,7 +47,11 @@ export async function destroySession() {
   jar.delete(SESSION_COOKIE);
 }
 
-export async function getSessionUser(): Promise<SessionUser | null> {
+/**
+ * Session lookup is deduplicated per request: layouts, pages and route
+ * handlers in the same render share a single database round-trip.
+ */
+export const getSessionUser = cache(async function getSessionUser(): Promise<SessionUser | null> {
   const jar = await cookies();
   const token = jar.get(SESSION_COOKIE)?.value;
   if (!token) return null;
@@ -68,7 +73,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     status: session.user.status,
     fullName: session.user.profile?.fullName ?? session.user.email,
   };
-}
+});
 
 export async function createEmailToken(userId: string, type: "VERIFY_EMAIL" | "PASSWORD_RESET") {
   const token = crypto.randomBytes(32).toString("hex");

@@ -9,7 +9,7 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-6 py-5 md:px-10">
         <span className="flex items-center gap-2.5">
-          <Crest className="h-9 w-9" />
+          <Crest className="h-8 w-auto text-ink dark:text-white" />
           <span className="text-lg font-bold tracking-tight">UCA Sandbox</span>
         </span>
         <div className="flex items-center gap-3">
@@ -35,7 +35,7 @@ export default function HomePage() {
           <CrestBackground className="pointer-events-none absolute -left-10 top-10 h-72 w-72 text-white/5" />
           <CrestBackground className="pointer-events-none absolute -right-16 bottom-0 h-96 w-96 text-white/5" />
           <div className="relative mx-auto max-w-5xl px-6 py-20 text-center md:py-28">
-            <Crest className="mx-auto h-16 w-16" />
+            <Crest className="mx-auto h-14 w-auto text-white" />
             <p className="hero-eyebrow mt-6 text-xs font-semibold uppercase tracking-[0.22em]">
               A modern academy for the ambitious
             </p>
@@ -155,7 +155,7 @@ export default function HomePage() {
       <footer className="border-t border-border px-6 py-8 md:px-10">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">
           <span className="flex items-center gap-2.5">
-            <Crest className="h-7 w-7" />
+            <Crest className="h-6 w-auto text-ink dark:text-white" />
             <span className="text-sm font-semibold">UCA Sandbox</span>
           </span>
           <p className="text-xs text-text-muted">

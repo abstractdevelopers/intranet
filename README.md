@@ -50,7 +50,7 @@ You can also use a free Supabase project for local development — set
 
    | Name              | Value                                          |
    | ----------------- | ---------------------------------------------- |
-   | `DATABASE_URL`    | Supabase pooled connection string (port 6543)  |
+   | `DATABASE_URL`    | Supabase pooled connection string (port 6543, `connection_limit=8`) |
    | `DIRECT_URL`      | Supabase direct connection string (port 5432)  |
    | `SESSION_SECRET`  | A long random string                           |
 
