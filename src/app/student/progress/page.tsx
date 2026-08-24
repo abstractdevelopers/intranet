@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
@@ -119,6 +120,18 @@ export default async function ProgressPage() {
                 </div>
               ))}
             </div>
+          </section>
+
+          <section>
+            <div className="flex items-center justify-between">
+              <p className="eyebrow">Certificates</p>
+              <Link href="/student/certificates" className="text-xs font-semibold text-brand-1 hover:underline dark:text-brand-3">
+                View certificates
+              </Link>
+            </div>
+            <p className="mt-2 text-sm text-text-muted">
+              Certificates are issued automatically when you complete every lesson and pass every assignment in a course.
+            </p>
           </section>
         </>
       )}

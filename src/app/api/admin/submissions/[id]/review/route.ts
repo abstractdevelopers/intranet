@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/rbac";
 import { auditLog, notify } from "@/lib/audit";
+import { issueCertificateIfComplete } from "@/lib/certificates";
 
 const schema = z.object({
   score: z.number().min(0),
@@ -19,7 +20,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
   const submission = await db.assignmentSubmission.findUnique({
     where: { id },
-    include: { assignment: { select: { title: true, maxScore: true } } },
+    include: { assignment: { select: { title: true, maxScore: true, module: { select: { courseId: true } } } } },
   });
   if (!submission) return NextResponse.json({ error: "Submission not found." }, { status: 404 });
 
@@ -68,6 +69,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       title: `Graded: ${submission.assignment.title}`,
       body: `You scored ${score}/${submission.assignment.maxScore}.`,
     });
+  }
+
+  // A passing grade may complete the course — issue the certificate if so.
+  if (!requestRevision) {
+    await issueCertificateIfComplete(submission.userId, submission.assignment.module.courseId);
   }
 
   await auditLog({

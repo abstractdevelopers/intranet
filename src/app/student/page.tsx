@@ -234,7 +234,12 @@ export default async function StudentDashboard() {
                     : "Your subscription is active."}
                 </p>
               </div>
-              <Badge tone={statusTone(subscription.status)}>{subscription.status.toLowerCase()}</Badge>
+              <div className="flex items-center gap-3">
+                <Badge tone={statusTone(subscription.status)}>{subscription.status.toLowerCase()}</Badge>
+                <Link href="/student/billing" className="text-xs font-semibold text-brand-1 hover:underline dark:text-brand-3">
+                  Manage billing
+                </Link>
+              </div>
             </div>
             <div className="mt-4 space-y-1 text-sm">
               {subscription.items.map((item) => (

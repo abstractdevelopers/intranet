@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireStudent } from "@/lib/rbac";
+import { issueCertificateIfComplete } from "@/lib/certificates";
 
 const schema = z.object({ action: z.enum(["OPEN", "COMPLETE"]) });
 
@@ -36,6 +37,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       create: { userId: user.id, lessonId: id, openedAt: now, completedAt: now },
       update: { completedAt: now, lastActivityAt: now },
     });
+    // A finished lesson may complete the course — issue the certificate if so.
+    const lesson = await db.lesson.findUnique({
+      where: { id },
+      select: { module: { select: { courseId: true } } },
+    });
+    if (lesson) await issueCertificateIfComplete(user.id, lesson.module.courseId);
   }
   return NextResponse.json({ ok: true });
 }

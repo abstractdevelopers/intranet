@@ -1,7 +1,7 @@
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
-import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty";
+import { NotificationList } from "@/components/notification-list";
 import { formatDateTime } from "@/lib/format";
 
 export const metadata = { title: "Notifications" };
@@ -17,23 +17,22 @@ export default async function NotificationsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="text-2xl font-bold tracking-tight">Notifications</h1>
-      <div className="mt-6 space-y-2">
-        {notifications.length === 0 ? (
+      {notifications.length === 0 ? (
+        <div className="mt-6">
           <EmptyState title="You're all up to date." />
-        ) : (
-          notifications.map((n) => (
-            <Card key={n.id} className={`p-4 ${n.readAt ? "opacity-70" : ""}`}>
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium">{n.title}</p>
-                  {n.body ? <p className="mt-0.5 text-sm text-text-muted">{n.body}</p> : null}
-                </div>
-                <span className="shrink-0 text-xs text-text-muted">{formatDateTime(n.createdAt)}</span>
-              </div>
-            </Card>
-          ))
-        )}
-      </div>
+        </div>
+      ) : (
+        <NotificationList
+          notifications={notifications.map((n) => ({
+            id: n.id,
+            title: n.title,
+            body: n.body,
+            createdAt: n.createdAt.toISOString(),
+            readAt: n.readAt?.toISOString() ?? null,
+          }))}
+          formatDateTime={formatDateTime}
+        />
+      )}
     </div>
   );
 }

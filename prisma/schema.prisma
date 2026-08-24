@@ -42,6 +42,7 @@ model User {
   notifications        Notification[]
   announcements        Announcement[]
   subscription         Subscription?
+  payments             Payment[]
   certificates         Certificate[]
   workspaces           Workspace[]         @relation("WorkspaceOwner")
   workspaceMemberships WorkspaceMember[]
@@ -384,12 +385,33 @@ model Subscription {
   trialStartedAt   DateTime
   trialEndsAt      DateTime
   billingStartedAt DateTime?
+  currentPeriodEnd DateTime? // paid through this date
   billingCycle     String    @default("MONTHLY")
   currency         String    @default("NGN")
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  items SubscriptionItem[]
+  items    SubscriptionItem[]
+  payments Payment[]
+}
+
+model Payment {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionId String?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  amount         Int // NGN (whole naira)
+  currency       String    @default("NGN")
+  status         String    @default("PENDING") // PENDING | SUCCESS | FAILED
+  provider       String    // PAYSTACK | BACHS
+  providerRef    String    @unique // provider transaction/session reference
+  periodStart    DateTime?
+  periodEnd      DateTime?
+  paidAt         DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([userId, status])
 }
 
 model SubscriptionItem {
@@ -426,6 +448,8 @@ model Workspace {
   ownerId   String
   owner     User     @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   provider  String   @default("INTERNAL") // WorkspaceProvider abstraction
+  externalId String? @unique // provider-side identifier
+  url       String?  // provider console URL, when the provider offers one
   status    String   @default("PROVISIONING") // PROVISIONING | READY | SUSPENDED
   createdAt DateTime @default(now())
 
