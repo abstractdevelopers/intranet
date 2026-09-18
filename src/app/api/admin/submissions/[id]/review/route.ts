@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/rbac";
 import { auditLog, notify } from "@/lib/audit";
 import { issueCertificateIfComplete } from "@/lib/certificates";
+import { publishProjectFromSubmission } from "@/lib/projects";
 
 const schema = z.object({
   score: z.number().min(0),
@@ -74,6 +75,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   // A passing grade may complete the course — issue the certificate if so.
   if (!requestRevision) {
     await issueCertificateIfComplete(submission.userId, submission.assignment.module.courseId);
+  }
+
+  // Passing work also becomes a portfolio piece on the student's creator profile (#4).
+  if (!requestRevision && score >= submission.assignment.maxScore * 0.5) {
+    await publishProjectFromSubmission(id, submission.userId);
   }
 
   await auditLog({

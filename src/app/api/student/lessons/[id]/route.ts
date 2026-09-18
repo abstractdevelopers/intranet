@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { requireStudent } from "@/lib/rbac";
+import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { issueCertificateIfComplete } from "@/lib/certificates";
 
 const schema = z.object({ action: z.enum(["OPEN", "COMPLETE"]) });
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const user = await requireStudent();
+  const guard = await requireOnboardedStudentApi();
+  if (!guard.ok) return guard.response;
+  const user = guard.user;
   const { id } = await params;
 
   const parsed = schema.safeParse(await request.json().catch(() => null));

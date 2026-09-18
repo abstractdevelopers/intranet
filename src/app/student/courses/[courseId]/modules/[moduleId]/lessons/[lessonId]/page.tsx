@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { LessonView } from "@/components/lessons/lesson-view";
+import { canAccessModule } from "@/lib/module-access";
 
 export default async function LessonPage({
   params,
@@ -29,7 +30,11 @@ export default async function LessonPage({
   });
   if (!lesson) notFound();
 
-  if (lesson.module.releaseAt && lesson.module.releaseAt > new Date()) {
+  // Release date, sequential completion and the previous week's Captain's Log —
+  // the same gate as the timeline, so a deep link can never bypass it.
+  const access = await canAccessModule(user.id, courseId, moduleId);
+  if (!access.allowed) {
+    if (access.reason === "LOCKED_LOG") redirect("/student/captains-log");
     redirect(`/student/courses/${courseId}`);
   }
 

@@ -13,6 +13,8 @@ import {
   IconAnalytics,
   IconAudit,
   IconSettings,
+  IconWorkspace,
+  IconCommunication,
 } from "@/components/icons";
 
 const SECTIONS: NavSection[] = [
@@ -38,6 +40,9 @@ const SECTIONS: NavSection[] = [
   {
     label: "Academy",
     items: [
+      { href: "/admin/captains-log", label: "Captain's Logs", icon: IconAnnouncement },
+      { href: "/admin/projects", label: "Projects", icon: IconWorkspace },
+      { href: "/admin/communities", label: "Communities", icon: IconCommunication },
       { href: "/admin/analytics", label: "Analytics", icon: IconAnalytics },
       { href: "/admin/audit-logs", label: "Audit Logs", icon: IconAudit },
       { href: "/admin/settings", label: "Settings", icon: IconSettings },

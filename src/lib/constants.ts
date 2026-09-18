@@ -58,3 +58,68 @@ export const EXPERIENCE_LEVELS = [
 export const TRIAL_DAYS = 30;
 
 export const CURRENCY = "NGN";
+
+/**
+ * Pathways (#14). The two compulsory foundations plus exactly one elective.
+ * `pathway` on Course/Enrollment uses these values.
+ */
+export const PATHWAYS = {
+  GRAPHIC_DESIGN: "GRAPHIC_DESIGN",
+  VIDEO_EDITING: "VIDEO_EDITING",
+  COMMUNICATION_INFLUENCE: "COMMUNICATION_INFLUENCE",
+  CONTENT_WRITING: "CONTENT_WRITING",
+} as const;
+
+export type Pathway = keyof typeof PATHWAYS;
+
+/** Maps each elective course slug to the pathway it represents. */
+export const ELECTIVE_SLUG_TO_PATHWAY: Record<string, Pathway> = {
+  "graphics-design": "GRAPHIC_DESIGN",
+  "video-editing": "VIDEO_EDITING",
+  "communication-influence": "COMMUNICATION_INFLUENCE",
+  "content-writing": "CONTENT_WRITING",
+};
+
+export const PATHWAY_LABELS: Record<Pathway, string> = {
+  GRAPHIC_DESIGN: "Graphics Design",
+  VIDEO_EDITING: "Video Editing",
+  COMMUNICATION_INFLUENCE: "Communication & Influence",
+  CONTENT_WRITING: "Content Writing",
+};
+
+export function pathwayFromSlug(slug: string): Pathway | null {
+  return ELECTIVE_SLUG_TO_PATHWAY[slug] ?? null;
+}
+
+/**
+ * Captain's Log questions (#12). Order matters — it is the order students see.
+ */
+export const CAPTAIN_LOG_QUESTIONS = [
+  { id: "experience", label: "How was this week's learning experience?", multiline: true },
+  { id: "learned", label: "What did you learn?", multiline: true },
+  { id: "helpedBy", label: "Who helped you during this week?", multiline: false },
+  { id: "helpedWho", label: "Who did you help during this week?", multiline: false },
+  { id: "enjoyed", label: "What did you enjoy?", multiline: true },
+  { id: "struggled", label: "What did you struggle with?", multiline: true },
+  { id: "improve", label: "What can UCA improve?", multiline: true },
+  { id: "anythingElse", label: "Is there anything else you want us to know?", multiline: true },
+] as const;
+
+export const CAPTAIN_LOG_STATUS = {
+  SUBMITTED: "SUBMITTED",
+  REVIEWED: "REVIEWED",
+} as const;
+
+export const PROJECT_VISIBILITY = {
+  PUBLISHED: "PUBLISHED",
+  HIDDEN: "HIDDEN",
+  RESTRICTED: "RESTRICTED",
+} as const;
+
+export const SUBMISSION_STATUS = {
+  SUBMITTED: "SUBMITTED",
+  AWAITING_GRADING: "AWAITING_GRADING",
+  GRADED: "GRADED",
+  NEEDS_REVISION: "NEEDS_REVISION",
+  RESUBMITTED: "RESUBMITTED",
+} as const;

@@ -90,6 +90,15 @@ export const IconSpark = (p: IconProps) => (
 export const IconTarget = (p: IconProps) => (
   <Svg {...p}><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" /></Svg>
 );
+export const IconHeart = (p: IconProps) => (
+  <Svg {...p}><path d="M12 19.5 5.2 13a4.13 4.13 0 0 1 5.8-5.9l1 1 1-1A4.13 4.13 0 0 1 18.8 13L12 19.5Z" /></Svg>
+);
+export const IconCompass = (p: IconProps) => (
+  <Svg {...p}><circle cx="12" cy="12" r="8.5" /><path d="m15 9-2 4.5-4 2 2-4.5L15 9Z" /><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" /></Svg>
+);
+export const IconUsers = (p: IconProps) => (
+  <Svg {...p}><circle cx="12" cy="9" r="3.2" /><path d="M6 19.5c1.3-2.9 3.4-4.3 6-4.3s4.7 1.4 6 4.3" /></Svg>
+);
 
 // --- Course identity ---
 export const IconBranding = (p: IconProps) => (

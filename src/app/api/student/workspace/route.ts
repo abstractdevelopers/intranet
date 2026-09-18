@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { requireStudent } from "@/lib/rbac";
+import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { getWorkspaceProvider } from "@/lib/workspace";
 
 /** Provision (or return) the student's workspace through the configured provider. */
 export async function POST() {
-  const user = await requireStudent();
+  const guard = await requireOnboardedStudentApi();
+  if (!guard.ok) return guard.response;
+  const user = guard.user;
 
   const existing = await db.workspace.findFirst({
     where: { ownerId: user.id, status: { not: "SUSPENDED" } },

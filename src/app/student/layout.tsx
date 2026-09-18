@@ -1,4 +1,4 @@
-import { requireStudent } from "@/lib/rbac";
+import { requireOnboardedStudent } from "@/lib/rbac";
 import { PortalShell, type NavSection } from "@/components/portal-shell";
 import {
   IconDashboard,
@@ -9,6 +9,9 @@ import {
   IconBell,
   IconWorkspace,
   IconProfile,
+  IconStudents,
+  IconAnnouncement,
+  IconCommunication,
 } from "@/components/icons";
 
 const SECTIONS: NavSection[] = [
@@ -18,7 +21,15 @@ const SECTIONS: NavSection[] = [
       { href: "/student", label: "Dashboard", icon: IconDashboard },
       { href: "/student/courses", label: "My Courses", icon: IconCourses },
       { href: "/student/assignments", label: "Assignments", icon: IconAssignments },
+      { href: "/student/captains-log", label: "Captain's Log", icon: IconAnnouncement },
       { href: "/student/progress", label: "Progress", icon: IconProgress },
+    ],
+  },
+  {
+    label: "Creators",
+    items: [
+      { href: "/student/creators", label: "Discover", icon: IconStudents },
+      { href: "/student/projects", label: "My Portfolio", icon: IconWorkspace },
     ],
   },
   {
@@ -31,14 +42,14 @@ const SECTIONS: NavSection[] = [
   {
     label: "You",
     items: [
-      { href: "/student/workspace", label: "Workspace", icon: IconWorkspace },
+      { href: "/student/community", label: "Communities", icon: IconCommunication },
       { href: "/student/profile", label: "Profile", icon: IconProfile },
     ],
   },
 ];
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
-  const user = await requireStudent();
+  const user = await requireOnboardedStudent();
   return (
     <PortalShell portal="Student Portal" sections={SECTIONS} userName={user.fullName} userRole="Student">
       {children}

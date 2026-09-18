@@ -4,9 +4,8 @@ import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty";
-import { CourseMark } from "@/components/course-mark";
-import { ProgressRing } from "@/components/ui/progress-ring";
-import { CrestBackground } from "@/components/crest";
+import { ButtonLink } from "@/components/ui/button";
+import { CourseHeader } from "@/components/courses/course-header";
 import {
   IconCheck,
   IconCheckCircle,
@@ -14,8 +13,10 @@ import {
   IconPlay,
   IconAssignments,
   IconClock,
+  IconAnnouncement,
 } from "@/components/icons";
 import { getCourseProgress } from "@/lib/progress";
+import { getLoggedWeeks, isModuleUnlocked } from "@/lib/captains-log";
 import { formatDate } from "@/lib/format";
 
 export default async function CoursePage({ params }: { params: Promise<{ courseId: string }> }) {
@@ -30,7 +31,7 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
   if (!enrollment) notFound();
   if (enrollment.status !== "ACCEPTED") redirect("/student/courses");
 
-  const [modules, progress] = await Promise.all([
+  const [modules, progress, loggedWeeks] = await Promise.all([
     db.module.findMany({
       where: { courseId, status: "PUBLISHED" },
       include: {
@@ -45,54 +46,52 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
       orderBy: { order: "asc" },
     }),
     getCourseProgress(user.id, courseId),
+    getLoggedWeeks(user.id),
   ]);
 
-  // Access model: scheduled release + sequential completion.
-  // A module unlocks when its release date has passed AND the previous module is complete.
+  // Access model: scheduled release + sequential completion + Captain's Log.
+  // A module unlocks when its release date has passed, the previous module is
+  // complete, and the previous week's Captain's Log is submitted.
   const now = new Date();
   let previousComplete = true;
   const moduleStates = [];
   for (const mod of modules) {
-    const released = !mod.releaseAt || mod.releaseAt <= now;
     const totalLessons = mod.lessons.length;
     const doneLessons = mod.lessons.filter((l) => l.progress[0]?.completedAt).length;
     const complete = totalLessons > 0 && doneLessons === totalLessons;
-    const unlocked = released && previousComplete;
+    const { unlocked, reason } = isModuleUnlocked({
+      releaseAt: mod.releaseAt,
+      previousComplete,
+      weekNumber: mod.weekNumber,
+      loggedWeeks,
+      now,
+    });
     if (!complete) previousComplete = false;
-    moduleStates.push({ mod, released, complete, unlocked, doneLessons, totalLessons });
+    moduleStates.push({
+      mod,
+      released: !mod.releaseAt || mod.releaseAt <= now,
+      complete,
+      unlocked,
+      lockedReason: reason,
+      doneLessons,
+      totalLessons,
+    });
   }
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
-      {/* Course hero */}
-      <section className="hero-band rounded-2xl p-6 md:p-8" aria-label="Course">
-        <CrestBackground className="pointer-events-none absolute -right-10 -top-6 h-40 w-auto opacity-10" />
-        <div className="relative flex flex-wrap items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <CourseMark slug={enrollment.course.slug} size="lg" />
-            <div>
-              <p className="hero-eyebrow text-[11px] font-semibold uppercase tracking-[0.18em]">
-                {enrollment.course.type === "COMPULSORY" ? "Compulsory course" : "Elective course"}
-              </p>
-              <h1 className="mt-1.5 text-2xl font-bold tracking-tight md:text-3xl">
-                {enrollment.course.name}
-              </h1>
-              <p className="hero-muted mt-1 max-w-lg text-sm">{enrollment.course.description}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right text-sm">
-              <p className="font-medium text-white/80">
-                {progress.completedModules} of {progress.totalModules} weeks
-              </p>
-              <p className="text-white/60">
-                {progress.completedLessons} of {progress.totalLessons} lessons
-              </p>
-            </div>
-            <ProgressRing value={progress.percent} size={76} stroke={6} />
-          </div>
-        </div>
-      </section>
+      {/* Course hero — collapsible so students can get straight to content (#7) */}
+      <CourseHeader
+        courseName={enrollment.course.name}
+        courseType={enrollment.course.type}
+        description={enrollment.course.description}
+        slug={enrollment.course.slug}
+        completedModules={progress.completedModules}
+        totalModules={progress.totalModules}
+        completedLessons={progress.completedLessons}
+        totalLessons={progress.totalLessons}
+        percent={progress.percent}
+      />
 
       {/* Curriculum journey */}
       <section aria-label="Curriculum">
@@ -108,7 +107,8 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
           </div>
         ) : (
           <ol className="relative mt-6 space-y-0 border-l-2 border-border pl-0">
-            {moduleStates.map(({ mod, released, complete, unlocked, doneLessons, totalLessons }) => (
+            {moduleStates.map(
+              ({ mod, complete, unlocked, lockedReason, doneLessons, totalLessons }) => (
               <li key={mod.id} className="relative pb-6 pl-8 last:pb-0">
                 {/* Timeline node */}
                 <span
@@ -150,16 +150,37 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1.5 text-xs font-medium text-text-muted">
-                          <IconLock className="h-3.5 w-3.5" />
-                          {released ? "Complete the previous week" : (
-                            <span className="inline-flex items-center gap-1">
-                              <IconClock className="h-3.5 w-3.5" /> Unlocks {formatDate(mod.releaseAt)}
-                            </span>
+                          {lockedReason === "LOCKED_LOG" ? (
+                            <>
+                              <IconAnnouncement className="h-3.5 w-3.5" />
+                              Submit your Captain&rsquo;s Log for Week {mod.weekNumber - 1}
+                            </>
+                          ) : lockedReason === "LOCKED_RELEASE" ? (
+                            <>
+                              <IconClock className="h-3.5 w-3.5" /> Unlocks{" "}
+                              {formatDate(mod.releaseAt)}
+                            </>
+                          ) : (
+                            <>
+                              <IconLock className="h-3.5 w-3.5" /> Complete the previous week
+                            </>
                           )}
                         </span>
                       )}
                     </div>
                   </div>
+
+                  {lockedReason === "LOCKED_LOG" ? (
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-300/60 bg-amber-50/60 px-4 py-3 dark:border-amber-900/50 dark:bg-amber-950/20">
+                      <p className="text-sm text-text-muted">
+                        This week opens automatically once you submit your Captain&rsquo;s Log
+                        for Week {mod.weekNumber - 1}.
+                      </p>
+                      <ButtonLink href="/student/captains-log" variant="secondary">
+                        Go to Captain&rsquo;s Log
+                      </ButtonLink>
+                    </div>
+                  ) : null}
 
                   {unlocked ? (
                     <ul className="mt-4 divide-y divide-border text-sm">

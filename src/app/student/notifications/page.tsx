@@ -2,12 +2,17 @@ import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { EmptyState } from "@/components/ui/empty";
 import { NotificationList } from "@/components/notification-list";
+import { syncStudentNotifications } from "@/lib/notification-triggers";
 import { formatDateTime } from "@/lib/format";
 
 export const metadata = { title: "Notifications" };
 
 export default async function NotificationsPage() {
   const user = await requireStudent();
+
+  // Catch up on anything that has become true since the last visit (#13).
+  await syncStudentNotifications(user.id);
+
   const notifications = await db.notification.findMany({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },

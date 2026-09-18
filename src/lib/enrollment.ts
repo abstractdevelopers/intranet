@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { TRIAL_DAYS } from "./constants";
+import { TRIAL_DAYS, pathwayFromSlug } from "./constants";
 
 export class EnrollmentError extends Error {}
 
@@ -78,15 +78,18 @@ export async function submitApplication(input: {
       });
     }
 
-    // Selected elective: pending admin approval.
+    // Selected elective: pending admin approval. The pathway is recorded on the
+    // enrollment so a later pathway change never rewrites the academic record.
+    const pathway = elective.pathway ?? pathwayFromSlug(elective.slug);
     await tx.enrollment.upsert({
       where: { userId_courseId: { userId: input.userId, courseId: elective.id } },
-      update: { status: "PENDING", enrollmentType: "ELECTIVE" },
+      update: { status: "PENDING", enrollmentType: "ELECTIVE", pathway },
       create: {
         userId: input.userId,
         courseId: elective.id,
         status: "PENDING",
         enrollmentType: "ELECTIVE",
+        pathway,
       },
     });
 

@@ -14,6 +14,9 @@ export type SessionUser = {
   role: Role;
   status: string;
   fullName: string;
+  username: string | null;
+  mustChangePassword: boolean;
+  onboardingCompletedAt: Date | null;
 };
 
 export async function hashPassword(password: string) {
@@ -72,8 +75,51 @@ export const getSessionUser = cache(async function getSessionUser(): Promise<Ses
     role: session.user.role as Role,
     status: session.user.status,
     fullName: session.user.profile?.fullName ?? session.user.email,
+    username: session.user.username,
+    mustChangePassword: session.user.mustChangePassword,
+    onboardingCompletedAt: session.user.onboardingCompletedAt,
   };
 });
+
+/** Invalidate every session for a user (e.g. after a role change). */
+export async function revokeSessions(userId: string) {
+  await db.session.deleteMany({ where: { userId } });
+}
+
+/** Username rules (#1): lowercase, 3–30 chars, letters/numbers/underscore/dot. */
+export const USERNAME_PATTERN = /^[a-z0-9._]{3,30}$/;
+
+/** Usernames that must not be claimable — they'd be confusing or impersonating. */
+const RESERVED_USERNAMES = new Set([
+  "admin", "administrator", "uca", "ucasandbox", "support", "help", "staff",
+  "founder", "moderator", "official", "root", "system", "me", "you", "profile",
+  "settings", "api", "login", "signup", "student", "creators", "projects",
+]);
+
+export function normaliseUsername(raw: string) {
+  return raw.trim().toLowerCase();
+}
+
+export function validateUsername(raw: string): string | null {
+  const username = normaliseUsername(raw);
+  if (!username) return "Choose a username.";
+  if (!USERNAME_PATTERN.test(username)) {
+    return "Usernames are 3–30 characters: lowercase letters, numbers, dots and underscores.";
+  }
+  if (RESERVED_USERNAMES.has(username)) return "That username isn't available.";
+  return null;
+}
+
+/** How long a student must wait before changing their username again. */
+export const USERNAME_CHANGE_COOLDOWN_DAYS = 14;
+
+/** Milliseconds remaining before a username may change again, if any. */
+export function usernameCooldownMs(changedAt: Date | null, now: Date = new Date()) {
+  if (!changedAt) return 0;
+  const readyAt = new Date(changedAt);
+  readyAt.setDate(readyAt.getDate() + USERNAME_CHANGE_COOLDOWN_DAYS);
+  return Math.max(0, readyAt.getTime() - now.getTime());
+}
 
 export async function createEmailToken(userId: string, type: "VERIFY_EMAIL" | "PASSWORD_RESET") {
   const token = crypto.randomBytes(32).toString("hex");

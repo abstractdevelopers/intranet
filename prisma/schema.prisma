@@ -18,25 +18,31 @@ datasource db {
 // ---------------------------------------------------------------------------
 
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  passwordHash    String
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  passwordHash          String
+  // Public identity inside the intranet — set during onboarding.
+  username              String?   @unique
   // FOUNDER | SUPER_ADMIN | ACADEMY_ADMIN | INSTRUCTOR | REVIEWER | STUDENT
-  role            String    @default("STUDENT")
-  status          String    @default("ACTIVE") // ACTIVE | SUSPENDED
-  emailVerifiedAt DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  role                  String    @default("STUDENT")
+  status                String    @default("ACTIVE") // ACTIVE | SUSPENDED
+  emailVerifiedAt       DateTime?
+  // Set when staff issue a temporary password; cleared once the student changes it.
+  mustChangePassword    Boolean   @default(false)
+  onboardingCompletedAt DateTime?
+  usernameChangedAt     DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   profile              Profile?
   sessions             Session[]
   applications         Application[]
-  reviewedApplications Application[]       @relation("ApplicationReviewer")
+  reviewedApplications Application[]          @relation("ApplicationReviewer")
   enrollments          Enrollment[]
-  approvedEnrollments  Enrollment[]        @relation("EnrollmentApprover")
+  approvedEnrollments  Enrollment[]           @relation("EnrollmentApprover")
   courseInstructorOf   CourseInstructor[]
   submissions          AssignmentSubmission[]
-  grades               Grade[]             @relation("GradeGrader")
+  grades               Grade[]                @relation("GradeGrader")
   feedback             Feedback[]
   progress             LessonProgress[]
   notifications        Notification[]
@@ -45,25 +51,37 @@ model User {
   subscription         Subscription?
   payments             Payment[]
   certificates         Certificate[]
-  workspaces           Workspace[]         @relation("WorkspaceOwner")
+  workspaces           Workspace[]            @relation("WorkspaceOwner")
   workspaceMemberships WorkspaceMember[]
   activityLogs         ActivityLog[]
-  auditLogs            AuditLog[]          @relation("AuditActor")
+  auditLogs            AuditLog[]             @relation("AuditActor")
   uploadedDocuments    Document[]
   emailTokens          EmailToken[]
+  projects             Project[]
+  projectLikes         ProjectLike[]
+  following            Follow[]               @relation("Follower")
+  followers            Follow[]               @relation("Following")
+  captainLogs          CaptainLog[]
+  reviewedCaptainLogs  CaptainLog[]           @relation("CaptainLogReviewer")
 }
 
 model Profile {
-  id          String    @id @default(cuid())
-  userId      String    @unique
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  fullName    String
-  phone       String?
-  location    String?
-  dateOfBirth DateTime?
-  avatarUrl   String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName         String
+  phone            String?
+  location         String?
+  dateOfBirth      DateTime?
+  // Short public bio / headline shown on the creator profile.
+  headline         String?
+  bio              String?
+  avatarUrl        String?
+  // Avatar stored in protected storage instead of a public URL.
+  avatarDocumentId String?   @unique
+  avatarDocument   Document? @relation("ProfileAvatar", fields: [avatarDocumentId], references: [id], onDelete: SetNull)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model Session {
@@ -83,7 +101,7 @@ model EmailToken {
   userId    String
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String    @unique
-  type      String    // VERIFY_EMAIL | PASSWORD_RESET
+  type      String // VERIFY_EMAIL | PASSWORD_RESET
   expiresAt DateTime
   usedAt    DateTime?
   createdAt DateTime  @default(now())
@@ -100,8 +118,8 @@ model Course {
   name          String
   slug          String    @unique
   description   String
-  type          String    // COMPULSORY | ELECTIVE
-  price         Int       // monthly price in NGN
+  type          String // COMPULSORY | ELECTIVE
+  price         Int // monthly price in NGN
   currency      String    @default("NGN")
   isCompulsory  Boolean   @default(false)
   isActive      Boolean   @default(true)
@@ -110,6 +128,9 @@ model Course {
   thumbnailUrl  String?
   startDate     DateTime?
   endDate       DateTime?
+  // Pathway this course belongs to. Students only receive courses for their own
+  // pathway; null means it applies to every pathway (the compulsory foundations).
+  pathway       String? // GRAPHIC_DESIGN | VIDEO_EDITING | COMMUNICATION_INFLUENCE | CONTENT_WRITING
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -121,8 +142,11 @@ model Course {
   events            Event[]
   subscriptionItems SubscriptionItem[]
   certificates      Certificate[]
+  projects          Project[]
+  communities       Community[]
 
   @@index([type, isActive])
+  @@index([pathway])
 }
 
 model CourseInstructor {
@@ -143,8 +167,8 @@ model Application {
   id                 String    @id @default(cuid())
   userId             String
   user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  currentOccupation  String    // STUDENT | EMPLOYED | ENTREPRENEUR | FREELANCER | JOB_SEEKER | OTHER
-  experienceLevel    String    // BEGINNER | INTERMEDIATE | ADVANCED
+  currentOccupation  String // STUDENT | EMPLOYED | ENTREPRENEUR | FREELANCER | JOB_SEEKER | OTHER
+  experienceLevel    String // BEGINNER | INTERMEDIATE | ADVANCED
   about              String
   motivation         String
   goals              String
@@ -169,8 +193,11 @@ model Enrollment {
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   courseId       String
   course         Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  status         String    // PENDING | ACCEPTED | REJECTED | SUSPENDED | COMPLETED
-  enrollmentType String    // COMPULSORY | ELECTIVE
+  status         String // PENDING | ACCEPTED | REJECTED | SUSPENDED | COMPLETED
+  enrollmentType String // COMPULSORY | ELECTIVE
+  // Pathway the student was enrolled under, so a later pathway change never
+  // rewrites the academic record.
+  pathway        String?
   approvedAt     DateTime?
   approvedById   String?
   approvedBy     User?     @relation("EnrollmentApprover", fields: [approvedById], references: [id])
@@ -230,7 +257,7 @@ model LessonResource {
   lessonId   String
   lesson     Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   title      String
-  type       String    // PDF | LINK | IMAGE | FILE
+  type       String // PDF | LINK | IMAGE | FILE
   url        String?
   documentId String?
   document   Document? @relation(fields: [documentId], references: [id])
@@ -248,6 +275,8 @@ model Document {
 
   resources       LessonResource[]
   submissionFiles SubmissionFile[]
+  projectAssets   ProjectAsset[]
+  profileAvatars  Profile[]        @relation("ProfileAvatar")
 }
 
 // ---------------------------------------------------------------------------
@@ -275,55 +304,56 @@ model Assignment {
 }
 
 model AssignmentSubmission {
-  id           String    @id @default(cuid())
+  id           String     @id @default(cuid())
   assignmentId String
   assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
   userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  attempt      Int       @default(1)
-  status       String    @default("SUBMITTED") // SUBMITTED | NEEDS_REVISION | RESUBMITTED | GRADED
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attempt      Int        @default(1)
+  status       String     @default("SUBMITTED") // SUBMITTED | NEEDS_REVISION | RESUBMITTED | GRADED
   textContent  String?
   repoUrl      String?
   externalUrl  String?
-  submittedAt  DateTime  @default(now())
+  submittedAt  DateTime   @default(now())
 
   files    SubmissionFile[]
   grade    Grade?
   feedback Feedback[]
+  project  Project?
 
   @@index([assignmentId, userId])
   @@index([userId, status])
 }
 
 model SubmissionFile {
-  id           String  @id @default(cuid())
+  id           String               @id @default(cuid())
   submissionId String
   submission   AssignmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   documentId   String
-  document     Document @relation(fields: [documentId], references: [id])
+  document     Document             @relation(fields: [documentId], references: [id])
   fileName     String
 }
 
 model Grade {
-  id           String    @id @default(cuid())
-  submissionId String    @unique
+  id           String               @id @default(cuid())
+  submissionId String               @unique
   submission   AssignmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   score        Float
   maxScore     Int
   passed       Boolean
   gradedById   String
-  gradedBy     User      @relation("GradeGrader", fields: [gradedById], references: [id])
-  gradedAt     DateTime  @default(now())
+  gradedBy     User                 @relation("GradeGrader", fields: [gradedById], references: [id])
+  gradedAt     DateTime             @default(now())
 }
 
 model Feedback {
-  id           String   @id @default(cuid())
+  id           String               @id @default(cuid())
   submissionId String
   submission   AssignmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   authorId     String
-  author       User     @relation(fields: [authorId], references: [id])
+  author       User                 @relation(fields: [authorId], references: [id])
   body         String
-  createdAt    DateTime @default(now())
+  createdAt    DateTime             @default(now())
 }
 
 // ---------------------------------------------------------------------------
@@ -364,15 +394,15 @@ model Notification {
 }
 
 model Event {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   title     String
   date      DateTime
-  audience  String    @default("ACADEMY") // ACADEMY | COURSE
+  audience  String   @default("ACADEMY") // ACADEMY | COURSE
   courseId  String?
-  course    Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course    Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
   createdBy String
-  creator   User      @relation(fields: [createdBy], references: [id])
-  createdAt DateTime  @default(now())
+  creator   User     @relation(fields: [createdBy], references: [id])
+  createdAt DateTime @default(now())
 
   @@index([date])
 }
@@ -412,32 +442,32 @@ model Subscription {
 }
 
 model Payment {
-  id             String    @id @default(cuid())
+  id             String        @id @default(cuid())
   userId         String
-  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   subscriptionId String?
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   amount         Int // NGN (whole naira)
-  currency       String    @default("NGN")
-  status         String    @default("PENDING") // PENDING | SUCCESS | FAILED
-  provider       String    // PAYSTACK | BACHS
-  providerRef    String    @unique // provider transaction/session reference
+  currency       String        @default("NGN")
+  status         String        @default("PENDING") // PENDING | SUCCESS | FAILED
+  provider       String // PAYSTACK | BACHS
+  providerRef    String        @unique // provider transaction/session reference
   periodStart    DateTime?
   periodEnd      DateTime?
   paidAt         DateTime?
-  createdAt      DateTime  @default(now())
+  createdAt      DateTime      @default(now())
 
   @@index([userId, status])
 }
 
 model SubscriptionItem {
-  id             String  @id @default(cuid())
+  id             String       @id @default(cuid())
   subscriptionId String
   subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
   courseId       String
-  course         Course  @relation(fields: [courseId], references: [id])
+  course         Course       @relation(fields: [courseId], references: [id])
   price          Int // monthly price in NGN, copied from the course at enrollment time
-  currency       String  @default("NGN")
+  currency       String       @default("NGN")
 
   @@unique([subscriptionId, courseId])
 }
@@ -459,26 +489,26 @@ model Certificate {
 }
 
 model Workspace {
-  id        String   @id @default(cuid())
-  name      String
-  ownerId   String
-  owner     User     @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  provider  String   @default("INTERNAL") // WorkspaceProvider abstraction
-  externalId String? @unique // provider-side identifier
-  url       String?  // provider console URL, when the provider offers one
-  status    String   @default("PROVISIONING") // PROVISIONING | READY | SUSPENDED
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  name       String
+  ownerId    String
+  owner      User     @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  provider   String   @default("INTERNAL") // WorkspaceProvider abstraction
+  externalId String?  @unique // provider-side identifier
+  url        String? // provider console URL, when the provider offers one
+  status     String   @default("PROVISIONING") // PROVISIONING | READY | SUSPENDED
+  createdAt  DateTime @default(now())
 
   members WorkspaceMember[]
 }
 
 model WorkspaceMember {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   userId      String
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role        String @default("MEMBER") // OWNER | MEMBER
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        String    @default("MEMBER") // OWNER | MEMBER
 
   @@unique([workspaceId, userId])
 }
@@ -509,4 +539,142 @@ model AuditLog {
   createdAt  DateTime @default(now())
 
   @@index([createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Community access (#15)
+// ---------------------------------------------------------------------------
+
+/**
+ * A student community (e.g. the general UCA community, or a pathway
+ * community). `pathway` null means it is the general academy community that
+ * every student belongs to.
+ */
+model Community {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  platform    String   @default("WHATSAPP") // WHATSAPP | TELEGRAM | DISCORD | OTHER
+  url         String
+  pathway     String? // null = general UCA community
+  courseId    String?
+  course      Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([pathway, isActive])
+}
+
+// ---------------------------------------------------------------------------
+// Creator profile: portfolio, following, likes (#2, #3, #4)
+// ---------------------------------------------------------------------------
+
+/**
+ * A student's portfolio piece. Created automatically from a passed assignment
+ * (or manually by the student), then curated by the student — it is the unit
+ * of work shown on their public creator profile.
+ */
+model Project {
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId            String?
+  course              Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  // The graded submission this project came from, when it was auto-created.
+  submissionId        String?  @unique
+  title               String
+  summary             String
+  // Student-authored description of the process/outcome.
+  description         String?
+  externalUrl         String?
+  repoUrl             String?
+  thumbnailDocumentId String?
+  // PUBLISHED = visible on the creator profile; HIDDEN = student drafted it;
+  // RESTRICTED = removed from public view by an admin.
+  visibility          String   @default("PUBLISHED") // PUBLISHED | HIDDEN | RESTRICTED
+  restrictedReason    String?
+  featured            Boolean  @default(false)
+  completedAt         DateTime @default(now())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  assets ProjectAsset[]
+  likes  ProjectLike[]
+
+  // Backing relation for the graded submission, when present.
+  submission AssignmentSubmission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+
+  @@index([userId, visibility])
+  @@index([courseId])
+}
+
+model ProjectAsset {
+  id         String    @id @default(cuid())
+  projectId  String
+  project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title      String
+  type       String // PDF | IMAGE | FILE | LINK
+  url        String?
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: SetNull)
+  createdAt  DateTime  @default(now())
+
+  @@index([projectId])
+}
+
+model ProjectLike {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, userId])
+  @@index([userId])
+}
+
+/**
+ * A one-directional "follow" between students.
+ */
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followingId])
+}
+
+// ---------------------------------------------------------------------------
+// Captain's Log (#12)
+// ---------------------------------------------------------------------------
+
+/**
+ * The mandatory weekly reflection. A week's content does not unlock until the
+ * previous week's log is submitted. One log per student per week.
+ */
+model CaptainLog {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekNumber   Int
+  // Structured answers keyed by the question id (see CAPTAIN_LOG_QUESTIONS).
+  responses    String // JSON object
+  status       String    @default("SUBMITTED") // SUBMITTED | REVIEWED
+  submittedAt  DateTime  @default(now())
+  reviewedAt   DateTime?
+  reviewedById String?
+  reviewedBy   User?     @relation("CaptainLogReviewer", fields: [reviewedById], references: [id])
+  reviewNote   String?
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([userId, weekNumber])
+  @@index([userId, weekNumber])
+  @@index([status])
 }

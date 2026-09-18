@@ -3,7 +3,7 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 import { db } from "@/lib/db";
-import { requireStudent } from "@/lib/rbac";
+import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { notify } from "@/lib/audit";
 
 const STORAGE_ROOT = path.join(process.cwd(), "storage", "documents");
@@ -27,7 +27,9 @@ function allowedTypes(assignment: { allowedTypes: string }): string[] {
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const user = await requireStudent();
+  const guard = await requireOnboardedStudentApi();
+  if (!guard.ok) return guard.response;
+  const user = guard.user;
   const { id } = await params;
 
   const assignment = await db.assignment.findFirst({

@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty";
 import { CourseMark } from "@/components/course-mark";
 import { IconAssignments, IconCheckCircle, IconPlay } from "@/components/icons";
+import { canAccessModule } from "@/lib/module-access";
 
 export default async function ModulePage({
   params,
@@ -22,6 +23,15 @@ export default async function ModulePage({
   if (!enrollment) notFound();
   if (enrollment.status !== "ACCEPTED") redirect("/student/courses");
 
+  // Same rules as the course timeline: release date, sequential completion and
+  // the previous week's Captain's Log. A direct URL must not bypass them.
+  const access = await canAccessModule(user.id, courseId, moduleId);
+  if (!access.allowed && access.reason === "NOT_FOUND") notFound();
+  if (!access.allowed && access.reason === "LOCKED_LOG") {
+    redirect(`/student/captains-log?lockedWeek=${moduleId}`);
+  }
+  if (!access.allowed) redirect(`/student/courses/${courseId}`);
+
   const mod = await db.module.findFirst({
     where: { id: moduleId, courseId, status: "PUBLISHED" },
     include: {
@@ -33,19 +43,6 @@ export default async function ModulePage({
     },
   });
   if (!mod) notFound();
-
-  // Enforce the same access rules as the course page: release date + sequential completion.
-  if (mod.releaseAt && mod.releaseAt > new Date()) redirect(`/student/courses/${courseId}`);
-  const previous = await db.module.findMany({
-    where: { courseId, status: "PUBLISHED", order: { lt: mod.order } },
-    include: { lessons: { include: { progress: { where: { userId: user.id } } } } },
-    orderBy: { order: "asc" },
-  });
-  const blocked = previous.some((m) => {
-    const ids = m.lessons;
-    return ids.length > 0 && ids.some((l) => !l.progress[0]?.completedAt);
-  });
-  if (blocked) redirect(`/student/courses/${courseId}`);
 
   const doneLessons = mod.lessons.filter((l) => l.progress[0]?.completedAt).length;
 

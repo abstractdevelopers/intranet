@@ -29,6 +29,13 @@ export async function POST(request: Request) {
   }
 
   await createSession(user.id);
-  const redirect = isStaff(user.role as Role) ? "/admin" : "/student";
+
+  const redirect = isStaff(user.role as Role)
+    ? "/admin"
+    : user.mustChangePassword
+      ? "/onboarding/password"
+      : !user.onboardingCompletedAt
+        ? "/onboarding"
+        : "/student";
   return NextResponse.json({ ok: true, redirect });
 }
