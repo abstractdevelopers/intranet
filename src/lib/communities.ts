@@ -31,20 +31,32 @@ export async function getStudentPathway(userId: string): Promise<StudentPathway>
       status: e.status,
     }));
 
-  const electiveEnrollment = enrollments.find((e) => e.enrollmentType === "ELECTIVE") ?? null;
-  const elective = electiveEnrollment
+  const electives = enrollments.filter((e) => e.enrollmentType === "ELECTIVE");
+
+  // A student can hold more than one elective (the testing course counts as
+  // one), so the pathway comes from the most recent accepted elective that
+  // actually maps to a pathway. Taking the first elective instead would let a
+  // pathway-less course mask the real one.
+  const pathwayOf = (e: (typeof electives)[number]): Pathway | null =>
+    (e.pathway as Pathway | null) ??
+    (e.course.pathway as Pathway | null) ??
+    pathwayFromSlug(e.course.slug);
+
+  const pathwayEnrollment =
+    [...electives].reverse().find((e) => e.status === "ACCEPTED" && pathwayOf(e)) ??
+    electives[electives.length - 1] ??
+    null;
+
+  const elective = pathwayEnrollment
     ? {
-        id: electiveEnrollment.course.id,
-        name: electiveEnrollment.course.name,
-        slug: electiveEnrollment.course.slug,
-        status: electiveEnrollment.status,
+        id: pathwayEnrollment.course.id,
+        name: pathwayEnrollment.course.name,
+        slug: pathwayEnrollment.course.slug,
+        status: pathwayEnrollment.status,
       }
     : null;
 
-  const pathway =
-    (electiveEnrollment?.pathway as Pathway | null) ??
-    (electiveEnrollment?.course.pathway as Pathway | null) ??
-    (electiveEnrollment ? pathwayFromSlug(electiveEnrollment.course.slug) : null);
+  const pathway = pathwayEnrollment ? pathwayOf(pathwayEnrollment) : null;
 
   return {
     pathway: pathway ?? null,

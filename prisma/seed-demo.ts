@@ -299,12 +299,15 @@ async function main() {
   for (const student of students) {
     await prisma.enrollment.upsert({
       where: { userId_courseId: { userId: student.id, courseId: course.id } },
-      update: { status: "ACCEPTED" },
+      update: { status: "ACCEPTED", enrollmentType: "COMPULSORY" },
       create: {
         userId: student.id,
         courseId: course.id,
         status: "ACCEPTED",
-        enrollmentType: "ELECTIVE",
+        // The testing course is not a real pathway elective. Enrolling it as
+        // one would let it stand in for a student's actual elective in
+        // pathway resolution and milestone checks.
+        enrollmentType: "COMPULSORY",
         approvedAt: new Date(),
         startedAt: new Date(),
       },

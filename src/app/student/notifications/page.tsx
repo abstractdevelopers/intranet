@@ -32,10 +32,9 @@ export default async function NotificationsPage() {
             id: n.id,
             title: n.title,
             body: n.body,
-            createdAt: n.createdAt.toISOString(),
+            createdAtLabel: formatDateTime(n.createdAt),
             readAt: n.readAt?.toISOString() ?? null,
           }))}
-          formatDateTime={formatDateTime}
         />
       )}
     </div>

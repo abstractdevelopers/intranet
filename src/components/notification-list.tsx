@@ -8,16 +8,14 @@ type Notification = {
   id: string;
   title: string;
   body: string | null;
-  createdAt: string;
+  createdAtLabel: string;
   readAt: string | null;
 };
 
 export function NotificationList({
   notifications,
-  formatDateTime,
 }: {
   notifications: Notification[];
-  formatDateTime: (d: string) => string;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -78,7 +76,7 @@ export function NotificationList({
                   {n.body ? <p className="mt-0.5 text-sm text-text-muted">{n.body}</p> : null}
                 </div>
               </div>
-              <span className="shrink-0 text-xs text-text-muted">{formatDateTime(n.createdAt)}</span>
+              <span className="shrink-0 text-xs text-text-muted">{n.createdAtLabel}</span>
             </div>
           </button>
         ))}
