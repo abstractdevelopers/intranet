@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge, statusTone } from "@/components/ui/badge";
 import { SubmissionForm } from "@/components/assignments/submission-form";
 import { formatDate } from "@/lib/format";
+import { effectiveMaxBytes } from "@/lib/storage";
 
 function parseAllowed(raw: string): string[] {
   try {
@@ -22,6 +23,14 @@ const STATUS_TONE: Record<string, "warning" | "danger" | "success"> = {
   RESUBMITTED: "warning",
   NEEDS_REVISION: "danger",
   GRADED: "success",
+};
+
+/** Plain-language status so students know whether anything more is expected. */
+const STATUS_LABEL: Record<string, string> = {
+  SUBMITTED: "Submitted / Awaiting Grading",
+  RESUBMITTED: "Resubmitted / Awaiting Grading",
+  NEEDS_REVISION: "Needs revision",
+  GRADED: "Graded",
 };
 
 export default async function AssignmentPage({
@@ -112,7 +121,7 @@ export default async function AssignmentPage({
           <SubmissionForm
             assignmentId={assignment.id}
             allowedTypes={allowed}
-            maxFileSizeMb={assignment.maxFileSizeMb}
+            maxFileSizeMb={Math.floor(effectiveMaxBytes(assignment.maxFileSizeMb) / 1024 / 1024)}
             attemptsLeft={attemptsLeft}
           />
         </div>
@@ -129,7 +138,7 @@ export default async function AssignmentPage({
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-semibold">Attempt {sub.attempt}</span>
                       <Badge tone={STATUS_TONE[sub.status] ?? statusTone(sub.status)}>
-                        {sub.status.replace(/_/g, " ").toLowerCase()}
+                        {STATUS_LABEL[sub.status] ?? sub.status.replace(/_/g, " ").toLowerCase()}
                       </Badge>
                     </div>
                     <span className="text-xs text-text-muted">{formatDate(sub.submittedAt)}</span>

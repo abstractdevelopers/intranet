@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-import crypto from "crypto";
 import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/rbac";
 import { auditLog } from "@/lib/audit";
-
-const STORAGE_ROOT = path.join(process.cwd(), "storage", "documents");
-const MAX_RESOURCE_BYTES = 25 * 1024 * 1024;
+import { storageKeyFor, writeToDiskIfPossible, MAX_UPLOAD_BYTES } from "@/lib/storage";
 
 /** Attach a resource to a lesson: either an external link or an uploaded PDF (protected storage). */
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -45,22 +40,33 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (file.type !== "application/pdf") {
     return NextResponse.json({ error: "Only PDF uploads are supported." }, { status: 400 });
   }
-  if (file.size > MAX_RESOURCE_BYTES) {
-    return NextResponse.json({ error: "Files must be 25MB or smaller." }, { status: 400 });
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return NextResponse.json(
+      { error: `Files must be ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)}MB or smaller.` },
+      { status: 413 }
+    );
   }
 
-  const storagePath = `${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-  await mkdir(STORAGE_ROOT, { recursive: true });
-  await writeFile(path.join(STORAGE_ROOT, storagePath), Buffer.from(await file.arrayBuffer()));
+  const storagePath = storageKeyFor(file.name);
+  const fileBytes = Buffer.from(await file.arrayBuffer());
 
   const resource = await db.$transaction(async (tx) => {
     const doc = await tx.document.create({
-      data: { title: file.name, storagePath, mimeType: file.type, sizeBytes: file.size, uploadedById: staff.id },
+      data: {
+        title: file.name,
+        storagePath,
+        data: fileBytes,
+        mimeType: file.type,
+        sizeBytes: file.size,
+        uploadedById: staff.id,
+      },
     });
     return tx.lessonResource.create({
       data: { lessonId: id, title, type: "PDF", documentId: doc.id },
     });
   });
+
+  await writeToDiskIfPossible(storagePath, fileBytes);
 
   await auditLog({ actorId: staff.id, action: "RESOURCE_ADDED", targetType: "Lesson", targetId: id });
   return NextResponse.json({ ok: true, id: resource.id });

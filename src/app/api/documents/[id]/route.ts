@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
-import path from "path";
 import { db } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { isStaff } from "@/lib/rbac";
 import { canViewCreator } from "@/lib/projects";
-
-const STORAGE_ROOT = path.join(process.cwd(), "storage", "documents");
+import { readDocumentBytes } from "@/lib/storage";
 
 /**
  * Protected document delivery. Files are never at public URLs:
@@ -19,7 +16,12 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const doc = await db.document.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      storagePath: true,
+      data: true,
+      mimeType: true,
       resources: { include: { lesson: { include: { module: { select: { courseId: true } } } } } },
       submissionFiles: { include: { submission: { select: { userId: true } } } },
       projectAssets: {
@@ -77,22 +79,14 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   if (!allowed)
     return NextResponse.json({ error: "You don't have access to this document." }, { status: 403 });
 
-  // Containment: never serve outside the storage root.
-  const fullPath = path.join(STORAGE_ROOT, doc.storagePath);
-  if (!fullPath.startsWith(STORAGE_ROOT + path.sep)) {
-    return NextResponse.json({ error: "Not found." }, { status: 404 });
-  }
+  const bytes = await readDocumentBytes(doc);
+  if (!bytes) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  try {
-    const data = await readFile(fullPath);
-    return new NextResponse(new Uint8Array(data), {
-      headers: {
-        "Content-Type": doc.mimeType,
-        "Content-Disposition": `inline; filename="${encodeURIComponent(doc.title)}"`,
-        "Cache-Control": "private, no-store",
-      },
-    });
-  } catch {
-    return NextResponse.json({ error: "Not found." }, { status: 404 });
-  }
+  return new NextResponse(new Uint8Array(bytes), {
+    headers: {
+      "Content-Type": doc.mimeType,
+      "Content-Disposition": `inline; filename="${encodeURIComponent(doc.title)}"`,
+      "Cache-Control": "private, no-store",
+    },
+  });
 }

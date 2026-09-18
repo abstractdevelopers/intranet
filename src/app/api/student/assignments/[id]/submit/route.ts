@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-import crypto from "crypto";
 import { db } from "@/lib/db";
 import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { notify } from "@/lib/audit";
-
-const STORAGE_ROOT = path.join(process.cwd(), "storage", "documents");
+import { storageKeyFor, writeToDiskIfPossible, effectiveMaxBytes } from "@/lib/storage";
 
 const MIME_BY_TYPE: Record<string, string[]> = {
   PDF: ["application/pdf"],
@@ -97,29 +93,32 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   let documentId: string | null = null;
   let fileName: string | null = null;
   if (isFile && file instanceof File) {
-    const maxBytes = assignment.maxFileSizeMb * 1024 * 1024;
+    const maxBytes = effectiveMaxBytes(assignment.maxFileSizeMb);
     if (file.size > maxBytes) {
       return NextResponse.json(
-        { error: `Files must be ${assignment.maxFileSizeMb}MB or smaller.` },
-        { status: 400 }
+        {
+          error: `Files must be ${Math.round(maxBytes / 1024 / 1024)}MB or smaller. Try compressing the document or exporting it at a lower quality.`,
+        },
+        { status: 413 }
       );
     }
     const mimeOk = allowed.some((t) => MIME_BY_TYPE[t]?.includes(file.type));
     if (!mimeOk) {
       return NextResponse.json({ error: "That file type isn't allowed here." }, { status: 400 });
     }
-    const storagePath = `${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-    await mkdir(STORAGE_ROOT, { recursive: true });
-    await writeFile(path.join(STORAGE_ROOT, storagePath), Buffer.from(await file.arrayBuffer()));
+    const storagePath = storageKeyFor(file.name);
+    const fileBytes = Buffer.from(await file.arrayBuffer());
     const doc = await db.document.create({
       data: {
         title: file.name,
         storagePath,
+        data: fileBytes,
         mimeType: file.type,
         sizeBytes: file.size,
         uploadedById: user.id,
       },
     });
+    await writeToDiskIfPossible(storagePath, fileBytes);
     documentId = doc.id;
     fileName = file.name;
   }

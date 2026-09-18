@@ -266,7 +266,10 @@ model LessonResource {
 model Document {
   id           String   @id @default(cuid())
   title        String
-  storagePath  String // protected storage key — never exposed directly
+  storagePath  String // logical storage key — never exposed directly
+  // Inline bytes. Serverless filesystems (Vercel) are read-only and ephemeral,
+  // so uploads are kept in the database. Legacy rows may still live on disk.
+  data         Bytes?
   mimeType     String
   sizeBytes    Int
   uploadedById String?
