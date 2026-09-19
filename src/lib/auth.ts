@@ -17,6 +17,7 @@ export type SessionUser = {
   username: string | null;
   mustChangePassword: boolean;
   onboardingCompletedAt: Date | null;
+  verificationTier: string | null;
 };
 
 export async function hashPassword(password: string) {
@@ -78,6 +79,7 @@ export const getSessionUser = cache(async function getSessionUser(): Promise<Ses
     username: session.user.username,
     mustChangePassword: session.user.mustChangePassword,
     onboardingCompletedAt: session.user.onboardingCompletedAt,
+    verificationTier: session.user.verificationTier,
   };
 });
 

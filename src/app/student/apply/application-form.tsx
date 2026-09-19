@@ -175,7 +175,8 @@ export function ApplicationForm({
             <span className="font-semibold">{selected ? `${naira(monthlyTotal)}/month` : "—"}</span>
           </div>
           <p className="mt-2 text-xs text-text-muted">
-            Each course is {naira(compulsory[0]?.price ?? 15000)}/month after the free first month.
+            The two compulsory courses are free. Only your elective is billed, at{" "}
+            {naira(selected?.price ?? 0)}/month after the free first month.
           </p>
         </div>
       </Card>

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./theme-toggle";
 import { BrandLockup } from "./crest";
 import { IconLogout, ICONS, type IconName } from "./icons";
+import { VerificationBadge } from "./verification-badge";
 
 export type NavItem = {
   href: string;
@@ -33,12 +34,14 @@ export function PortalShell({
   sections,
   userName,
   userRole,
+  userTier,
   children,
 }: {
   portal: string;
   sections: NavSection[];
   userName: string;
   userRole: string;
+  userTier?: string | null;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -93,7 +96,10 @@ export function PortalShell({
         <div className="space-y-3 border-t border-border px-4 py-4">
           <ThemeToggle />
           <div className="text-sm">
-            <p className="font-medium">{userName}</p>
+            <p className="flex items-center gap-1.5 font-medium">
+              <span className="truncate">{userName}</span>
+              <VerificationBadge tier={userTier} />
+            </p>
             <p className="text-xs text-text-muted">{userRole}</p>
           </div>
           <form action="/api/auth/logout" method="post">

@@ -19,10 +19,11 @@ export default function LoginPage() {
         <Link href="/forgot-password" className="text-brand-1 hover:text-brand-2 dark:text-brand-3">
           Forgot password?
         </Link>
-        <Link href="/signup" className="text-text-muted hover:text-text">
-          Create an account
-        </Link>
       </div>
+      <p className="mt-4 text-xs text-text-muted">
+        Accounts are created by the academy. If you applied and haven&rsquo;t received
+        sign-in details, contact the team.
+      </p>
     </AuthLayout>
   );
 }

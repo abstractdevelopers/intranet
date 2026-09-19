@@ -38,7 +38,13 @@ const SECTIONS: NavSection[] = [
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const user = await requireOnboardedStudent();
   return (
-    <PortalShell portal="Student Portal" sections={SECTIONS} userName={user.fullName} userRole="Student">
+    <PortalShell
+      portal="Student Portal"
+      sections={SECTIONS}
+      userName={user.fullName}
+      userRole="Student"
+      userTier={user.verificationTier}
+    >
       {children}
     </PortalShell>
   );

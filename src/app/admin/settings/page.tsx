@@ -60,6 +60,7 @@ export default async function AdminSettingsPage({
             fullName: u.profile?.fullName ?? null,
             role: u.role,
             status: u.status,
+            verificationTier: u.verificationTier,
           }))}
           currentUserId={actor.id}
           actorIsFounder={actor.role === "FOUNDER"}

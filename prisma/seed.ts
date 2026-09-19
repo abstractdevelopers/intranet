@@ -51,10 +51,15 @@ const COURSES = [
   },
 ] as const;
 
-const MONTHLY_PRICE_NGN = 15_000;
+// Only the elective is billed; the two compulsory foundations are free. The
+// monthly total is therefore derived from the elective's price, never hardcoded.
+const ELECTIVE_MONTHLY_PRICE_NGN = 15_000;
+const COMPULSORY_MONTHLY_PRICE_NGN = 0;
 
 async function main() {
   for (const course of COURSES) {
+    const price =
+      course.type === "COMPULSORY" ? COMPULSORY_MONTHLY_PRICE_NGN : ELECTIVE_MONTHLY_PRICE_NGN;
     await prisma.course.upsert({
       where: { slug: course.slug },
       update: {
@@ -62,14 +67,14 @@ async function main() {
         description: course.description,
         type: course.type,
         isCompulsory: course.isCompulsory,
-        price: MONTHLY_PRICE_NGN,
+        price,
         currency: "NGN",
         isActive: true,
         status: "PUBLISHED",
       },
       create: {
         ...course,
-        price: MONTHLY_PRICE_NGN,
+        price,
         currency: "NGN",
         status: "PUBLISHED",
       },
@@ -109,7 +114,9 @@ async function main() {
   }
 
   console.log("Seed complete:");
-  console.log(`  Courses: ${COURSES.length} (₦${MONTHLY_PRICE_NGN.toLocaleString()}/month each)`);
+  console.log(
+    `  Courses: ${COURSES.length} (compulsory ₦${COMPULSORY_MONTHLY_PRICE_NGN.toLocaleString()}, elective ₦${ELECTIVE_MONTHLY_PRICE_NGN.toLocaleString()}/month)`
+  );
   console.log(`  Founder accounts: ${adminEmails.join(", ")}`);
 }
 

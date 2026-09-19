@@ -107,6 +107,8 @@ export const GOLD_VERIFIED_EMAILS = [
   "wallace@launchverse.space",
   "zaheer@launchverse.space",
   "ufolayca@gmail.com",
+  "calebwallace127@gmail.com",
+  "zaheercoderlts@gmail.com",
 ];
 
 export function tierForEmail(email: string): VerificationTier {

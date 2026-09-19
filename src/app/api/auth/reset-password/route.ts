@@ -23,7 +23,9 @@ export async function POST(request: Request) {
   }
   await db.user.update({
     where: { id: record.userId },
-    data: { passwordHash: await hashPassword(parsed.data.password) },
+    // The student chose this password themselves, so any "must change on first
+    // sign-in" flag from an admin-issued temporary password no longer applies.
+    data: { passwordHash: await hashPassword(parsed.data.password), mustChangePassword: false },
   });
   // Invalidate all existing sessions after a password change.
   await db.session.deleteMany({ where: { userId: record.userId } });

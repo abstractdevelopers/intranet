@@ -11,6 +11,7 @@ import { StudentStatusButton } from "@/components/admin/student-status-button";
 import { IssuePasswordButton } from "@/components/admin/issue-password-button";
 import { CaptainLogAnswers } from "@/components/captains-log/captain-log-answers";
 import { Avatar } from "@/components/creators/avatar";
+import { VerificationBadge } from "@/components/verification-badge";
 import { getCourseProgress } from "@/lib/progress";
 import { getScoreBreakdown } from "@/lib/scores";
 import { getStudentPathway } from "@/lib/communities";
@@ -78,8 +79,9 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
           />
           <div>
             <p className="eyebrow">Student</p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight">
-              {student.profile?.fullName ?? student.email}
+            <h1 className="mt-1 flex items-center gap-2 text-2xl font-bold tracking-tight">
+              <span>{student.profile?.fullName ?? student.email}</span>
+              <VerificationBadge tier={student.verificationTier} className="h-5 w-5" />
             </h1>
             <p className="mt-1 text-sm text-text-muted">
               {student.username ? `@${student.username} · ` : ""}

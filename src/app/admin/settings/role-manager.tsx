@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Badge, statusTone } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty";
 import { ROLES, type Role } from "@/lib/constants";
+import { VerificationBadge } from "@/components/verification-badge";
 
 type ManagedUser = {
   id: string;
@@ -12,6 +13,7 @@ type ManagedUser = {
   fullName: string | null;
   role: string;
   status: string;
+  verificationTier: string | null;
 };
 
 const ROLE_LABELS: Record<Role, string> = {
@@ -79,9 +81,10 @@ export function RoleManager({
             className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface px-4 py-3"
           >
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
-                {user.fullName ?? user.email}
-                {isSelf ? <span className="ml-2 text-xs text-text-muted">(you)</span> : null}
+              <p className="flex items-center gap-1.5 truncate text-sm font-medium">
+                <span className="truncate">{user.fullName ?? user.email}</span>
+                <VerificationBadge tier={user.verificationTier} />
+                {isSelf ? <span className="text-xs text-text-muted">(you)</span> : null}
               </p>
               <p className="truncate text-xs text-text-muted">{user.email}</p>
             </div>

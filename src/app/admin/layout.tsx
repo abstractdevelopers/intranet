@@ -42,6 +42,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       sections={SECTIONS}
       userName={user.fullName}
       userRole={user.role.replaceAll("_", " ")}
+      userTier={user.verificationTier}
     >
       {children}
     </PortalShell>
