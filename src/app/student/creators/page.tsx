@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty";
 import { Avatar } from "@/components/creators/avatar";
+import { VerificationBadge } from "@/components/verification-badge";
 import { FollowButton } from "@/components/creators/follow-button";
 import { IconCompass, IconUsers, IconCourses } from "@/components/icons";
 import { searchCreators, getFollowedCreators } from "@/lib/creators";
@@ -126,9 +127,10 @@ export default async function CreatorsPage({
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/student/creators/${creator.username ?? creator.id}`}
-                    className="block truncate text-sm font-semibold hover:text-brand-1 dark:hover:text-brand-3"
+                    className="flex items-center gap-1 text-sm font-semibold hover:text-brand-1 dark:hover:text-brand-3"
                   >
-                    {creator.fullName}
+                    <span className="truncate">{creator.fullName}</span>
+                    <VerificationBadge tier={creator.verificationTier} />
                   </Link>
                   {creator.username ? (
                     <p className="truncate text-xs text-text-muted">@{creator.username}</p>

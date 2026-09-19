@@ -1,49 +1,36 @@
 import { requireOnboardedStudent } from "@/lib/rbac";
 import { PortalShell, type NavSection } from "@/components/portal-shell";
-import {
-  IconDashboard,
-  IconCourses,
-  IconAssignments,
-  IconProgress,
-  IconCalendar,
-  IconBell,
-  IconWorkspace,
-  IconProfile,
-  IconStudents,
-  IconAnnouncement,
-  IconCommunication,
-} from "@/components/icons";
 
 const SECTIONS: NavSection[] = [
   {
     label: "Learn",
     items: [
-      { href: "/student", label: "Dashboard", icon: IconDashboard },
-      { href: "/student/courses", label: "My Courses", icon: IconCourses },
-      { href: "/student/assignments", label: "Assignments", icon: IconAssignments },
-      { href: "/student/captains-log", label: "Captain's Log", icon: IconAnnouncement },
-      { href: "/student/progress", label: "Progress", icon: IconProgress },
+      { href: "/student", label: "Dashboard", icon: "Dashboard" },
+      { href: "/student/courses", label: "My Courses", icon: "Courses" },
+      { href: "/student/assignments", label: "Assignments", icon: "Assignments" },
+      { href: "/student/captains-log", label: "Captain's Log", icon: "Announcement" },
+      { href: "/student/progress", label: "Progress", icon: "Progress" },
     ],
   },
   {
     label: "Creators",
     items: [
-      { href: "/student/creators", label: "Discover", icon: IconStudents },
-      { href: "/student/projects", label: "My Portfolio", icon: IconWorkspace },
+      { href: "/student/creators", label: "Discover", icon: "Students" },
+      { href: "/student/projects", label: "My Portfolio", icon: "Workspace" },
     ],
   },
   {
     label: "Academy",
     items: [
-      { href: "/student/calendar", label: "Calendar", icon: IconCalendar },
-      { href: "/student/notifications", label: "Notifications", icon: IconBell },
+      { href: "/student/calendar", label: "Calendar", icon: "Calendar" },
+      { href: "/student/notifications", label: "Notifications", icon: "Bell" },
     ],
   },
   {
     label: "You",
     items: [
-      { href: "/student/community", label: "Communities", icon: IconCommunication },
-      { href: "/student/profile", label: "Profile", icon: IconProfile },
+      { href: "/student/community", label: "Communities", icon: "Communication" },
+      { href: "/student/profile", label: "Profile", icon: "Profile" },
     ],
   },
 ];

@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge, statusTone } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty";
 import { StudentInviteForm } from "@/components/admin/student-invite-form";
+import { VerificationBadge } from "@/components/verification-badge";
 import { formatDate } from "@/lib/format";
 
 export const metadata = { title: "Students" };
@@ -71,10 +72,11 @@ export default async function StudentsPage({
             <Card className="p-4 transition-colors hover:border-brand-1/40">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-semibold">
-                    {student.profile?.fullName ?? "—"}
+                  <p className="flex items-center gap-1 text-sm font-semibold">
+                    <span>{student.profile?.fullName ?? "—"}</span>
+                    <VerificationBadge tier={student.verificationTier} />
                     {student.username ? (
-                      <span className="ml-2 font-normal text-text-muted">@{student.username}</span>
+                      <span className="ml-1 font-normal text-text-muted">@{student.username}</span>
                     ) : null}
                   </p>
                   <p className="text-xs text-text-muted">{student.email} · Joined {formatDate(student.createdAt)}</p>

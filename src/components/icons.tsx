@@ -142,3 +142,45 @@ export const IconSettings = (p: IconProps) => (
 export const IconAnnouncement = (p: IconProps) => (
   <Svg {...p}><path d="M18.5 5.5 6 9.5v5l2 .6V19a1.6 1.6 0 0 0 3.2 0v-2.6l7.3 3.1V5.5Z" /><path d="M6 9.5H4.8A1.3 1.3 0 0 0 3.5 10.8v2.4A1.3 1.3 0 0 0 4.8 14.5H6" /></Svg>
 );
+export const IconEye = (p: IconProps) => (
+  <Svg {...p}><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="3" /></Svg>
+);
+export const IconEyeOff = (p: IconProps) => (
+  <Svg {...p}><path d="M9.9 5.8A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.6 3.5" /><path d="M6.2 7.7A17 17 0 0 0 2.5 12S6 18.5 12 18.5c1.2 0 2.3-.2 3.3-.6" /><path d="M10 10a2.8 2.8 0 0 0 3.9 3.9" /><path d="m4 4 16 16" /></Svg>
+);
+
+/**
+ * Named registry. Navigation config travels from server layouts into the client
+ * nav as a string key; React cannot serialize component functions across that
+ * boundary, and it gives us one place to keep the icon set honest.
+ */
+export const ICONS = {
+  Dashboard: IconDashboard,
+  Courses: IconCourses,
+  Assignments: IconAssignments,
+  Progress: IconProgress,
+  Calendar: IconCalendar,
+  Bell: IconBell,
+  Workspace: IconWorkspace,
+  Profile: IconProfile,
+  Students: IconStudents,
+  Announcement: IconAnnouncement,
+  Communication: IconCommunication,
+  Applications: IconApplications,
+  Enrollments: IconEnrollments,
+  File: IconFile,
+  Analytics: IconAnalytics,
+  Audit: IconAudit,
+  Settings: IconSettings,
+  Certificate: IconCertificate,
+  Milestone: IconMilestone,
+  Trophy: IconTrophy,
+  Medal: IconMedal,
+  Spark: IconSpark,
+  Target: IconTarget,
+  Heart: IconHeart,
+  Compass: IconCompass,
+  Users: IconUsers,
+} as const;
+
+export type IconName = keyof typeof ICONS;

@@ -13,6 +13,7 @@ export type CreatorCard = {
   projectCount: number;
   followerCount: number;
   isFollowing: boolean;
+  verificationTier: string | null;
 };
 
 /**
@@ -45,6 +46,7 @@ export async function searchCreators(
     select: {
       id: true,
       username: true,
+      verificationTier: true,
       profile: { select: { fullName: true, headline: true, avatarDocumentId: true } },
       enrollments: {
         where: { enrollmentType: "ELECTIVE" },
@@ -73,6 +75,7 @@ export async function searchCreators(
       projectCount: c._count.projects,
       followerCount: c._count.followers,
       isFollowing: c.followers.length > 0,
+      verificationTier: c.verificationTier,
     };
   });
 }
@@ -87,6 +90,7 @@ export async function getFollowedCreators(viewerId: string): Promise<CreatorCard
         select: {
           id: true,
           username: true,
+          verificationTier: true,
           profile: { select: { fullName: true, headline: true, avatarDocumentId: true } },
           enrollments: {
             where: { enrollmentType: "ELECTIVE" },
@@ -117,6 +121,7 @@ export async function getFollowedCreators(viewerId: string): Promise<CreatorCard
       projectCount: c._count.projects,
       followerCount: c._count.followers,
       isFollowing: true,
+      verificationTier: c.verificationTier,
     };
   });
 }

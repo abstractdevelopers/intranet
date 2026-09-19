@@ -92,6 +92,28 @@ export function pathwayFromSlug(slug: string): Pathway | null {
 }
 
 /**
+ * Verification badges. GOLD marks the founding team; BLUE marks every other
+ * signed-up account. Null on User.verificationTier means no badge.
+ */
+export const VERIFICATION_TIERS = {
+  GOLD: "GOLD",
+  BLUE: "BLUE",
+} as const;
+
+export type VerificationTier = keyof typeof VERIFICATION_TIERS;
+
+/** Accounts that carry the gold badge. Every other verified account is blue. */
+export const GOLD_VERIFIED_EMAILS = [
+  "wallace@launchverse.space",
+  "zaheer@launchverse.space",
+  "ufolayca@gmail.com",
+];
+
+export function tierForEmail(email: string): VerificationTier {
+  return GOLD_VERIFIED_EMAILS.includes(email.toLowerCase()) ? "GOLD" : "BLUE";
+}
+
+/**
  * Captain's Log questions (#12). Order matters — it is the order students see.
  */
 export const CAPTAIN_LOG_QUESTIONS = [

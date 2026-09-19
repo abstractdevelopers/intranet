@@ -1,51 +1,35 @@
 import { requireStaff } from "@/lib/rbac";
 import { PortalShell, type NavSection } from "@/components/portal-shell";
-import {
-  IconDashboard,
-  IconStudents,
-  IconApplications,
-  IconEnrollments,
-  IconCourses,
-  IconAssignments,
-  IconFile,
-  IconAnnouncement,
-  IconCalendar,
-  IconAnalytics,
-  IconAudit,
-  IconSettings,
-  IconWorkspace,
-  IconCommunication,
-} from "@/components/icons";
 
 const SECTIONS: NavSection[] = [
   {
     label: "Operate",
     items: [
-      { href: "/admin", label: "Dashboard", icon: IconDashboard },
-      { href: "/admin/applications", label: "Applications", icon: IconApplications },
-      { href: "/admin/students", label: "Students", icon: IconStudents },
-      { href: "/admin/enrollments", label: "Enrollments", icon: IconEnrollments },
+      { href: "/admin", label: "Dashboard", icon: "Dashboard" },
+      { href: "/admin/applications", label: "Applications", icon: "Applications" },
+      { href: "/admin/students", label: "Students", icon: "Students" },
+      { href: "/admin/enrollments", label: "Enrollments", icon: "Enrollments" },
     ],
   },
   {
     label: "Teach",
     items: [
-      { href: "/admin/courses", label: "Courses", icon: IconCourses },
-      { href: "/admin/assignments", label: "Assignments", icon: IconAssignments },
-      { href: "/admin/submissions", label: "Submissions", icon: IconFile },
-      { href: "/admin/announcements", label: "Announcements", icon: IconAnnouncement },
-      { href: "/admin/calendar", label: "Calendar", icon: IconCalendar },
+      { href: "/admin/courses", label: "Courses", icon: "Courses" },
+      { href: "/admin/assignments", label: "Assignments", icon: "Assignments" },
+      { href: "/admin/submissions", label: "Submissions", icon: "File" },
+      { href: "/admin/announcements", label: "Announcements", icon: "Announcement" },
+      { href: "/admin/calendar", label: "Calendar", icon: "Calendar" },
     ],
   },
   {
     label: "Academy",
     items: [
-      { href: "/admin/captains-log", label: "Captain's Logs", icon: IconAnnouncement },
-      { href: "/admin/projects", label: "Projects", icon: IconWorkspace },
-      { href: "/admin/communities", label: "Communities", icon: IconCommunication },
-      { href: "/admin/analytics", label: "Analytics", icon: IconAnalytics },
-      { href: "/admin/audit-logs", label: "Audit Logs", icon: IconAudit },
-      { href: "/admin/settings", label: "Settings", icon: IconSettings },
+      { href: "/admin/captains-log", label: "Captain's Logs", icon: "Announcement" },
+      { href: "/admin/projects", label: "Projects", icon: "Workspace" },
+      { href: "/admin/communities", label: "Communities", icon: "Communication" },
+      { href: "/admin/analytics", label: "Analytics", icon: "Analytics" },
+      { href: "/admin/audit-logs", label: "Audit Logs", icon: "Audit" },
+      { href: "/admin/settings", label: "Settings", icon: "Settings" },
     ],
   },
 ];

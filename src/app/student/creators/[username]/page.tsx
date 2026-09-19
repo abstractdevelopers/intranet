@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/ui/empty";
 import { ButtonLink } from "@/components/ui/button";
 import { CourseMark } from "@/components/course-mark";
 import { Avatar } from "@/components/creators/avatar";
+import { VerificationBadge } from "@/components/verification-badge";
 import { FollowButton } from "@/components/creators/follow-button";
 import { LikeButton } from "@/components/creators/like-button";
 import { IconUsers, IconCourses, IconFile, IconClock } from "@/components/icons";
@@ -35,6 +36,7 @@ export default async function CreatorProfilePage({
       id: true,
       username: true,
       status: true,
+      verificationTier: true,
       onboardingCompletedAt: true,
       createdAt: true,
       profile: {
@@ -102,7 +104,10 @@ export default async function CreatorProfilePage({
               <p className="hero-eyebrow text-[11px] font-semibold uppercase tracking-[0.18em]">
                 Creator profile
               </p>
-              <h1 className="mt-1.5 text-2xl font-bold tracking-tight md:text-3xl">{displayName}</h1>
+              <h1 className="mt-1.5 flex items-center gap-2 text-2xl font-bold tracking-tight md:text-3xl">
+                <span>{displayName}</span>
+                <VerificationBadge tier={creator.verificationTier} className="h-5 w-5" />
+              </h1>
               {creator.username ? (
                 <p className="hero-muted mt-1 text-sm">@{creator.username}</p>
               ) : null}

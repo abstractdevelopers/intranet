@@ -27,6 +27,9 @@ model User {
   role                  String    @default("STUDENT")
   status                String    @default("ACTIVE") // ACTIVE | SUSPENDED
   emailVerifiedAt       DateTime?
+  // Verification badge shown next to a name. GOLD is reserved for the founding
+  // team; BLUE is granted to every other signed-up account. Null = no badge.
+  verificationTier      String?
   // Set when staff issue a temporary password; cleared once the student changes it.
   mustChangePassword    Boolean   @default(false)
   onboardingCompletedAt DateTime?

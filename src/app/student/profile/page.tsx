@@ -6,6 +6,7 @@ import { Badge, statusTone } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { ProfileEditor } from "@/components/creators/profile-editor";
 import { Avatar } from "@/components/creators/avatar";
+import { VerificationBadge } from "@/components/verification-badge";
 import { IconUsers, IconCourses } from "@/components/icons";
 import { USERNAME_CHANGE_COOLDOWN_DAYS, usernameCooldownMs } from "@/lib/auth";
 import { getStudentPathway } from "@/lib/communities";
@@ -27,6 +28,7 @@ export default async function ProfilePage() {
     db.user.findUnique({
       where: { id: user.id },
       select: {
+        verificationTier: true,
         _count: {
           select: {
             followers: true,
@@ -69,6 +71,12 @@ export default async function ProfilePage() {
             name={profile?.fullName ?? user.fullName}
           />
           <div className="flex flex-1 flex-wrap gap-6 text-sm">
+            <span className="inline-flex w-full items-center gap-1.5">
+              <span className="font-semibold">
+                {profile?.fullName ?? user.fullName}
+              </span>
+              <VerificationBadge tier={counts.verificationTier} />
+            </span>
             <span className="inline-flex items-center gap-1.5 text-text-muted">
               <IconCourses className="h-4 w-4" />
               <span className="font-semibold text-text">{counts._count.projects}</span> public projects

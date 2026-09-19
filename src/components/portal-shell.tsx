@@ -1,16 +1,32 @@
+"use client";
+
 import Link from "next/link";
-import type { ComponentType, SVGProps } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./theme-toggle";
 import { BrandLockup } from "./crest";
-import { IconLogout } from "./icons";
+import { IconLogout, ICONS, type IconName } from "./icons";
 
 export type NavItem = {
   href: string;
   label: string;
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  /** Key into ICONS — a string so it survives the server→client boundary. */
+  icon: IconName;
 };
 
 export type NavSection = { label: string; items: NavItem[] };
+
+/**
+ * Highlight only the most specific matching nav item. A plain prefix test would
+ * light up the portal root (`/student`) on every subpage, since it is a prefix
+ * of them all — so the winner is the longest href that matches the path.
+ */
+function activeHref(pathname: string, hrefs: string[]): string | null {
+  const matches = hrefs.filter(
+    (href) => pathname === href || pathname.startsWith(`${href}/`)
+  );
+  if (matches.length === 0) return null;
+  return matches.reduce((best, href) => (href.length > best.length ? href : best));
+}
 
 export function PortalShell({
   portal,
@@ -25,7 +41,10 @@ export function PortalShell({
   userRole: string;
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const allItems = sections.flatMap((s) => s.items);
+  // One winner across every section, so sibling sections can't double-highlight.
+  const active = activeHref(pathname, allItems.map((i) => i.href));
 
   return (
     <div className="flex min-h-screen">
@@ -42,16 +61,31 @@ export function PortalShell({
                 {section.label}
               </p>
               <div className="space-y-0.5">
-                {section.items.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="group flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:bg-surface-2 hover:text-text focus-visible:outline-2 focus-visible:outline-brand-1"
-                  >
-                    <item.icon className="h-[18px] w-[18px] shrink-0 text-text-muted transition-colors group-hover:text-brand-1 dark:group-hover:text-brand-3" />
-                    {item.label}
-                  </Link>
-                ))}
+                {section.items.map((item) => {
+                  const isCurrent = active === item.href;
+                  const NavIcon = ICONS[item.icon];
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={isCurrent ? "page" : undefined}
+                      className={`group flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-brand-1 ${
+                        isCurrent
+                          ? "bg-brand-3/25 text-brand-1 dark:text-brand-3"
+                          : "text-text-muted hover:bg-surface-2 hover:text-text"
+                      }`}
+                    >
+                      <NavIcon
+                        className={`h-[18px] w-[18px] shrink-0 transition-colors ${
+                          isCurrent
+                            ? "text-brand-1 dark:text-brand-3"
+                            : "text-text-muted group-hover:text-brand-1 dark:group-hover:text-brand-3"
+                        }`}
+                      />
+                      {item.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -84,16 +118,25 @@ export function PortalShell({
           className="flex gap-1 overflow-x-auto border-b border-border bg-surface px-3 py-2 md:hidden"
           aria-label="Portal mobile"
         >
-          {allItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium text-text-muted hover:bg-surface-2 hover:text-text"
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </Link>
-          ))}
+          {allItems.map((item) => {
+            const isCurrent = active === item.href;
+            const NavIcon = ICONS[item.icon];
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isCurrent ? "page" : undefined}
+                className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium ${
+                  isCurrent
+                    ? "bg-brand-3/25 text-brand-1 dark:text-brand-3"
+                    : "text-text-muted hover:bg-surface-2 hover:text-text"
+                }`}
+              >
+                <NavIcon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>
