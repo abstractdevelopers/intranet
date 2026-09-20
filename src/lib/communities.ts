@@ -33,19 +33,17 @@ export async function getStudentPathway(userId: string): Promise<StudentPathway>
 
   const electives = enrollments.filter((e) => e.enrollmentType === "ELECTIVE");
 
-  // A student can hold more than one elective (the testing course counts as
-  // one), so the pathway comes from the most recent accepted elective that
-  // actually maps to a pathway. Taking the first elective instead would let a
-  // pathway-less course mask the real one.
   const pathwayOf = (e: (typeof electives)[number]): Pathway | null =>
     (e.pathway as Pathway | null) ??
     (e.course.pathway as Pathway | null) ??
     pathwayFromSlug(e.course.slug);
 
+  // Only an ACCEPTED elective defines a pathway. PENDING and REJECTED electives
+  // grant nothing: a pending applicant has not been approved, and a rejected
+  // one must stay out entirely. Falling back to any elective would leak that
+  // pathway's resources (its community link) to students who don't have it.
   const pathwayEnrollment =
-    [...electives].reverse().find((e) => e.status === "ACCEPTED" && pathwayOf(e)) ??
-    electives[electives.length - 1] ??
-    null;
+    [...electives].reverse().find((e) => e.status === "ACCEPTED" && pathwayOf(e)) ?? null;
 
   const elective = pathwayEnrollment
     ? {
@@ -67,9 +65,15 @@ export async function getStudentPathway(userId: string): Promise<StudentPathway>
 }
 
 /**
- * Communities (#15) the student belongs to: the general UCA community (no
- * pathway) plus the community for their pathway. Inactive communities and
- * communities for other pathways are never returned.
+ * Communities (#15) a student may see:
+ *
+ * - the general UCA community (pathway null), which every student gets;
+ * - the community for the student's own pathway, and only that one.
+ *
+ * A student with no accepted elective has no pathway, so they see the general
+ * community and nothing else. Communities for other pathways, and inactive
+ * communities, are never returned — so a dept link can't reach a student who
+ * didn't apply for that dept.
  */
 export async function getStudentCommunities(userId: string) {
   const { pathway } = await getStudentPathway(userId);
@@ -77,6 +81,8 @@ export async function getStudentCommunities(userId: string) {
   return db.community.findMany({
     where: {
       isActive: true,
+      // General is unconditional; the pathway branch is added only when the
+      // student actually has an approved pathway.
       OR: [{ pathway: null }, ...(pathway ? [{ pathway }] : [])],
     },
     orderBy: [{ pathway: "asc" }, { order: "asc" }],

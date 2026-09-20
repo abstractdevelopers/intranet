@@ -56,6 +56,55 @@ const COURSES = [
 const ELECTIVE_MONTHLY_PRICE_NGN = 15_000;
 const COMPULSORY_MONTHLY_PRICE_NGN = 0;
 
+/**
+ * WhatsApp campuses. The general community has no pathway and is visible to
+ * every student; each campus is visible only to students whose elective was
+ * accepted for that pathway. Names match the campuses as the academy refers
+ * to them.
+ */
+const COMMUNITIES = [
+  {
+    name: "General UCA Community",
+    description: "The academy-wide community — open to every UCA student.",
+    platform: "WHATSAPP",
+    url: "https://chat.whatsapp.com/COdoshnfo9EAV7Ndp3mDbm",
+    pathway: null,
+    order: 0,
+  },
+  {
+    name: "Graphic Design Campus",
+    description: "For students on the Graphics Design pathway.",
+    platform: "WHATSAPP",
+    url: "https://chat.whatsapp.com/EHdM94vPC3VErr0ufDW2rD",
+    pathway: "GRAPHIC_DESIGN",
+    order: 1,
+  },
+  {
+    name: "Video Editing Campus",
+    description: "For students on the Video Editing pathway.",
+    platform: "WHATSAPP",
+    url: "https://chat.whatsapp.com/EnUIjX2Tsnp1UGRAheDc43",
+    pathway: "VIDEO_EDITING",
+    order: 2,
+  },
+  {
+    name: "Communication & Influence Campus",
+    description: "For students on the Communication & Influence pathway.",
+    platform: "WHATSAPP",
+    url: "https://chat.whatsapp.com/DCjBHc6iUgs2wKtKtyN1t5",
+    pathway: "COMMUNICATION_INFLUENCE",
+    order: 3,
+  },
+  {
+    name: "Content Writing Campus",
+    description: "For students on the Content Writing pathway.",
+    platform: "WHATSAPP",
+    url: "https://chat.whatsapp.com/GDS2W0bKatKCNyF3uaOOPO",
+    pathway: "CONTENT_WRITING",
+    order: 4,
+  },
+];
+
 async function main() {
   for (const course of COURSES) {
     const price =
@@ -113,11 +162,28 @@ async function main() {
     });
   }
 
+  // Communities are keyed by name+pathway: there is no unique constraint, and
+  // upserting on name alone would let a duplicate row stack up on each run.
+  let communityCount = 0;
+  for (const community of COMMUNITIES) {
+    const existing = await prisma.community.findFirst({
+      where: { name: community.name, pathway: community.pathway },
+      select: { id: true },
+    });
+    if (existing) {
+      await prisma.community.update({ where: { id: existing.id }, data: community });
+    } else {
+      await prisma.community.create({ data: community });
+    }
+    communityCount++;
+  }
+
   console.log("Seed complete:");
   console.log(
     `  Courses: ${COURSES.length} (compulsory ₦${COMPULSORY_MONTHLY_PRICE_NGN.toLocaleString()}, elective ₦${ELECTIVE_MONTHLY_PRICE_NGN.toLocaleString()}/month)`
   );
   console.log(`  Founder accounts: ${adminEmails.join(", ")}`);
+  console.log(`  Communities: ${communityCount} (1 general + ${communityCount - 1} pathway campuses)`);
 }
 
 main()
