@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { requireStaff } from "@/lib/rbac";
 import { db } from "@/lib/db";
+import { DISCUSSION_FEED_ENABLED } from "@/lib/constants";
 import { Card } from "@/components/ui/card";
 import { Badge, statusTone } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty";
@@ -15,6 +17,7 @@ export default async function AdminDiscussionsPage({
   searchParams: Promise<{ q?: string; show?: string }>;
 }) {
   await requireStaff();
+  if (!DISCUSSION_FEED_ENABLED) notFound();
   const { q, show } = await searchParams;
   const query = q?.trim() ?? "";
   const includeHidden = show === "hidden";

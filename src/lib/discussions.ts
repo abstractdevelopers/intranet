@@ -1,6 +1,15 @@
 import { db } from "./db";
-import { PATHWAY_LABELS, type Pathway } from "./constants";
+import { DISCUSSION_FEED_ENABLED, PATHWAY_LABELS, type Pathway } from "./constants";
 import { getStudentPathway } from "./communities";
+
+/**
+ * The feed is locked off while the academy runs on WhatsApp communities. Every
+ * read and write checks this so the feature can't be reached by calling its
+ * APIs directly. Pages are also blocked, but this is the boundary that matters.
+ */
+export function isDiscussionFeedEnabled() {
+  return DISCUSSION_FEED_ENABLED;
+}
 
 /** A feed a student can read and post to. */
 export type FeedScope = {
@@ -15,6 +24,7 @@ export type FeedScope = {
  * two features stay consistent.
  */
 export async function getVisibleFeeds(userId: string): Promise<FeedScope[]> {
+  if (!DISCUSSION_FEED_ENABLED) return [];
   const { pathway } = await getStudentPathway(userId);
   const feeds: FeedScope[] = [{ pathway: null, label: "Academy" }];
   if (pathway) feeds.push({ pathway, label: PATHWAY_LABELS[pathway] });
@@ -30,6 +40,9 @@ export async function resolveWritablePathway(
   userId: string,
   requested: string | null | undefined
 ): Promise<{ ok: true; pathway: Pathway | null } | { ok: false; reason: string }> {
+  if (!DISCUSSION_FEED_ENABLED) {
+    return { ok: false, reason: "The discussion feed isn't available right now." };
+  }
   const { pathway: own } = await getStudentPathway(userId);
 
   if (!requested) return { ok: true, pathway: null };
@@ -55,6 +68,7 @@ export async function canAccessPost(
   userId: string,
   post: { pathway: string | null; status: string; authorId: string }
 ): Promise<boolean> {
+  if (!DISCUSSION_FEED_ENABLED) return false;
   if (!post.pathway) return true;
   const { pathway: own } = await getStudentPathway(userId);
   return own === post.pathway;
@@ -79,6 +93,7 @@ export async function getFeedPosts(
   userId: string,
   options: { pathway?: Pathway | null; take?: number } = {}
 ) {
+  if (!DISCUSSION_FEED_ENABLED) return [];
   const { pathway } = await getStudentPathway(userId);
   const feeds = options.pathway === undefined ? [null, pathway] : [options.pathway];
 
@@ -103,6 +118,7 @@ export async function getFeedPosts(
 
 /** A single post with its visible replies, or null when it isn't accessible. */
 export async function getPostThread(userId: string, postId: string) {
+  if (!DISCUSSION_FEED_ENABLED) return null;
   const post = await db.discussionPost.findFirst({
     where: { id: postId, status: "PUBLISHED" },
     include: {

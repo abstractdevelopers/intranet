@@ -4,8 +4,11 @@ import { db } from "@/lib/db";
 import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { notify } from "@/lib/audit";
 import { canAccessPost } from "@/lib/discussions";
+import { DISCUSSION_FEED_ENABLED } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
+
+const LOCKED = { error: "The discussion feed isn't available right now." };
 
 const schema = z.object({
   body: z.string().trim().min(1, "Write a reply before sending.").max(3000),
@@ -17,6 +20,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (!guard.ok) return guard.response;
   const user = guard.user;
   const { id: postId } = await params;
+
+  if (!DISCUSSION_FEED_ENABLED) return NextResponse.json(LOCKED, { status: 403 });
 
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {

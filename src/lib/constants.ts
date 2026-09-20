@@ -57,6 +57,14 @@ export const EXPERIENCE_LEVELS = [
 /** Length of the free first month in days. */
 export const TRIAL_DAYS = 30;
 
+/**
+ * The on-platform discussion feed. Built and tested, but locked off for now:
+ * the academy is using the existing WhatsApp communities instead, so the feed
+ * has no nav entry and its pages and APIs are closed. Flip this to true to
+ * bring it back — no other change is needed.
+ */
+export const DISCUSSION_FEED_ENABLED = false;
+
 export const CURRENCY = "NGN";
 
 /**

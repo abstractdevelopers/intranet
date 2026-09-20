@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
@@ -36,13 +35,6 @@ export default async function CommunityPage() {
           Your community links are tied to your pathway, so you always land in the right
           places without having to work out where you belong.
         </p>
-        <Link
-          href="/student/community/feed"
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-1 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-2"
-        >
-          <IconCommunication className="h-4 w-4" />
-          Open the discussion feed
-        </Link>
       </header>
 
       {/* Pathway card */}

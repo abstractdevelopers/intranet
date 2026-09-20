@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { canAccessPost } from "@/lib/discussions";
+import { DISCUSSION_FEED_ENABLED } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
+
+const LOCKED = { error: "The discussion feed isn't available right now." };
 
 /** Like / unlike a discussion post. */
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -11,6 +14,8 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   if (!guard.ok) return guard.response;
   const user = guard.user;
   const { id: postId } = await params;
+
+  if (!DISCUSSION_FEED_ENABLED) return NextResponse.json(LOCKED, { status: 403 });
 
   const post = await db.discussionPost.findFirst({
     where: { id: postId, status: "PUBLISHED" },

@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireOnboardedStudentApi } from "@/lib/rbac";
+import { DISCUSSION_FEED_ENABLED } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
+
+const LOCKED = { error: "The discussion feed isn't available right now." };
 
 /**
  * Delete one's own discussion post. Staff moderation lives in the admin portal
@@ -14,6 +17,8 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   if (!guard.ok) return guard.response;
   const user = guard.user;
   const { id: postId } = await params;
+
+  if (!DISCUSSION_FEED_ENABLED) return NextResponse.json(LOCKED, { status: 403 });
 
   const post = await db.discussionPost.findUnique({
     where: { id: postId },

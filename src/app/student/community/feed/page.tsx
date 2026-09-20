@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { requireOnboardedStudent } from "@/lib/rbac";
+import { DISCUSSION_FEED_ENABLED, PATHWAY_LABELS, type Pathway } from "@/lib/constants";
 import { getVisibleFeeds, getFeedPosts } from "@/lib/discussions";
-import { PATHWAY_LABELS, type Pathway } from "@/lib/constants";
 import { PostComposer } from "@/components/discussions/post-composer";
 import { PostCard } from "@/components/discussions/post-card";
 import { EmptyState } from "@/components/ui/empty";
@@ -19,6 +20,7 @@ export default async function FeedPage({
   searchParams: Promise<{ scope?: string }>;
 }) {
   const user = await requireOnboardedStudent();
+  if (!DISCUSSION_FEED_ENABLED) notFound();
   const { scope } = await searchParams;
 
   const feeds = await getVisibleFeeds(user.id);

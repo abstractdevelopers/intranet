@@ -3,8 +3,11 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { resolveWritablePathway } from "@/lib/discussions";
+import { DISCUSSION_FEED_ENABLED } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
+
+const LOCKED = { error: "The discussion feed isn't available right now." };
 
 const schema = z.object({
   title: z.string().trim().max(140).optional(),
@@ -18,6 +21,8 @@ export async function POST(request: Request) {
   const guard = await requireOnboardedStudentApi();
   if (!guard.ok) return guard.response;
   const user = guard.user;
+
+  if (!DISCUSSION_FEED_ENABLED) return NextResponse.json(LOCKED, { status: 403 });
 
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {

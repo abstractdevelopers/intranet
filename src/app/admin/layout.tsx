@@ -26,8 +26,7 @@ const SECTIONS: NavSection[] = [
     items: [
       { href: "/admin/captains-log", label: "Captain's Logs", icon: "Announcement" },
       { href: "/admin/projects", label: "Projects", icon: "Workspace" },
-      { href: "/admin/discussions", label: "Discussions", icon: "Communication" },
-      { href: "/admin/communities", label: "Communities", icon: "Users" },
+      { href: "/admin/communities", label: "Communities", icon: "Communication" },
       { href: "/admin/analytics", label: "Analytics", icon: "Analytics" },
       { href: "/admin/audit-logs", label: "Audit Logs", icon: "Audit" },
       { href: "/admin/settings", label: "Settings", icon: "Settings" },

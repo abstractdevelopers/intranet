@@ -3,8 +3,11 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/rbac";
 import { auditLog, notify } from "@/lib/audit";
+import { DISCUSSION_FEED_ENABLED } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
+
+const LOCKED = { error: "The discussion feed isn't available right now." };
 
 const schema = z.object({
   action: z.enum(["HIDE", "RESTORE", "DELETE"]),
@@ -20,6 +23,8 @@ const schema = z.object({
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const staff = await requireStaff();
   const { id } = await params;
+
+  if (!DISCUSSION_FEED_ENABLED) return NextResponse.json(LOCKED, { status: 403 });
 
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {

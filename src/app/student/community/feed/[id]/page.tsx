@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireOnboardedStudent } from "@/lib/rbac";
+import { DISCUSSION_FEED_ENABLED } from "@/lib/constants";
 import { getPostThread } from "@/lib/discussions";
 import { PostCard } from "@/components/discussions/post-card";
 import { ReplyForm } from "@/components/discussions/reply-form";
@@ -11,6 +12,7 @@ export const metadata = { title: "Discussion" };
 
 export default async function ThreadPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireOnboardedStudent();
+  if (!DISCUSSION_FEED_ENABLED) notFound();
   const { id } = await params;
 
   // Access is enforced in the helper: another pathway's thread is a 404, not a
