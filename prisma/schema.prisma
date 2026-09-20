@@ -66,6 +66,9 @@ model User {
   followers            Follow[]               @relation("Following")
   captainLogs          CaptainLog[]
   reviewedCaptainLogs  CaptainLog[]           @relation("CaptainLogReviewer")
+  discussionPosts      DiscussionPost[]
+  discussionReplies    DiscussionReply[]
+  discussionLikes      DiscussionLike[]
 }
 
 model Profile {
@@ -683,4 +686,74 @@ model CaptainLog {
   @@unique([userId, weekNumber])
   @@index([userId, weekNumber])
   @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Community feed (#15, #16)
+// ---------------------------------------------------------------------------
+
+/**
+ * A discussion post in the on-platform academy feed. `pathway` null means the
+ * general academy feed every student can read and post to; a set pathway
+ * scopes the post to students on that pathway only. This keeps conversation
+ * inside the intranet instead of in third-party chat groups.
+ */
+model DiscussionPost {
+  id           String    @id @default(cuid())
+  authorId     String
+  author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  // null = general academy feed; otherwise the pathway this post belongs to.
+  pathway      String?
+  title        String?
+  body         String
+  // PUBLISHED = visible in the feed; HIDDEN = removed from the feed by staff.
+  // Hidden posts stay in the database so moderation remains reversible.
+  status       String    @default("PUBLISHED") // PUBLISHED | HIDDEN
+  hiddenReason String?
+  hiddenAt     DateTime?
+  hiddenById   String?
+  pinned       Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  replies DiscussionReply[]
+  likes   DiscussionLike[]
+
+  @@index([pathway, status, createdAt])
+  @@index([authorId])
+}
+
+/**
+ * A reply to a discussion post. Replies inherit the post's visibility, so no
+ * separate pathway column is kept — scoping always follows the parent post.
+ */
+model DiscussionReply {
+  id           String         @id @default(cuid())
+  postId       String
+  post         DiscussionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId     String
+  author       User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  body         String
+  status       String         @default("PUBLISHED") // PUBLISHED | HIDDEN
+  hiddenReason String?
+  hiddenAt     DateTime?
+  hiddenById   String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([postId, status, createdAt])
+  @@index([authorId])
+}
+
+/** A student's like on a post. One like per student per post. */
+model DiscussionLike {
+  id        String         @id @default(cuid())
+  postId    String
+  post      DiscussionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now())
+
+  @@unique([postId, userId])
+  @@index([userId])
 }

@@ -27,9 +27,15 @@ const SECTIONS: NavSection[] = [
     ],
   },
   {
+    label: "Community",
+    items: [
+      { href: "/student/community/feed", label: "Discussion Feed", icon: "Communication" },
+      { href: "/student/community", label: "Communities", icon: "Users" },
+    ],
+  },
+  {
     label: "You",
     items: [
-      { href: "/student/community", label: "Communities", icon: "Communication" },
       { href: "/student/profile", label: "Profile", icon: "Profile" },
     ],
   },
