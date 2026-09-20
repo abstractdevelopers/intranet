@@ -19,6 +19,8 @@ export function AuthForm({
     type: string;
     autoComplete?: string;
     placeholder?: string;
+    /** Pre-filled value. Required for `type: "hidden"` fields like tokens. */
+    value?: string;
   }[];
   onSuccess?: (data: { redirect?: string }) => void;
 }) {
@@ -59,6 +61,13 @@ export function AuthForm({
       {fields.map((field) => {
         const isPassword = field.type === "password";
         const show = revealed[field.name] ?? false;
+
+        // Hidden inputs carry server-issued values such as reset tokens and
+        // must never be rendered with a visible label wrapper.
+        if (field.type === "hidden") {
+          return <input key={field.name} type="hidden" name={field.name} defaultValue={field.value ?? ""} />;
+        }
+
         return (
           <div key={field.name} className="space-y-1.5">
             <label htmlFor={field.name} className="block text-sm font-medium">

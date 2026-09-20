@@ -28,6 +28,9 @@ const WAITING_LIST_ONLY: Prisma.UserWhereInput = {
   enrollments: { none: {} },
 };
 
+/** Waiting-list accounts that have not yet been emailed an invitation. */
+const NOT_INVITED: Prisma.UserWhereInput = { welcomeEmailSentAt: null };
+
 const SIGNED_UP: Prisma.UserWhereInput = {
   OR: [
     { username: { not: null } },
@@ -36,12 +39,13 @@ const SIGNED_UP: Prisma.UserWhereInput = {
   ],
 };
 
-type Tab = "all" | "signedup" | "waiting";
+type Tab = "all" | "signedup" | "waiting" | "invited";
 
 const TAB_LABELS: Record<Tab, string> = {
   all: "All",
   signedup: "Signed up",
   waiting: "Waiting list",
+  invited: "Invited",
 };
 
 export default async function StudentsPage({
@@ -52,7 +56,10 @@ export default async function StudentsPage({
   await requireStaff();
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
-  const tab: Tab = params.tab === "signedup" || params.tab === "waiting" ? params.tab : "all";
+  const tab: Tab =
+    params.tab === "signedup" || params.tab === "waiting" || params.tab === "invited"
+      ? params.tab
+      : "all";
   const page = Math.max(1, Number.parseInt(params.page ?? "1", 10) || 1);
 
   const searchFilter: Prisma.UserWhereInput = query
@@ -66,7 +73,13 @@ export default async function StudentsPage({
     : {};
 
   const tabFilter: Prisma.UserWhereInput =
-    tab === "waiting" ? WAITING_LIST_ONLY : tab === "signedup" ? SIGNED_UP : {};
+    tab === "waiting"
+      ? WAITING_LIST_ONLY
+      : tab === "invited"
+        ? { AND: [WAITING_LIST_ONLY, { welcomeEmailSentAt: { not: null } }] }
+        : tab === "signedup"
+          ? SIGNED_UP
+          : {};
 
   const where: Prisma.UserWhereInput = {
     role: "STUDENT",
@@ -74,25 +87,31 @@ export default async function StudentsPage({
   };
 
   // Counts are scoped to the search so the tabs reflect what staff are viewing.
-  const [students, filteredTotal, allCount, signedUpCount, waitingCount] = await Promise.all([
-    db.user.findMany({
-      where,
-      include: { profile: true, enrollments: { include: { course: true } } },
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * PER_PAGE,
-      take: PER_PAGE,
-    }),
-    db.user.count({ where }),
-    db.user.count({ where: { role: "STUDENT", AND: [{}, searchFilter] } }),
-    db.user.count({ where: { role: "STUDENT", AND: [SIGNED_UP, searchFilter] } }),
-    db.user.count({ where: { role: "STUDENT", AND: [WAITING_LIST_ONLY, searchFilter] } }),
-  ]);
+  const [students, filteredTotal, allCount, signedUpCount, waitingCount, pendingInviteCount, invitedCount] =
+    await Promise.all([
+      db.user.findMany({
+        where,
+        include: { profile: true, enrollments: { include: { course: true } } },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * PER_PAGE,
+        take: PER_PAGE,
+      }),
+      db.user.count({ where }),
+      db.user.count({ where: { role: "STUDENT", AND: [{}, searchFilter] } }),
+      db.user.count({ where: { role: "STUDENT", AND: [SIGNED_UP, searchFilter] } }),
+      db.user.count({ where: { role: "STUDENT", AND: [WAITING_LIST_ONLY, searchFilter] } }),
+      // Invite progress must be counted independently of the search box and the
+      // current page, or the panel appears to reset after every refresh.
+      db.user.count({ where: { role: "STUDENT", AND: [WAITING_LIST_ONLY, NOT_INVITED] } }),
+      db.user.count({ where: { role: "STUDENT", AND: [WAITING_LIST_ONLY, { welcomeEmailSentAt: { not: null } }] } }),
+    ]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTotal / PER_PAGE));
   const counts: Record<Tab, number> = {
     all: allCount,
     signedup: signedUpCount,
     waiting: waitingCount,
+    invited: invitedCount,
   };
 
   const tabHref = (t: Tab, p = 1) => {
@@ -120,7 +139,7 @@ export default async function StudentsPage({
       <section>
         <p className="eyebrow">Waiting list</p>
         <Card className="mt-3 p-6">
-          <WelcomeBatchPanel waiting={waitingCount} />
+          <WelcomeBatchPanel pending={pendingInviteCount} invited={invitedCount} total={waitingCount} />
         </Card>
       </section>
 
@@ -137,7 +156,7 @@ export default async function StudentsPage({
       </form>
 
       <div className="flex flex-wrap gap-2" role="tablist" aria-label="Student filters">
-        {(["all", "signedup", "waiting"] as Tab[]).map((t) => (
+        {(["all", "signedup", "waiting", "invited"] as Tab[]).map((t) => (
           <Link
             key={t}
             href={tabHref(t)}
@@ -175,8 +194,10 @@ export default async function StudentsPage({
               query
                 ? "Try a different search."
                 : tab === "waiting"
-                  ? "Nobody is waiting on an unclaimed account."
-                  : "Students will appear here once they sign up."
+                  ? "Every waiting-list account has been invited."
+                  : tab === "invited"
+                    ? "Nobody has been invited yet."
+                    : "Students will appear here once they sign up."
             }
           />
         ) : (

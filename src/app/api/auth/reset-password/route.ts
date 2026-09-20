@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { consumeEmailToken, hashPassword } from "@/lib/auth";
 
 const schema = z.object({
-  token: z.string().min(10).max(200),
+  token: z.string().min(10, "This reset link is invalid or has expired.").max(200),
   password: z.string().min(8, "Password must be at least 8 characters.").max(200),
 });
 
