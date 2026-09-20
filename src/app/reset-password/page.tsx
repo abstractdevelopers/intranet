@@ -29,7 +29,7 @@ function ResetForm() {
       endpoint="/api/auth/reset-password"
       submitLabel="Update password"
       fields={[
-        { name: "token", label: "", type: "hidden" },
+        { name: "token", label: "", type: "hidden", value: token },
         { name: "password", label: "New password", type: "password", autoComplete: "new-password", placeholder: "At least 8 characters" },
       ]}
       onSuccess={() => setDone(true)}
