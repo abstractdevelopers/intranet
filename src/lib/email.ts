@@ -9,7 +9,13 @@
  * delivery is skipped; in-app notifications always work regardless.
  * Swap `sendEmail` to change providers without touching call sites.
  */
-export async function sendEmail(input: { to: string; subject: string; body: string }) {
+export async function sendEmail(input: {
+  to: string;
+  subject: string;
+  body: string;
+  /** Branded HTML version. Plain text is always kept as the fallback. */
+  html?: string;
+}) {
   const key = process.env.SENDBYTE_API_KEY;
   const from = process.env.EMAIL_FROM ?? "UCA Sandbox <no-reply@uca.sandbox>";
   if (!key) {
@@ -25,6 +31,7 @@ export async function sendEmail(input: { to: string; subject: string; body: stri
         to: [input.to],
         subject: input.subject,
         text: input.body,
+        ...(input.html ? { html: input.html } : {}),
       }),
     });
     if (!res.ok) console.error("[email:failed]", res.status, await res.text());

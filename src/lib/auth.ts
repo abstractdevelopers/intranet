@@ -123,9 +123,13 @@ export function usernameCooldownMs(changedAt: Date | null, now: Date = new Date(
   return Math.max(0, readyAt.getTime() - now.getTime());
 }
 
-export async function createEmailToken(userId: string, type: "VERIFY_EMAIL" | "PASSWORD_RESET") {
+export async function createEmailToken(
+  userId: string,
+  type: "VERIFY_EMAIL" | "PASSWORD_RESET",
+  ttlMs = 1000 * 60 * 60 // 1 hour for self-service resets
+) {
   const token = crypto.randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+  const expiresAt = new Date(Date.now() + ttlMs);
   await db.emailToken.create({ data: { userId, token, type, expiresAt } });
   return token;
 }

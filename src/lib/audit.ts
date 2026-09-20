@@ -1,5 +1,6 @@
 import { db } from "./db";
 import { sendEmail } from "./email";
+import { notificationEmail } from "./email-templates";
 
 // Notification types that also go out by email (the rest stay in-app).
 const EMAIL_TYPES = new Set([
@@ -53,11 +54,11 @@ export async function notify(input: {
       select: { email: true },
     });
     if (user) {
-      await sendEmail({
-        to: user.email,
-        subject: input.title,
+      const { subject, html, text } = notificationEmail({
+        title: input.title,
         body: input.body ?? input.title,
       });
+      await sendEmail({ to: user.email, subject, body: text, html });
     }
   }
 }

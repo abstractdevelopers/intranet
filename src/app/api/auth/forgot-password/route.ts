@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { createEmailToken } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
+import { passwordResetEmail } from "@/lib/email-templates";
 
 const schema = z.object({ email: z.string().trim().email().max(200) });
 
@@ -29,17 +30,8 @@ export async function POST(request: Request) {
     const token = await createEmailToken(user.id, "PASSWORD_RESET");
     const link = `${appOrigin(request)}/reset-password?token=${token}`;
 
-    await sendEmail({
-      to: user.email,
-      subject: "Reset your UCA Sandbox password",
-      body: [
-        "We received a request to reset your UCA Sandbox password.",
-        "",
-        `Set a new password here: ${link}`,
-        "",
-        "This link expires in 1 hour. If you didn't request it, you can ignore this email.",
-      ].join("\n"),
-    });
+    const { subject, html, text } = passwordResetEmail({ link });
+    await sendEmail({ to: user.email, subject, body: text, html });
 
     // Without a mail provider configured the link only exists here, so surface
     // it in the logs rather than leaving the reset flow silently broken.
