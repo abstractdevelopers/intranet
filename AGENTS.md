@@ -52,6 +52,8 @@ Never rename it to "LMS" / "Academy Portal" as the product identity.
 - `NEXT_PUBLIC_APP_URL` must be set or token links and the email logo point at the wrong host.
 - Waiting-list accounts (imported 2026-09-20, ~655) are identified by `WAITING_LIST_ONLY` in `/admin/students`: no username + no onboarding + no application. They hold no known password, so access is only via "forgot password" or a welcome invite.
 - Waiting-list invites: `/admin/students` → "Send next 25 invites" (batches of 25, `welcomeEmailSentAt` stamped before send so retries can't duplicate).
+- Bulk emails: `scripts/send-notice.ts`, dry-run unless `--apply`; `--limit=N` caps a run, `--to=` targets one address, `--resend` includes already-sent. Progress columns (`welcomeEmailSentAt`, `noticeEmailSentAt`) are stamped BEFORE sending, so a rerun resumes and can never double-send. Sent 2026-09-20: 656 invites + 683 notices.
+- Auth form gotcha: `AuthForm` renders hidden fields only when the field gets an explicit `value`. A hidden token with no value fails silently as "link invalid or expired" — check the rendered input, not the server.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
