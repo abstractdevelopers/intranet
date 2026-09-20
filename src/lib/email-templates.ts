@@ -191,7 +191,7 @@ export function welcomeEmail(input: { email: string; link: string }) {
       "To get started, set your password using the button below. You'll then choose a username and complete your profile.",
     ],
     cta: { label: "Set your password", url: input.link },
-    note: "For your security, this link can only be used once and expires in one hour. If it expires, just use “Forgot password” on the sign-in page to get a new one.",
+    note: "This link can only be used once. It stays valid for 14 days, and if it ever expires just use “Forgot password” on the sign-in page to get a new one.",
     signoff: "— The UCA Sandbox team",
   });
   const text = [
@@ -203,11 +203,53 @@ export function welcomeEmail(input: { email: string; link: string }) {
     "",
     `Set your password here: ${input.link}`,
     "",
-    "This link can only be used once and expires in one hour.",
+    "This link can only be used once. It stays valid for 14 days, and if it ever expires use \"Forgot password\" on the sign-in page.",
     "",
     "— The UCA Sandbox team",
   ].join("\n");
   return { subject: "You're in — welcome to UCA Sandbox", html, text };
+}
+/**
+ * Apology notice after the sign-in and password-reset outage.
+ *
+ * Deliberately carries no token: a bulk send must not mint one link per
+ * recipient, so people are pointed at the sign-in page and asked to request
+ * their own. That also keeps this email valid forever.
+ */
+export function passwordFixedNoticeEmail(input: { email: string; loginUrl: string; forgotUrl: string }) {
+  const html = layout({
+    eyebrow: "Service update",
+    heading: "Password access is working again",
+    paragraphs: [
+      "We're sorry — and we want to be upfront about what happened.",
+      "Between the point we sent your invitation and now, a fault on our side stopped password links from being accepted. Anyone who tried to set a password via an invitation link, or via \u201cForgot password\u201d, was told the link was invalid or expired. That message was wrong and it was not your fault. Your link had not expired.",
+      "This affected everyone, and we are sorry for the confusion it caused.",
+      "The problem is now fixed and verified end to end. If you have not yet set a password, you can do so using the link in your invitation email, or by choosing \u201cForgot password\u201d on the sign-in page.",
+      "Nothing about your account or your place has changed. Your first month is still free.",
+    ],
+    cta: { label: "Go to sign in", url: input.loginUrl },
+    note: "Prefer a fresh link? Open the sign-in page and choose \u201cForgot password\u201d, then enter this email address. You will get a new link that stays valid for one hour.",
+    signoff: "\u2014 The UCA Sandbox team",
+  });
+  const text = [
+    "Password access is working again",
+    "",
+    "We're sorry — and we want to be upfront about what happened.",
+    "",
+    "Between the point we sent your invitation and now, a fault on our side stopped password links from being accepted. Anyone who tried to set a password via an invitation link, or via \"Forgot password\", was told the link was invalid or expired. That message was wrong and it was not your fault. Your link had not expired.",
+    "",
+    "This affected everyone, and we are sorry for the confusion it caused.",
+    "",
+    "The problem is now fixed and verified end to end. If you have not yet set a password, you can do so using the link in your invitation email, or by choosing \"Forgot password\" on the sign-in page.",
+    "",
+    `Sign in: ${input.loginUrl}`,
+    `New password: ${input.forgotUrl}`,
+    "",
+    "Nothing about your account or your place has changed. Your first month is still free.",
+    "",
+    "\u2014 The UCA Sandbox team",
+  ].join("\n");
+  return { subject: "Fixed: you can now set your UCA Sandbox password", html, text };
 }
 
 /** Wrap plain notification text in the branded shell. */

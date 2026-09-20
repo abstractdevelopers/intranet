@@ -36,6 +36,8 @@ model User {
   usernameChangedAt     DateTime?
   // When a welcome invitation was emailed, so bulk invites are never repeated.
   welcomeEmailSentAt    DateTime?
+  // When the password-access-fixed notice was emailed.
+  noticeEmailSentAt     DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
