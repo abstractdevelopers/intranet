@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     // Without a mail provider configured the link only exists here, so surface
     // it in the logs rather than leaving the reset flow silently broken.
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.SENDBYTE_API_KEY) {
       console.info(`[uca] password reset link for ${user.email}: ${link}`);
     }
   }
