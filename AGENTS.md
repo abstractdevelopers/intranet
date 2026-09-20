@@ -48,7 +48,10 @@ Never rename it to "LMS" / "Academy Portal" as the product identity.
 - Theme: class-based dark mode, tokens in `src/app/globals.css` (@theme), Poppins via next/font.
 - UI primitives in `src/components/ui/` — reuse them; both themes always.
 - Friendly client errors; technical details only in server logs.
-- Dev email links (verify/reset) are console.logged server-side until an email provider is added.
+- Email: SendByte (`SENDBYTE_API_KEY`, `EMAIL_FROM`), NOT Resend. `EMAIL_FROM`'s domain must be verified in the SendByte dashboard. Templates in `src/lib/email-templates.ts`; brand colours are duplicated there because email clients strip CSS variables. The logo is a WHITE PNG — keep it on the purple band, never a light background.
+- `NEXT_PUBLIC_APP_URL` must be set or token links and the email logo point at the wrong host.
+- Waiting-list accounts (imported 2026-09-20, ~655) are identified by `WAITING_LIST_ONLY` in `/admin/students`: no username + no onboarding + no application. They hold no known password, so access is only via "forgot password" or a welcome invite.
+- Waiting-list invites: `/admin/students` → "Send next 25 invites" (batches of 25, `welcomeEmailSentAt` stamped before send so retries can't duplicate).
 
 <!-- BEGIN:nextjs-agent-rules -->
 
