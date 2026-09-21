@@ -42,6 +42,9 @@ model User {
   // each audience tracks its own send: waiting-list vs already-signed-up.
   onboardingWeekEmailSentAt        DateTime?
   onboardingWeekSignedUpEmailSentAt DateTime?
+  // Set when someone unsubscribes from bulk email. Bulk campaigns honour it;
+  // transactional mail (password resets, enrollment decisions) does not.
+  emailOptOutAt         DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
@@ -77,6 +80,9 @@ model User {
   discussionPosts      DiscussionPost[]
   discussionReplies    DiscussionReply[]
   discussionLikes      DiscussionLike[]
+  emailCampaignRecipients EmailCampaignRecipient[]
+  createdEmailTemplates   EmailTemplate[]
+  createdEmailCampaigns   EmailCampaign[]
 }
 
 model Profile {
@@ -764,4 +770,101 @@ model DiscussionLike {
 
   @@unique([postId, userId])
   @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Email campaigns (Mailchimp-style announcements)
+// ---------------------------------------------------------------------------
+
+/**
+ * A reusable, brand-styled email layout. Five built-in styles ship as code
+ * (see src/lib/email-templates.ts); admins can also save custom templates.
+ * `body` holds plain text — paragraphs and "Label: URL" link lines — which the
+ * renderer turns into branded HTML.
+ */
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  // Built-in style key (e.g. ANNOUNCEMENT), or CUSTOM for admin-authored.
+  kind        String   @default("CUSTOM")
+  eyebrow     String?
+  heading     String
+  body        String
+  ctaLabel    String?
+  ctaUrl      String?
+  note        String?
+  signoff     String?
+  // JSON array of Document ids used as banner images, in display order.
+  imageIds    String?
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  isArchived  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  campaigns   EmailCampaign[]
+
+  @@index([isArchived, createdAt])
+}
+
+/**
+ * One bulk send. Audience rules are stored as a JSON blob resolved at send
+ * time, so a scheduled campaign reflects who matches when it actually runs.
+ */
+model EmailCampaign {
+  id          String        @id @default(cuid())
+  title       String
+  subject     String
+  templateId  String?
+  template    EmailTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  // Content is snapshotted here, so later template edits never rewrite a
+  // campaign that has already gone out.
+  eyebrow     String?
+  heading     String
+  body        String
+  ctaLabel    String?
+  ctaUrl      String?
+  note        String?
+  signoff     String?
+  imageIds    String?
+
+  // DRAFT | SCHEDULED | SENDING | SENT | CANCELED | FAILED
+  status      String        @default("DRAFT")
+  // JSON audience rules: { audience, courseIds, pathway }.
+  audience    String
+  audienceSize Int?
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdById String
+  createdBy   User          @relation(fields: [createdById], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  recipients  EmailCampaignRecipient[]
+
+  @@index([status, scheduledAt])
+  @@index([createdAt])
+}
+
+/**
+ * Per-recipient delivery row. Rows are claimed in batches as a send runs, so a
+ * campaign that dies mid-way resumes from exactly where it stopped and can
+ * never email the same person twice.
+ */
+model EmailCampaignRecipient {
+  id         String        @id @default(cuid())
+  campaignId String
+  campaign   EmailCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email      String
+  // PENDING | SENT | FAILED | SKIPPED
+  status     String        @default("PENDING")
+  error      String?
+  sentAt     DateTime?
+  createdAt  DateTime      @default(now())
+
+  @@index([campaignId, status])
+  @@index([email])
 }

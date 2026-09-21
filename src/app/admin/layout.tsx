@@ -18,6 +18,7 @@ const SECTIONS: NavSection[] = [
       { href: "/admin/assignments", label: "Assignments", icon: "Assignments" },
       { href: "/admin/submissions", label: "Submissions", icon: "File" },
       { href: "/admin/announcements", label: "Announcements", icon: "Announcement" },
+      { href: "/admin/campaigns", label: "Email campaigns", icon: "Communication" },
       { href: "/admin/calendar", label: "Calendar", icon: "Calendar" },
     ],
   },
@@ -25,6 +26,7 @@ const SECTIONS: NavSection[] = [
     label: "Academy",
     items: [
       { href: "/admin/captains-log", label: "Captain's Logs", icon: "Announcement" },
+      { href: "/admin/notifications", label: "Notifications", icon: "Bell" },
       { href: "/admin/projects", label: "Projects", icon: "Workspace" },
       { href: "/admin/communities", label: "Communities", icon: "Communication" },
       { href: "/admin/analytics", label: "Analytics", icon: "Analytics" },

@@ -44,6 +44,14 @@ type LayoutOptions = {
   note?: string;
   /** Optional sign-off line. */
   signoff?: string;
+  /** Public image URLs rendered as full-width banners below the hero. */
+  images?: string[];
+  /** Extra footer line, e.g. a postal address for bulk mail compliance. */
+  footerNote?: string;
+  /** When set, the footer carries an unsubscribe link for bulk campaigns. */
+  unsubscribeUrl?: string;
+  /** Preview text shown in the inbox list instead of the heading. */
+  preheader?: string;
 };
 
 /**
@@ -56,6 +64,13 @@ function layout(options: LayoutOptions) {
     .map(
       (p) =>
         `<p style="margin:0 0 16px;font-family:${FONT};font-size:15px;line-height:24px;color:${INK};">${esc(p)}</p>`
+    )
+    .join("");
+
+  const images = (options.images ?? [])
+    .map(
+      (url) =>
+        `<img src="${esc(url)}" alt="" width="528" style="display:block;width:100%;max-width:528px;height:auto;border:0;outline:none;border-radius:8px;margin:0 0 20px;" />`
     )
     .join("");
 
@@ -95,6 +110,16 @@ function layout(options: LayoutOptions) {
       )}</p>`
     : "";
 
+  const footerLines = [
+    "UCA Sandbox — Unify Creator Academy",
+    options.footerNote ?? "This message was sent to you because you have a UCA Sandbox account.",
+  ];
+  if (options.unsubscribeUrl) {
+    footerLines.push(
+      `<a href="${esc(options.unsubscribeUrl)}" target="_blank" style="color:${BRAND_1};text-decoration:underline;">Unsubscribe from academy emails</a>`
+    );
+  }
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,7 +130,9 @@ function layout(options: LayoutOptions) {
 </head>
 <body style="margin:0;padding:0;background-color:${SURFACE_2};">
 <!-- Preview text, hidden in the body but shown in the inbox list. -->
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc(options.heading)}</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc(
+    options.preheader ?? options.heading
+  )}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${SURFACE_2};padding:32px 12px;">
   <tr>
     <td align="center">
@@ -127,6 +154,7 @@ function layout(options: LayoutOptions) {
         <!-- Body -->
         <tr>
           <td style="padding:32px 36px 36px;">
+            ${images}
             ${paragraphs}
             ${cta}
             ${note}
@@ -138,8 +166,7 @@ function layout(options: LayoutOptions) {
         <tr>
           <td bgcolor="${SURFACE_2}" style="padding:20px 36px;border-top:1px solid ${BORDER};">
             <p style="margin:0;font-family:${FONT};font-size:12px;line-height:20px;color:${TEXT_MUTED};">
-              UCA Sandbox — Unify Creator Academy<br />
-              This message was sent to you because you have a UCA Sandbox account.
+              ${footerLines.join("<br />")}
             </p>
           </td>
         </tr>
