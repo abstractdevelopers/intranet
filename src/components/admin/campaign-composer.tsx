@@ -270,7 +270,33 @@ export function CampaignComposer({ courses, styles }: { courses: Course[]; style
         setError(data.error ?? "We couldn't start this send.");
         return;
       }
-      setNotice("Sending has started in the background. Progress updates below.");
+
+      // The plan's cron only runs daily, so keep the browser driving the send
+      // to completion. Each call sends another slice; we stop on the first
+      // error and leave the remainder for the next DRAIN attempt.
+      let progress = data.progress as { sent: number; failed: number; remaining: number; done: boolean } | undefined;
+      let guard = 0;
+      while (progress && !progress.done && guard < 60) {
+        guard += 1;
+        setNotice(`Sending — ${progress.sent} delivered, ${progress.remaining} to go…`);
+        const next = await fetch(`/api/admin/campaigns/${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "DRAIN" }),
+        });
+        if (!next.ok) break;
+        const nd = await next.json().catch(() => ({}));
+        if (!nd?.progress) break;
+        progress = nd.progress;
+      }
+
+      if (progress) {
+        setNotice(
+          progress.done
+            ? `Done. ${progress.sent} delivered${progress.failed ? `, ${progress.failed} failed` : ""}.`
+            : `Paused after ${progress.sent} sends with ${progress.remaining} left. Press "Resume send" to continue.`
+        );
+      }
       router.refresh();
     });
 

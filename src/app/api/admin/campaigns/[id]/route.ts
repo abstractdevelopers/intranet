@@ -3,10 +3,10 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/rbac";
 import { auditLog } from "@/lib/audit";
-import { runCampaign, materialiseRecipients } from "@/lib/campaign-sender";
+import { runCampaign, materialiseRecipients, INTERACTIVE_BUDGET_MS } from "@/lib/campaign-sender";
 
 const schema = z.object({
-  action: z.enum(["SEND_NOW", "SCHEDULE", "CANCEL", "RETRY_FAILED"]),
+  action: z.enum(["SEND_NOW", "SCHEDULE", "CANCEL", "RETRY_FAILED", "DRAIN"]),
   scheduledAt: z.string().datetime().optional(),
 });
 
@@ -103,8 +103,19 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       where: { campaignId: id, status: "FAILED" },
       data: { status: "PENDING", error: null },
     });
-    const progress = await runCampaign(id, 5);
+    const progress = await runCampaign(id, INTERACTIVE_BUDGET_MS);
     return NextResponse.json({ ok: true, reopened: reopened.count, progress });
+  }
+
+  // DRAIN: keep sending a campaign that is already mid-flight. The admin UI
+  // calls this in a loop after "Send now" so a send completes in the browser
+  // instead of waiting for the daily cron to finish it.
+  if (parsed.data.action === "DRAIN") {
+    if (!["SENDING", "SCHEDULED", "DRAFT"].includes(campaign.status)) {
+      return NextResponse.json({ ok: true, progress: null, idle: true });
+    }
+    const progress = await runCampaign(id, INTERACTIVE_BUDGET_MS);
+    return NextResponse.json({ ok: true, progress });
   }
 
   // SEND_NOW: only from a pre-send state, so a click can't re-drive a live run.
@@ -115,7 +126,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     );
   }
   await materialiseRecipients(id);
-  const progress = await runCampaign(id, 5);
+  const progress = await runCampaign(id, INTERACTIVE_BUDGET_MS);
   await auditLog({ actorId: staff.id, action: "CAMPAIGN_SENT", targetType: "EmailCampaign", targetId: id });
   return NextResponse.json({ ok: true, progress });
 }

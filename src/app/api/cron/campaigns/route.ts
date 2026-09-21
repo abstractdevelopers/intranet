@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/rbac";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 /**
  * Background sender. Vercel Cron calls this on a schedule; it picks up any

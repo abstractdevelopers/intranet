@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Action = "SEND_NOW" | "CANCEL" | "RETRY_FAILED";
+type Action = "SEND_NOW" | "CANCEL" | "RETRY_FAILED" | "DRAIN";
 
 /**
  * Per-campaign controls in the list. The available actions depend on status:
@@ -41,6 +41,39 @@ export function CampaignRowActions({
       return;
     }
     router.refresh();
+  }
+
+  /**
+   * Drive a paused or in-flight send to completion. On this plan the cron only
+   * runs once a day, so the "Resume send" button loops the DRAIN action until
+   * the campaign reports done.
+   */
+  async function resume() {
+    setBusy("DRAIN");
+    setError(null);
+    let guard = 0;
+    try {
+      let progress: { done: boolean } | undefined;
+      do {
+        guard += 1;
+        const res = await fetch(`/api/admin/campaigns/${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "DRAIN" }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setError(data.error ?? "We couldn't continue that send.");
+          break;
+        }
+        const data = await res.json().catch(() => ({}));
+        progress = data?.progress;
+        if (!progress) break;
+      } while (!progress.done && guard < 60);
+    } finally {
+      setBusy(null);
+      router.refresh();
+    }
   }
 
   async function remove() {
@@ -91,7 +124,13 @@ export function CampaignRowActions({
       ) : null}
 
       {status === "SENDING" ? (
-        <span className="text-xs text-text-muted">Sending in the background…</span>
+        <button
+          onClick={resume}
+          disabled={busy !== null}
+          className="rounded-lg bg-brand-1 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-brand-2 disabled:opacity-50"
+        >
+          {busy === "DRAIN" ? "Sending…" : "Resume send"}
+        </button>
       ) : null}
 
       {status === "SENT" && sentCount > 0 ? (

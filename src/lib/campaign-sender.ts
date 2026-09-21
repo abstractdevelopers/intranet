@@ -102,8 +102,28 @@ export function describeAudience(rules: AudienceRules, courseNames: string[] = [
   }
 }
 
-/** How many recipients the public app URL should be advertised as. */
-export const BATCH_SIZE = 40;
+/**
+ * How many recipients are claimed from the queue per round, and how many are
+ * sent in parallel. Claims are deliberately kept small: a row is marked
+ * SENDING before its send and never retried, so a hard kill can skip at most
+ * one chunk.
+ */
+const CLAIM_CHUNK = 25;
+const CONCURRENCY = 15;
+
+/**
+ * Wall-clock budget for one invocation. Vercel Hobby caps functions at 60s, so
+ * this leaves headroom to record outcomes before the platform kills the run.
+ * Campaigns that don't finish are resumed by the next run.
+ */
+export const TIME_BUDGET_MS = 45_000;
+
+/**
+ * Shorter budget for a send kicked off from the admin UI, so the "Send now"
+ * click returns quickly instead of holding the browser for the full window.
+ * Whatever is left drains on the next worker run.
+ */
+export const INTERACTIVE_BUDGET_MS = 20_000;
 
 function apiKey() {
   const key = process.env.SENDBYTE_API_KEY;
@@ -216,11 +236,15 @@ export type SendProgress = {
 };
 
 /**
- * Send up to `maxBatches` chunks of a campaign. Returns after the batch limit
- * so a serverless invocation stays short; the cron job calls again until the
- * campaign reports `done`.
+ * Send a campaign until it finishes or the time budget runs out.
+ *
+ * Rows are claimed in small chunks and marked SENDING before the provider call,
+ * so a hard kill can skip at most one chunk but can never email anyone twice.
+ * Outcomes are written back in bulk. A run that stops early leaves PENDING rows
+ * behind, and the next run picks them up.
  */
-export async function runCampaign(campaignId: string, maxBatches = 5): Promise<SendProgress> {
+export async function runCampaign(campaignId: string, timeBudgetMs = TIME_BUDGET_MS): Promise<SendProgress> {
+  const startedAt = Date.now();
   const campaign = await db.emailCampaign.findUnique({
     where: { id: campaignId },
     select: {
@@ -252,38 +276,57 @@ export async function runCampaign(campaignId: string, maxBatches = 5): Promise<S
   const baseHtml = await campaignHtml(campaign);
   const baseText = campaignPlainText(campaign);
 
-  for (let batch = 0; batch < maxBatches; batch++) {
-    const claimed = await claimRecipients(campaignId, BATCH_SIZE);
+  while (Date.now() - startedAt < timeBudgetMs) {
+    const claimed = await claimRecipients(campaignId, CLAIM_CHUNK);
     if (claimed.length === 0) break;
 
-    await Promise.all(
-      claimed.map(async (recipient) => {
-        try {
-          // One render, many recipients: only the unsubscribe link differs.
-          const unsubscribe = await unsubscribeUrlFor(recipient.email);
-          const html = baseHtml.replaceAll(UNSUBSCRIBE_TOKEN, unsubscribe);
-          const text = `${baseText}\n\nUnsubscribe: ${unsubscribe}`;
-          await sendCampaignEmail({
-            to: recipient.email,
-            subject: campaign.subject,
-            html,
-            text,
-          });
-          await db.emailCampaignRecipient.update({
-            where: { id: recipient.id },
-            data: { status: "SENT", sentAt: new Date() },
-          });
-        } catch (err) {
-          await db.emailCampaignRecipient.update({
-            where: { id: recipient.id },
-            data: {
-              status: "FAILED",
+    const sentIds: string[] = [];
+    const failures: { id: string; error: string }[] = [];
+
+    // Send in parallel but in bounded slices, so a chunk never opens more
+    // sockets than the provider will tolerate.
+    for (let i = 0; i < claimed.length; i += CONCURRENCY) {
+      const slice = claimed.slice(i, i + CONCURRENCY);
+      const outcomes = await Promise.all(
+        slice.map(async (recipient) => {
+          try {
+            // One render, many recipients: only the unsubscribe link differs.
+            const unsubscribe = await unsubscribeUrlFor(recipient.email);
+            await sendCampaignEmail({
+              to: recipient.email,
+              subject: campaign.subject,
+              html: baseHtml.replaceAll(UNSUBSCRIBE_TOKEN, unsubscribe),
+              text: `${baseText}\n\nUnsubscribe: ${unsubscribe}`,
+            });
+            return { id: recipient.id, ok: true as const };
+          } catch (err) {
+            return {
+              id: recipient.id,
+              ok: false as const,
               error: err instanceof Error ? err.message.slice(0, 300) : String(err),
-            },
-          });
-        }
-      })
-    );
+            };
+          }
+        })
+      );
+      for (const o of outcomes) {
+        if (o.ok) sentIds.push(o.id);
+        else failures.push({ id: o.id, error: o.error });
+      }
+    }
+
+    // Bulk success write; failures carry a per-row message so they stay visible.
+    if (sentIds.length > 0) {
+      await db.emailCampaignRecipient.updateMany({
+        where: { id: { in: sentIds } },
+        data: { status: "SENT", sentAt: new Date() },
+      });
+    }
+    for (const f of failures) {
+      await db.emailCampaignRecipient.update({
+        where: { id: f.id },
+        data: { status: "FAILED", error: f.error },
+      });
+    }
   }
 
   const [sent, failed, remaining] = await Promise.all([
@@ -311,10 +354,15 @@ export async function runCampaign(campaignId: string, maxBatches = 5): Promise<S
 }
 
 /**
- * Advance any campaign that is due: scheduled ones whose time has passed, plus
- * any still sending. Called by the cron endpoint.
+ * Advance every campaign that is due: scheduled ones whose time has passed,
+ * plus any left mid-send. Called by the cron endpoint.
+ *
+ * The time budget is shared across campaigns so one large send cannot starve
+ * the others and push the invocation past the platform limit. Anything not
+ * finished simply stays SENDING and is picked up by the next run.
  */
 export async function runDueCampaigns(limit = 3): Promise<SendProgress[]> {
+  const startedAt = Date.now();
   const due = await db.emailCampaign.findMany({
     where: {
       OR: [
@@ -329,17 +377,15 @@ export async function runDueCampaigns(limit = 3): Promise<SendProgress[]> {
 
   const results: SendProgress[] = [];
   for (const { id } of due) {
+    const remaining = TIME_BUDGET_MS - (Date.now() - startedAt);
+    if (remaining < 5_000) break;
     try {
-      results.push(await runCampaign(id, 5));
+      results.push(await runCampaign(id, remaining));
     } catch (err) {
-      await db.emailCampaign.update({
-        where: { id },
-        data: {
-          status: "FAILED",
-          completedAt: new Date(),
-        },
-      });
-      console.error("[campaign] failed", id, err);
+      // Leave it resumable rather than permanently FAILED — with a daily cron a
+      // transient error must not strand the remaining recipients.
+      await db.emailCampaign.update({ where: { id }, data: { status: "SENDING" } });
+      console.error("[campaign] run failed, will retry", id, err);
     }
   }
   return results;
