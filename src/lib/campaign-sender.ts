@@ -258,6 +258,7 @@ export async function runCampaign(campaignId: string, timeBudgetMs = TIME_BUDGET
       note: true,
       signoff: true,
       imageIds: true,
+      style: true,
       status: true,
     },
   });

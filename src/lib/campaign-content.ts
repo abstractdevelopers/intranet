@@ -39,21 +39,25 @@ export type CampaignContentInput = {
   note: string | null;
   signoff: string | null;
   imageIds: string | null;
+  style: string | null;
 };
 
 /** Branded HTML with the unsubscribe placeholder still in place. */
 export async function campaignHtml(campaign: CampaignContentInput) {
-  return renderCampaign({
-    eyebrow: campaign.eyebrow ?? "UCA Sandbox",
-    heading: campaign.heading,
-    body: campaign.body,
-    ctaLabel: campaign.ctaLabel,
-    ctaUrl: campaign.ctaUrl,
-    note: campaign.note,
-    signoff: campaign.signoff,
-    images: publicImageUrls(campaign.imageIds),
-    unsubscribeUrl: UNSUBSCRIBE_TOKEN,
-  });
+  return renderCampaign(
+    {
+      eyebrow: campaign.eyebrow ?? "UCA Sandbox",
+      heading: campaign.heading,
+      body: campaign.body,
+      ctaLabel: campaign.ctaLabel,
+      ctaUrl: campaign.ctaUrl,
+      note: campaign.note,
+      signoff: campaign.signoff,
+      images: publicImageUrls(campaign.imageIds),
+      unsubscribeUrl: UNSUBSCRIBE_TOKEN,
+    },
+    campaign.style ?? "BANNER"
+  );
 }
 
 export function campaignPlainText(campaign: CampaignContentInput) {
@@ -62,7 +66,7 @@ export function campaignPlainText(campaign: CampaignContentInput) {
 
 /** Style metadata for the admin UI, keyed by the built-in style name. */
 export function campaignStyle(key: string | null) {
-  return styleFor(key ?? "ANNOUNCEMENT");
+  return styleFor(key ?? "BANNER");
 }
 
 /** Confirm each image id belongs to a stored Document, so a bad id can't 404. */

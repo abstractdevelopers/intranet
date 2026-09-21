@@ -24,7 +24,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     where: { id },
     select: {
       subject: true, eyebrow: true, heading: true, body: true,
-      ctaLabel: true, ctaUrl: true, note: true, signoff: true, imageIds: true,
+      ctaLabel: true, ctaUrl: true, note: true, signoff: true,       imageIds: true,
+      style: true,
     },
   });
   if (!campaign) return NextResponse.json({ error: "Campaign not found." }, { status: 404 });

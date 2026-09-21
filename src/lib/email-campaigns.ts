@@ -1,86 +1,62 @@
 /**
- * Campaign rendering for the admin email announcer.
+ * Campaign styles for the admin email announcer.
  *
- * A campaign is stored as plain text plus a chosen style. This module turns
- * that into branded HTML at send time, so the same content can be re-rendered
- * for a preview, for a test send, or by a background worker.
- *
- * Body conventions (kept deliberately simple so admins don't need HTML):
- *   - blank line  → new paragraph
- *   - "Label: https://..." on its own line → a secondary link line
- *   - everything else → paragraph text
+ * A campaign is stored as plain text plus a chosen style. Each style maps to a
+ * genuinely different card design (see email-campaign-layouts.ts) — different
+ * structure, not one shell recoloured — and all of them use the UCA palette.
  */
 
-const BRAND_1 = "#570e83";
-const ACCENT = "#e6a9ff";
+import { LAYOUTS, parseBody, type LayoutKey } from "./email-campaign-layouts";
+
+export { parseBody };
+export type { Block } from "./email-campaign-layouts";
 
 export type CampaignStyle = {
-  key: string;
+  key: LayoutKey;
   label: string;
   description: string;
   eyebrow: string;
-  headingPrefix?: string;
 };
 
 /**
- * The five built-in styles. `label`/`description` drive the picker in the
- * admin UI; the rest seeds a new campaign's defaults.
+ * The five built-in styles. `key` selects the card design; `label` and
+ * `description` drive the picker in the admin UI; `eyebrow` seeds a default.
  */
 export const CAMPAIGN_STYLES: CampaignStyle[] = [
   {
-    key: "ANNOUNCEMENT",
-    label: "Academy announcement",
-    description: "A general update for the whole academy.",
+    key: "BANNER",
+    label: "Banner",
+    description: "Purple gradient hero with your image and headline. Best for general announcements.",
     eyebrow: "Academy update",
   },
   {
-    key: "NEW_COURSE",
-    label: "New course or module",
-    description: "Announce newly published learning content.",
+    key: "SPLIT",
+    label: "Split feature",
+    description: "Image beside the headline in a two-column panel. Best for new courses and modules.",
     eyebrow: "New on UCA Sandbox",
   },
   {
-    key: "EVENT",
-    label: "Event invitation",
-    description: "Invite students to a live session or deadline.",
+    key: "TICKET",
+    label: "Invitation",
+    description: "Centred, with a dashed stub for the date or deadline. Best for events and live sessions.",
     eyebrow: "You're invited",
   },
   {
-    key: "MILESTONE",
-    label: "Celebration",
-    description: "Recognise progress, wins, or a cohort milestone.",
+    key: "SPOTLIGHT",
+    label: "Spotlight",
+    description: "Full purple card with a bright button. Best for celebrations and big wins.",
     eyebrow: "Celebrating you",
   },
   {
-    key: "REMINDER",
-    label: "Friendly reminder",
-    description: "Nudge students about something outstanding.",
+    key: "NOTE",
+    label: "Note",
+    description: "Plain, left-ruled card with bullets. Best for reminders and checklists.",
     eyebrow: "A quick reminder",
   },
 ];
 
-export function styleFor(key: string): CampaignStyle {
+export function styleFor(key: string | null): CampaignStyle {
   return CAMPAIGN_STYLES.find((s) => s.key === key) ?? CAMPAIGN_STYLES[0];
-}
-
-/** One parsed line of campaign body copy. */
-type Block = { kind: "paragraph"; text: string } | { kind: "link"; label: string; url: string };
-
-const LINK_LINE = /^([^:]{2,60}):\s*(https?:\/\/\S+)$/i;
-
-/** Split raw body text into renderable blocks. */
-export function parseBody(body: string): Block[] {
-  return body
-    .split(/\n{2,}/)
-    .flatMap((chunk) => chunk.split("\n"))
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const match = line.match(LINK_LINE);
-      return match
-        ? { kind: "link" as const, label: match[1].trim(), url: match[2].trim() }
-        : { kind: "paragraph" as const, text: line };
-    });
 }
 
 /** Plain-text fallback — always mirrors the HTML content. */
@@ -103,133 +79,24 @@ export function campaignText(input: {
 }
 
 /**
- * The branded HTML shell. Kept here rather than reused from email-templates.ts
- * because campaign assets need public image URLs and an unsubscribe footer,
- * which the transactional templates deliberately don't have.
+ * Render a campaign to HTML using the chosen card design. `style` is the
+ * campaign's style key; anything unrecognised falls back to the banner design.
  */
-export function renderCampaign(input: {
-  eyebrow: string;
-  heading: string;
-  body: string;
-  ctaLabel?: string | null;
-  ctaUrl?: string | null;
-  note?: string | null;
-  signoff?: string | null;
-  images?: string[];
-  preheader?: string;
-  unsubscribeUrl?: string;
-}): string {
-  const ink = "#0d070b";
-  const muted = "#6b6470";
-  const surface2 = "#f4f0f7";
-  const border = "#e7e0ec";
-  const font =
-    "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-
-  const esc = (v: string) =>
-    v
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-
-  const blocks = parseBody(input.body);
-  const content = blocks
-    .map((block) =>
-      block.kind === "link"
-        ? `<p style="margin:0 0 16px;font-family:${font};font-size:15px;line-height:24px;color:${ink};"><a href="${esc(
-            block.url
-          )}" target="_blank" style="color:${BRAND_1};text-decoration:underline;">${esc(block.label)}</a></p>`
-        : `<p style="margin:0 0 16px;font-family:${font};font-size:15px;line-height:24px;color:${ink};">${esc(
-            block.text
-          )}</p>`
-    )
-    .join("");
-
-  const images = (input.images ?? [])
-    .map(
-      (url) =>
-        `<img src="${esc(url)}" alt="" width="528" style="display:block;width:100%;max-width:528px;height:auto;border:0;border-radius:8px;margin:0 0 20px;" />`
-    )
-    .join("");
-
-  const cta =
-    input.ctaLabel && input.ctaUrl
-      ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 4px;">
-          <tr><td align="center" bgcolor="${BRAND_1}" style="border-radius:8px;">
-            <a href="${esc(input.ctaUrl)}" target="_blank" style="display:inline-block;padding:14px 28px;font-family:${font};font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">${esc(
-              input.ctaLabel
-            )}</a>
-          </td></tr>
-        </table>`
-      : "";
-
-  const note = input.note
-    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
-        <tr><td bgcolor="${surface2}" style="border-left:3px solid ${ACCENT};border-radius:0 6px 6px 0;padding:14px 16px;">
-          <p style="margin:0;font-family:${font};font-size:13px;line-height:20px;color:${muted};">${esc(
-            input.note
-          )}</p>
-        </td></tr>
-      </table>`
-    : "";
-
-  const signoff = `<p style="margin:24px 0 0;font-family:${font};font-size:14px;line-height:22px;color:${ink};">${esc(
-    input.signoff ?? "— The UCA Sandbox team"
-  )}</p>`;
-
-  const footer = [
-    "UCA Sandbox — Unify Creator Academy",
-    "You're receiving this because you have a UCA Sandbox account.",
-  ];
-  if (input.unsubscribeUrl) {
-    footer.push(
-      `<a href="${esc(input.unsubscribeUrl)}" target="_blank" style="color:${BRAND_1};text-decoration:underline;">Unsubscribe from academy emails</a>`
-    );
-  }
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="color-scheme" content="light" />
-<title>${esc(input.heading)}</title>
-</head>
-<body style="margin:0;padding:0;background-color:${surface2};">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc(input.preheader ?? input.heading)}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${surface2};padding:32px 12px;">
-  <tr><td align="center">
-    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;border:1px solid ${border};">
-      <tr>
-        <td bgcolor="${BRAND_1}" style="background:linear-gradient(135deg,${BRAND_1} 0%,#410b61 55%,#2d0745 100%);padding:32px 36px 28px;">
-          <p style="margin:0;font-family:${font};font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:${ACCENT};">${esc(
-            input.eyebrow
-          )}</p>
-          <h1 style="margin:8px 0 0;font-family:${font};font-size:24px;line-height:32px;font-weight:700;color:#ffffff;">${esc(
-            input.heading
-          )}</h1>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:32px 36px 36px;">
-          ${images}
-          ${content}
-          ${cta}
-          ${note}
-          ${signoff}
-        </td>
-      </tr>
-      <tr>
-        <td bgcolor="${surface2}" style="padding:20px 36px;border-top:1px solid ${border};">
-          <p style="margin:0;font-family:${font};font-size:12px;line-height:20px;color:${muted};">${footer.join(
-            "<br />"
-          )}</p>
-        </td>
-      </tr>
-    </table>
-  </td></tr>
-</table>
-</body>
-</html>`;
+export function renderCampaign(
+  input: {
+    eyebrow: string;
+    heading: string;
+    body: string;
+    ctaLabel?: string | null;
+    ctaUrl?: string | null;
+    note?: string | null;
+    signoff?: string | null;
+    images?: string[];
+    preheader?: string;
+    unsubscribeUrl?: string;
+  },
+  style: string = "BANNER"
+): string {
+  const layout = LAYOUTS[style as LayoutKey] ?? LAYOUTS.BANNER;
+  return layout(input);
 }

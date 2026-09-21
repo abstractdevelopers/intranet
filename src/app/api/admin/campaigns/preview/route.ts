@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     note?: string;
     signoff?: string;
     imageIds?: string[];
+    style?: string;
     audience?: AudienceRules["audience"];
     courseIds?: string[];
     pathway?: string | null;
@@ -44,17 +45,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "A heading and body are required." }, { status: 400 });
   }
 
-  const html = renderCampaign({
-    eyebrow: payload.eyebrow || "UCA Sandbox",
-    heading: payload.heading,
-    body: payload.body,
-    ctaLabel: payload.ctaLabel || null,
-    ctaUrl: payload.ctaUrl || null,
-    note: payload.note || null,
-    signoff: payload.signoff || null,
-    images: publicImageUrls(JSON.stringify(payload.imageIds ?? [])),
-    unsubscribeUrl: UNSUBSCRIBE_TOKEN,
-  });
+  const html = renderCampaign(
+    {
+      eyebrow: payload.eyebrow || "UCA Sandbox",
+      heading: payload.heading,
+      body: payload.body,
+      ctaLabel: payload.ctaLabel || null,
+      ctaUrl: payload.ctaUrl || null,
+      note: payload.note || null,
+      signoff: payload.signoff || null,
+      images: publicImageUrls(JSON.stringify(payload.imageIds ?? [])),
+      unsubscribeUrl: UNSUBSCRIBE_TOKEN,
+    },
+    payload.style ?? "BANNER"
+  );
 
   return new NextResponse(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
 }

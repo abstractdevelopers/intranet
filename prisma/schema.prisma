@@ -785,7 +785,8 @@ model DiscussionLike {
 model EmailTemplate {
   id          String   @id @default(cuid())
   name        String
-  // Built-in style key (e.g. ANNOUNCEMENT), or CUSTOM for admin-authored.
+  // Card design this template was authored in: BANNER | SPLIT | TICKET |
+  // SPOTLIGHT | NOTE, or CUSTOM for an admin-authored starting point.
   kind        String   @default("CUSTOM")
   eyebrow     String?
   heading     String
@@ -817,8 +818,8 @@ model EmailCampaign {
   subject     String
   templateId  String?
   template    EmailTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
-  // Content is snapshotted here, so later template edits never rewrite a
-  // campaign that has already gone out.
+  // Campaign content is snapshotted here, so later template edits never rewrite
+  // a campaign that has already gone out.
   eyebrow     String?
   heading     String
   body        String
@@ -827,6 +828,8 @@ model EmailCampaign {
   note        String?
   signoff     String?
   imageIds    String?
+  // Which card design to render: BANNER | SPLIT | TICKET | SPOTLIGHT | NOTE.
+  style       String        @default("BANNER")
 
   // DRAFT | SCHEDULED | SENDING | SENT | CANCELED | FAILED
   status      String        @default("DRAFT")

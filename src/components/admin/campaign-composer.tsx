@@ -19,6 +19,7 @@ type SavedTemplate = {
   note: string | null;
   signoff: string | null;
   imageIds: string | null;
+  kind: string | null;
 };
 
 type Audience = "ALL_STUDENTS" | "SIGNED_UP" | "NOT_SIGNED_UP" | "COURSE" | "PATHWAY";
@@ -49,7 +50,7 @@ Watch the replay: https://intranet.launchverse.site/login`;
 export function CampaignComposer({ courses, styles }: { courses: Course[]; styles: Style[] }) {
   const router = useRouter();
 
-  const [styleKey, setStyleKey] = useState(styles[0]?.key ?? "ANNOUNCEMENT");
+  const [styleKey, setStyleKey] = useState(styles[0]?.key ?? "BANNER");
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [eyebrow, setEyebrow] = useState(styles[0]?.eyebrow ?? "Academy update");
@@ -93,11 +94,12 @@ export function CampaignComposer({ courses, styles }: { courses: Course[]; style
       signoff,
       templateId: templateId || null,
       imageIds: images.map((i) => i.id),
+      style: styleKey,
       audience,
       courseIds,
       pathway: audience === "PATHWAY" ? pathway : null,
     }),
-    [title, subject, eyebrow, heading, body, ctaLabel, ctaUrl, note, signoff, templateId, images, audience, courseIds, pathway]
+    [title, subject, eyebrow, heading, body, ctaLabel, ctaUrl, note, signoff, templateId, images, styleKey, audience, courseIds, pathway]
   );
 
   useEffect(() => {
@@ -168,6 +170,9 @@ export function CampaignComposer({ courses, styles }: { courses: Course[]; style
     } catch {
       setImages([]);
     }
+    // Restore the card design the template was authored in, so loading it
+    // doesn't silently drop back to the banner layout.
+    if (t.kind && styles.some((s) => s.key === t.kind)) setStyleKey(t.kind);
   }
 
   async function uploadImage(file: File) {
