@@ -252,6 +252,88 @@ export function passwordFixedNoticeEmail(input: { email: string; loginUrl: strin
   return { subject: "Fixed: you can now set your UCA Sandbox password", html, text };
 }
 
+/**
+ * Onboarding-week announcement for waiting-list accounts that have not signed
+ * up yet. Carries no token (a bulk send must not mint one link per recipient),
+ * so the CTA points at "Forgot password" where people request their own link.
+ */
+export function onboardingWeekEmail(input: { email: string; loginUrl: string; forgotUrl: string }) {
+  const heading = "Onboarding week starts now — claim your seat";
+  const html = layout({
+    eyebrow: "Onboarding week",
+    heading,
+    paragraphs: [
+      "The wait is over. Onboarding week at Unify Creator Academy has officially begun.",
+      `You joined our waiting list, and your UCA Sandbox account is already reserved for ${input.email}. The doors are open — the only thing standing between you and your classroom is a password.`,
+      "This week you'll set up your creator profile, claim your username, and lock in the elective pathway you want to specialise in. It takes about five minutes, and everything from there happens inside your own portal.",
+      "Don't let this week pass you by — the people who show up now start building first.",
+    ],
+    cta: { label: "Claim your account", url: input.forgotUrl },
+    note: `Enter this same email address (${input.email}) on that page and we'll send you a secure link to set your password. Already set one? Sign in at ${input.loginUrl}.`,
+    signoff: "— The UCA Sandbox team",
+  });
+  const text = [
+    "Onboarding week starts now — claim your seat",
+    "",
+    "The wait is over. Onboarding week at Unify Creator Academy has officially begun.",
+    "",
+    `You joined our waiting list, and your UCA Sandbox account is already reserved for ${input.email}. The doors are open — the only thing standing between you and your classroom is a password.`,
+    "",
+    "This week you'll set up your creator profile, claim your username, and lock in the elective pathway you want to specialise in. It takes about five minutes, and everything from there happens inside your own portal.",
+    "",
+    "Don't let this week pass you by — the people who show up now start building first.",
+    "",
+    `Claim your account: ${input.forgotUrl}`,
+    `Sign in: ${input.loginUrl}`,
+    "",
+    `Enter this same email address (${input.email}) on that page and we'll send you a secure link to set your password.`,
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+  return { subject: "Onboarding week is here — claim your UCA Sandbox seat", html, text };
+}
+
+/**
+ * Onboarding-week announcement for people who have ALREADY signed up. Same
+ * event, different tone: they don't need to claim an account, they need to
+ * finish setting it up and show up. No token — CTA goes to the sign-in page.
+ */
+export function onboardingWeekSignedUpEmail(input: { email: string; loginUrl: string; forgotUrl: string }) {
+  const heading = "It's onboarding week — don't stop now";
+  const html = layout({
+    eyebrow: "Onboarding week",
+    heading,
+    paragraphs: [
+      "Onboarding week at Unify Creator Academy is live, and you're already on the inside.",
+      `You've started setting up your UCA Sandbox account for ${input.email} — which means you're ahead of the pack. The next step is finishing it.`,
+      "Open your portal to complete your creator profile, claim your username, and confirm the elective pathway you're specialising in. Once that's done, your weeks unlock and the real work begins.",
+      "Everyone who has their setup finished this week starts their first module on time. Give it five minutes today — future you will thank you.",
+    ],
+    cta: { label: "Continue in your portal", url: input.loginUrl },
+    note: `Signed out or stuck on your password? Choose “Forgot password” on the sign-in page and enter ${input.email} to get a fresh link.`,
+    signoff: "— The UCA Sandbox team",
+  });
+  const text = [
+    "It's onboarding week — don't stop now",
+    "",
+    "Onboarding week at Unify Creator Academy is live, and you're already on the inside.",
+    "",
+    `You've started setting up your UCA Sandbox account for ${input.email} — which means you're ahead of the pack. The next step is finishing it.`,
+    "",
+    "Open your portal to complete your creator profile, claim your username, and confirm the elective pathway you're specialising in. Once that's done, your weeks unlock and the real work begins.",
+    "",
+    "Everyone who has their setup finished this week starts their first module on time. Give it five minutes today — future you will thank you.",
+    "",
+    `Continue in your portal: ${input.loginUrl}`,
+    `New password: ${input.forgotUrl}`,
+    "",
+    `Signed out or stuck on your password? Choose "Forgot password" on the sign-in page and enter ${input.email} to get a fresh link.`,
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+  return { subject: "Onboarding week is live — finish your UCA Sandbox setup", html, text };
+}
+
 /** Wrap plain notification text in the branded shell. */
 export function notificationEmail(input: { title: string; body: string; link?: string }) {
   const html = layout({
