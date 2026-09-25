@@ -9,6 +9,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { CourseMark } from "@/components/course-mark";
 import { Avatar } from "@/components/creators/avatar";
 import { VerificationBadge } from "@/components/verification-badge";
+import { EliteBadge } from "@/components/elite-badge";
 import { FollowButton } from "@/components/creators/follow-button";
 import { LikeButton } from "@/components/creators/like-button";
 import { IconUsers, IconCourses, IconFile, IconClock } from "@/components/icons";
@@ -37,6 +38,7 @@ export default async function CreatorProfilePage({
       username: true,
       status: true,
       verificationTier: true,
+      eliteMemberNumber: true,
       onboardingCompletedAt: true,
       createdAt: true,
       profile: {
@@ -114,6 +116,7 @@ export default async function CreatorProfilePage({
               </p>
               <h1 className="mt-1.5 flex items-center gap-2 text-2xl font-bold tracking-tight md:text-3xl">
                 <span>{displayName}</span>
+                <EliteBadge memberNumber={creator.eliteMemberNumber} className="h-5 w-5" />
                 <VerificationBadge tier={creator.verificationTier} className="h-5 w-5" />
               </h1>
               {creator.username ? (

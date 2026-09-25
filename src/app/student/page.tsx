@@ -24,6 +24,7 @@ import { getCourseProgress } from "@/lib/progress";
 import { buildMilestones } from "@/lib/milestones";
 import { getScoreBreakdown } from "@/lib/scores";
 import { getCaptainLogState } from "@/lib/captains-log";
+import { isPromiseWallOpen, CLASSES_START } from "@/lib/constants";
 import { getStudentPathway, getStudentCommunities } from "@/lib/communities";
 import { syncStudentNotifications } from "@/lib/notification-triggers";
 import { formatNaira, formatDate, formatDateTime } from "@/lib/format";
@@ -53,6 +54,7 @@ export default async function StudentDashboard() {
     pathway,
     communities,
     pendingAssignments,
+    myPromise,
   ] = await Promise.all([
     db.enrollment.findMany({
       where: { userId: user.id },
@@ -80,6 +82,7 @@ export default async function StudentDashboard() {
         status: { in: ["SUBMITTED", "RESUBMITTED"] },
       },
     }),
+    db.promise.findUnique({ where: { userId: user.id }, select: { id: true } }),
   ]);
 
   const milestones = buildMilestones(enrollments, lessonDone, submissions, grades);
@@ -127,6 +130,33 @@ export default async function StudentDashboard() {
           ) : null}
         </div>
       </section>
+
+      {/* Pre-class window — the course warm-up, before classes begin */}
+      {isPromiseWallOpen() ? (
+        <Card className="border-brand-3/50 bg-brand-3/10 dark:border-brand-1/40 dark:bg-brand-1/10">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <IconCommunication className="mt-0.5 h-5 w-5 shrink-0 text-brand-1 dark:text-brand-3" />
+              <div>
+                <p className="text-sm font-semibold">Classes begin {formatDate(CLASSES_START)} — start with your warm-up</p>
+                <p className="mt-1 max-w-xl text-sm text-text-muted">
+                  {myPromise
+                    ? `You've written your line. See what your coursemates are working toward.`
+                    : "A small first task for your course: write one line about what you want to make. Nothing graded — just how we begin."}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <ButtonLink href="/student/warm-up" variant={myPromise ? "secondary" : "primary"}>
+                {myPromise ? "See the warm-up" : "Start your warm-up"}
+              </ButtonLink>
+              <ButtonLink href="/student/peer-body" variant="secondary">
+                Peer Body
+              </ButtonLink>
+            </div>
+          </div>
+        </Card>
+      ) : null}
 
       {/* Captain's Log gate — the most urgent thing on the dashboard */}
       {captainLog.currentWeek !== null && captainLog.required ? (

@@ -38,6 +38,10 @@ type LayoutOptions = {
   heading: string;
   /** Paragraphs of body copy. Plain text, escaped before rendering. */
   paragraphs: string[];
+  /** Short scannable perks, rendered as a ticked list under the paragraphs. */
+  highlights?: string[];
+  /** Optional sub-heading introducing the highlights. */
+  highlightsLabel?: string;
   /** Primary call to action. */
   cta?: { label: string; url: string };
   /** Optional note rendered in a muted box under the CTA. */
@@ -91,6 +95,31 @@ function layout(options: LayoutOptions) {
           )}</a>
         </p>`
     : "";
+
+  const highlights =
+    options.highlights && options.highlights.length
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 4px;background-color:${SURFACE_2};border-radius:8px;">
+          <tr>
+            <td style="padding:18px 20px 8px;">
+              ${
+                options.highlightsLabel
+                  ? `<p style="margin:0 0 12px;font-family:${FONT};font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:${BRAND_1};">${esc(
+                      options.highlightsLabel
+                    )}</p>`
+                  : ""
+              }
+              ${options.highlights
+                .map(
+                  (h) =>
+                    `<p style="margin:0 0 10px;font-family:${FONT};font-size:14px;line-height:22px;color:${INK};"><span style="color:${BRAND_1};font-weight:700;">&#10003;</span>&nbsp;&nbsp;${esc(
+                      h
+                    )}</p>`
+                )
+                .join("")}
+            </td>
+          </tr>
+        </table>`
+      : "";
 
   const note = options.note
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
@@ -156,6 +185,7 @@ function layout(options: LayoutOptions) {
           <td style="padding:32px 36px 36px;">
             ${images}
             ${paragraphs}
+            ${highlights}
             ${cta}
             ${note}
             ${signoff}
@@ -370,4 +400,58 @@ export function notificationEmail(input: { title: string; body: string; link?: s
     cta: input.link ? { label: "Open UCA Sandbox", url: input.link } : undefined,
   });
   return { subject: input.title, html, text: `${input.title}\n\n${input.body}` };
+}
+
+/**
+ * Account-reclaim email.
+ *
+ * Sent after the account rebuild: every member gets a single-use link to set a
+ * new password, then is guided through username → profile → pathway. Kept
+ * short and accountable — it states plainly that access was interrupted and
+ * resolved, and makes clear there is nothing to pay.
+ */
+export function accountReclaimEmail(input: { email: string; link: string }) {
+  const html = layout({
+    eyebrow: "Account restored",
+    heading: "Your UCA Sandbox account is back",
+    paragraphs: [
+      `We've rebuilt your UCA Sandbox account for ${input.email} and restored your place at the academy.`,
+      "During recent platform maintenance, sign-in was affected for all members. That was on us, it's fully resolved, and we've put safeguards in place so it can't happen again.",
+      "To come back in, reclaim your account below. It takes about a minute: set a new password, choose your username, and pick your pathway.",
+    ],
+    highlightsLabel: "What's waiting when you're back",
+    highlights: [
+      "Your free month restarts the day you return — 30 days, on us.",
+      "The first 100 creators back get Elite Member status: a permanent badge on your profile.",
+      "Pick your pathway and get set up ahead of classes.",
+      "Classes begin 5 October, so you'll be settled in before day one.",
+    ],
+    cta: { label: "Reclaim your account", url: input.link },
+    note: "This link is single-use and stays valid for 14 days. If it expires, use “Forgot password” on the sign-in page to get a new one.",
+    signoff: "— The UCA Sandbox team",
+  });
+
+  const text = [
+    "Your UCA Sandbox account is back",
+    "",
+    `We've rebuilt your UCA Sandbox account for ${input.email} and restored your place at the academy.`,
+    "",
+    "During recent platform maintenance, sign-in was affected for all members. That was on us, it's fully resolved, and we've put safeguards in place so it can't happen again.",
+    "",
+    "To come back in, reclaim your account below. It takes about a minute: set a new password, choose your username, and pick your pathway.",
+    "",
+    "WHAT'S WAITING WHEN YOU'RE BACK",
+    "  • Your free month restarts the day you return — 30 days, on us.",
+    "  • The first 100 creators back get Elite Member status: a permanent badge on your profile.",
+    "  • Pick your pathway and get set up ahead of classes.",
+    "  • Classes begin 5 October, so you'll be settled in before day one.",
+    "",
+    `Reclaim your account: ${input.link}`,
+    "",
+    "This link is single-use and stays valid for 14 days. If it expires, use \"Forgot password\" on the sign-in page to get a new one.",
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+
+  return { subject: "Your UCA Sandbox account is restored — reclaim it here", html, text };
 }

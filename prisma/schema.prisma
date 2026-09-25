@@ -30,6 +30,10 @@ model User {
   // Verification badge shown next to a name. GOLD is reserved for the founding
   // team; BLUE is granted to every other signed-up account. Null = no badge.
   verificationTier      String?
+  // Reclaim-window reward: the numeric rank (1–100) a creator earned by coming
+  // back early after the 2026-09-25 incident. Unique so ranks can never
+  // collide; null for everyone else. Drives the Elite badge.
+  eliteMemberNumber     Int?      @unique
   // Set when staff issue a temporary password; cleared once the student changes it.
   mustChangePassword    Boolean   @default(false)
   onboardingCompletedAt DateTime?
@@ -85,6 +89,12 @@ model User {
   createdEmailCampaigns   EmailCampaign[]
   pushSubscriptions       PushSubscription[]
   createdPushCampaigns    PushCampaign[]
+  peerBodyFacilitated     PeerBodyRound[]            @relation("PeerBodyFacilitator")
+  peerBodySubmissions     PeerBodySubmission[]
+  peerBodyReviews         PeerBodyReview[]           @relation("PeerBodyReviewer")
+  peerBodyReviewsReceived PeerBodyReview[]           @relation("PeerBodyAuthor")
+  promises                Promise[]
+  promiseCheers           PromiseCheer[]
 }
 
 model Profile {
@@ -166,6 +176,7 @@ model Course {
   certificates      Certificate[]
   projects          Project[]
   communities       Community[]
+  peerBodyRounds    PeerBodyRound[]
 
   @@index([type, isActive])
   @@index([pathway])
@@ -925,3 +936,117 @@ model PushCampaign {
   @@index([status, createdAt])
   @@index([createdAt])
 }
+
+// ---------------------------------------------------------------------------
+// Peer Body — structured peer feedback circles
+// ---------------------------------------------------------------------------
+
+/**
+ * A round of peer feedback. A facilitator opens it with a prompt and a window;
+ * students submit work, then review each other using kindness-forward prompts.
+ * `courseId` is optional so a round can span a whole pathway as well.
+ */
+model PeerBodyRound {
+  id            String    @id @default(cuid())
+  title         String
+  prompt        String
+  courseId      String?
+  course        Course?   @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  pathway       String?
+  // REVIEWING = open for submissions and reviews; CLOSED = read-only archive.
+  status        String    @default("REVIEWING") // REVIEWING | CLOSED
+  facilitatorId String
+  facilitator   User      @relation("PeerBodyFacilitator", fields: [facilitatorId], references: [id])
+  closesAt      DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  submissions PeerBodySubmission[]
+
+  @@index([status, createdAt])
+  @@index([courseId])
+}
+
+/** A student's work submitted into a round. One submission per student per round. */
+model PeerBodySubmission {
+  id        String        @id @default(cuid())
+  roundId   String
+  round     PeerBodyRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  linkUrl   String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  reviews PeerBodyReview[]
+
+  @@unique([roundId, authorId])
+  @@index([roundId, createdAt])
+}
+
+/**
+ * One peer review of a submission. Three short fields keep feedback specific
+ * and kind: what landed, one thing to try, and a question to consider.
+ */
+model PeerBodyReview {
+  id            String             @id @default(cuid())
+  submissionId  String
+  submission    PeerBodySubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  reviewerId    String
+  reviewer      User               @relation("PeerBodyReviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  // The submission author, denormalised so "reviews I received" is one query.
+  authorId      String
+  author        User               @relation("PeerBodyAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  whatLanded    String
+  oneSuggestion String
+  oneQuestion   String?
+  createdAt     DateTime           @default(now())
+
+  @@unique([submissionId, reviewerId])
+  @@index([authorId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Promise Wall — the pre-class community ritual
+// ---------------------------------------------------------------------------
+
+/**
+ * One line a returning creator posts before classes begin: what they intend to
+ * build at the academy. Public, capped at one per student, editable while the
+ * pre-class window is open.
+ */
+model Promise {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String
+  // The outcome they picked (key of PROMISE_GOALS); null for older rows.
+  goal      String?
+  // The craft this promise belongs to, copied from the student's elective so
+  // the wall can be filtered by craft. Null = not yet assigned.
+  pathway   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cheers PromiseCheer[]
+
+  @@unique([userId])
+  @@index([createdAt])
+  @@index([pathway])
+}
+
+/** One peer's cheer (spark) on a promise. One per student per promise. */
+model PromiseCheer {
+  id        String   @id @default(cuid())
+  promiseId String
+  promise   Promise  @relation(fields: [promiseId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([promiseId, userId])
+  @@index([userId])
+}
+

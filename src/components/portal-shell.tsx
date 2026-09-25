@@ -6,6 +6,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { BrandLockup } from "./crest";
 import { IconLogout, ICONS, type IconName } from "./icons";
 import { VerificationBadge } from "./verification-badge";
+import { EliteBadge } from "./elite-badge";
 
 export type NavItem = {
   href: string;
@@ -35,6 +36,7 @@ export function PortalShell({
   userName,
   userRole,
   userTier,
+  userEliteNumber,
   badges,
   children,
 }: {
@@ -43,6 +45,8 @@ export function PortalShell({
   userName: string;
   userRole: string;
   userTier?: string | null;
+  /** Elite reclaim rank; renders the badge beside the name when set. */
+  userEliteNumber?: number | null;
   /** Optional unread counts keyed by nav href, e.g. notifications. */
   badges?: Record<string, number>;
   children: React.ReactNode;
@@ -107,6 +111,7 @@ export function PortalShell({
           <div className="text-sm">
             <p className="flex items-center gap-1.5 font-medium">
               <span className="truncate">{userName}</span>
+              <EliteBadge memberNumber={userEliteNumber} />
               <VerificationBadge tier={userTier} />
             </p>
             <p className="text-xs text-text-muted">{userRole}</p>

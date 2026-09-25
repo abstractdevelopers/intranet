@@ -155,3 +155,123 @@ export const SUBMISSION_STATUS = {
   NEEDS_REVISION: "NEEDS_REVISION",
   RESUBMITTED: "RESUBMITTED",
 } as const;
+
+// ---------------------------------------------------------------------------
+// Reclaim pathway auto-approval
+// ---------------------------------------------------------------------------
+
+/**
+ * While rebuilding accounts after the 2026-09-25 incident, every returning
+ * creator picks a pathway and is enrolled immediately instead of waiting for
+ * staff review — there are ~685 of them and manual approval is not practical.
+ *
+ * This is a deliberately time-boxed allowance: it lapses at the end of
+ * 2026-10-01, after which the normal "staff approve the elective" rule applies
+ * again (and the legacy full application form is used instead of the
+ * one-click picker). Nothing else needs changing when the date passes.
+ */
+export const PATHWAY_AUTO_APPROVAL_UNTIL = new Date("2026-10-01T23:59:59.999Z");
+
+export function isPathwayAutoApprovalActive(now: Date = new Date()) {
+  return now.getTime() <= PATHWAY_AUTO_APPROVAL_UNTIL.getTime();
+}
+
+/**
+ * Number of returning creators who receive the Elite badge. Granted in the
+ * order they complete their reclaim, and never again afterwards — the scarcity
+ * is the point, so this is a hard ceiling rather than a threshold.
+ */
+export const ELITE_BADGE_LIMIT = 100;
+
+// ---------------------------------------------------------------------------
+// Pre-class window (course warm-up)
+// ---------------------------------------------------------------------------
+
+/**
+ * Classes begin 5 October 2026. The warm-up is the small pre-class task that
+ * gets each student thinking about their craft: one line about what they want
+ * to make, visible to their coursemates. Writing closes at the end of
+ * 3 October; the lines stay readable afterwards as an archive.
+ */
+export const CLASSES_START = new Date("2026-10-05T00:00:00.000Z");
+export const PROMISE_WALL_CLOSES = new Date("2026-10-03T23:59:59.999Z");
+
+export function isPromiseWallOpen(now: Date = new Date()) {
+  return now.getTime() <= PROMISE_WALL_CLOSES.getTime();
+}
+
+/** Peer Body round lifecycle. */
+export const PEER_BODY_STATUS = {
+  REVIEWING: "REVIEWING",
+  CLOSED: "CLOSED",
+} as const;
+
+/** Kindness-forward review prompts, shared by the form and the email. */
+export const PEER_BODY_PROMPTS = {
+  whatLanded: "What landed for you?",
+  oneSuggestion: "One thing they could try next.",
+  oneQuestion: "A question to leave them thinking.",
+} as const;
+
+// ---------------------------------------------------------------------------
+// Warm-up — the pre-class course task
+// ---------------------------------------------------------------------------
+
+/**
+ * One line each creator writes before classes begin: a small, real first
+ * thought for their craft. Picked from a short list so the wall stays scannable
+ * and every entry maps to something the academy actually teaches.
+ */
+export const PROMISE_GOALS = {
+  PORTFOLIO: "Build a portfolio I'm proud of",
+  AUDIENCE: "Grow a real audience",
+  CLIENT: "Land my first client",
+  SERIES: "Ship a series I love",
+  PERSONAL_BRAND: "Build my personal brand",
+} as const;
+
+export type PromiseGoal = keyof typeof PROMISE_GOALS;
+
+export const PROMISE_GOAL_KEYS = Object.keys(PROMISE_GOALS) as PromiseGoal[];
+
+/**
+ * A warm-up prompt written for each craft, so the exercise reads like a real
+ * first task for that course rather than a generic form.
+ */
+export const PROMISE_PROMPTS_BY_PATHWAY: Record<Pathway, string[]> = {
+  GRAPHIC_DESIGN: [
+    "The brand I'd love to design is…",
+    "The mark I'd sketch first is…",
+    "The poster I'd want people to stop for is…",
+  ],
+  VIDEO_EDITING: [
+    "The video I'd cut first is…",
+    "The story I'd want to tell on screen is…",
+    "The scene I'd love to edit is…",
+  ],
+  CONTENT_WRITING: [
+    "The first line I'd write is…",
+    "The story I'd publish first is…",
+    "The piece I'd want people to quote is…",
+  ],
+  COMMUNICATION_INFLUENCE: [
+    "The idea I'd want people to believe is…",
+    "The message I'd want to be known for is…",
+    "The conversation I'd want to start is…",
+  ],
+};
+
+/** Used before a pathway is known, or when one isn't set. */
+export const PROMISE_PROMPTS = [
+  "What I want to build at UCA is…",
+  "The first thing I want to make here is…",
+  "I'm here because…",
+] as const;
+
+/** Craft chip colours, kept in step with the course marks. */
+export const PATHWAY_TONES: Record<Pathway, string> = {
+  GRAPHIC_DESIGN: "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-950 dark:text-fuchsia-300",
+  VIDEO_EDITING: "bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300",
+  COMMUNICATION_INFLUENCE: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
+  CONTENT_WRITING: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
+};

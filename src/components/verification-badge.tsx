@@ -1,4 +1,5 @@
 import type { VerificationTier } from "@/lib/constants";
+import { EliteBadge } from "./elite-badge";
 
 /**
  * The verification tick shown beside a member's name. GOLD is the founding
@@ -56,15 +57,19 @@ export function VerificationBadge({
 export function VerifiedName({
   name,
   tier,
+  eliteNumber,
   className = "",
 }: {
   name: string;
   tier: string | null | undefined;
+  /** Reclaim-window rank; renders the Elite badge when set. */
+  eliteNumber?: number | null;
   className?: string;
 }) {
   return (
     <span className={`inline-flex items-center gap-1 ${className}`}>
       <span className="truncate">{name}</span>
+      <EliteBadge memberNumber={eliteNumber} />
       <VerificationBadge tier={tier} />
     </span>
   );

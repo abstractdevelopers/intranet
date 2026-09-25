@@ -13,6 +13,8 @@ const SECTIONS: NavSection[] = [
       { href: "/student/courses", label: "My Courses", icon: "Courses" },
       { href: "/student/assignments", label: "Assignments", icon: "Assignments" },
       { href: "/student/captains-log", label: "Captain's Log", icon: "Announcement" },
+      { href: "/student/warm-up", label: "Warm-up", icon: "Assignments" },
+      { href: "/student/peer-body", label: "Peer Body", icon: "Users" },
       { href: "/student/progress", label: "Progress", icon: "Progress" },
     ],
   },
@@ -50,6 +52,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
       userName={user.fullName}
       userRole="Student"
       userTier={user.verificationTier}
+      userEliteNumber={user.eliteMemberNumber}
       badges={{ "/student/notifications": unread }}
     >
       <InstallBanner />

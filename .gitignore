@@ -42,3 +42,7 @@ next-env.d.ts
 .env
 
 storage/
+
+# Recipient exports — these hold real student email addresses (PII) and must
+# never be committed. The send/reclaim scripts read them from the working tree.
+prisma/data/

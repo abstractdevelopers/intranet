@@ -7,6 +7,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { ProfileEditor } from "@/components/creators/profile-editor";
 import { Avatar } from "@/components/creators/avatar";
 import { VerificationBadge } from "@/components/verification-badge";
+import { EliteBadge } from "@/components/elite-badge";
 import { IconUsers, IconCourses } from "@/components/icons";
 import { USERNAME_CHANGE_COOLDOWN_DAYS, usernameCooldownMs } from "@/lib/auth";
 import { getStudentPathway } from "@/lib/communities";
@@ -29,6 +30,7 @@ export default async function ProfilePage() {
       where: { id: user.id },
       select: {
         verificationTier: true,
+        eliteMemberNumber: true,
         _count: {
           select: {
             followers: true,
@@ -75,6 +77,7 @@ export default async function ProfilePage() {
               <span className="font-semibold">
                 {profile?.fullName ?? user.fullName}
               </span>
+              <EliteBadge memberNumber={counts.eliteMemberNumber} />
               <VerificationBadge tier={counts.verificationTier} />
             </span>
             <span className="inline-flex items-center gap-1.5 text-text-muted">

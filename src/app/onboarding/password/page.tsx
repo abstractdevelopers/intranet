@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { StepProgress } from "@/components/onboarding/step-progress";
 import { PasswordSetupForm } from "@/components/onboarding/password-setup-form";
 import { requireStudent } from "@/lib/rbac";
 
@@ -12,7 +13,7 @@ export default async function OnboardingPasswordPage() {
 
   return (
     <div className="space-y-6">
-      <StepProgress current={1} />
+      <StepProgress steps={["Password", "Username", "Profile", "Pathway"]} current={1} />
       <div>
         <p className="eyebrow">Step 01</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight">Set your password</h1>
@@ -28,31 +29,3 @@ export default async function OnboardingPasswordPage() {
   );
 }
 
-function StepProgress({ current }: { current: number }) {
-  const steps = ["Password", "Username", "Profile"];
-  return (
-    <ol className="flex items-center gap-2 text-xs font-semibold">
-      {steps.map((label, i) => {
-        const n = i + 1;
-        const state = n === current ? "current" : n < current ? "done" : "todo";
-        return (
-          <li key={label} className="flex items-center gap-2">
-            <span
-              className={`flex h-6 w-6 items-center justify-center rounded-full ${
-                state === "current"
-                  ? "bg-brand-1 text-white"
-                  : state === "done"
-                    ? "bg-brand-1/20 text-brand-1 dark:text-brand-3"
-                    : "border border-border text-text-muted"
-              }`}
-            >
-              {n}
-            </span>
-            <span className={state === "todo" ? "text-text-muted" : ""}>{label}</span>
-            {n < steps.length ? <span className="text-text-muted">·</span> : null}
-          </li>
-        );
-      })}
-    </ol>
-  );
-}

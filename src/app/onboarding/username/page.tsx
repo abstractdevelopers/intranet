@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { StepProgress } from "@/components/onboarding/step-progress";
 import { UsernameForm } from "@/components/onboarding/username-form";
 import { requireStudent } from "@/lib/rbac";
 
@@ -13,7 +14,7 @@ export default async function OnboardingUsernamePage() {
 
   return (
     <div className="space-y-6">
-      <StepProgress current={2} />
+      <StepProgress steps={["Password", "Username", "Profile", "Pathway"]} current={2} />
       <div>
         <p className="eyebrow">Step 02</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight">Choose your username</h1>
@@ -29,31 +30,3 @@ export default async function OnboardingUsernamePage() {
   );
 }
 
-function StepProgress({ current }: { current: number }) {
-  const steps = ["Password", "Username", "Profile"];
-  return (
-    <ol className="flex items-center gap-2 text-xs font-semibold">
-      {steps.map((label, i) => {
-        const n = i + 1;
-        const state = n === current ? "current" : n < current ? "done" : "todo";
-        return (
-          <li key={label} className="flex items-center gap-2">
-            <span
-              className={`flex h-6 w-6 items-center justify-center rounded-full ${
-                state === "current"
-                  ? "bg-brand-1 text-white"
-                  : state === "done"
-                    ? "bg-brand-1/20 text-brand-1 dark:text-brand-3"
-                    : "border border-border text-text-muted"
-              }`}
-            >
-              {n}
-            </span>
-            <span className={state === "todo" ? "text-text-muted" : ""}>{label}</span>
-            {n < steps.length ? <span className="text-text-muted">·</span> : null}
-          </li>
-        );
-      })}
-    </ol>
-  );
-}

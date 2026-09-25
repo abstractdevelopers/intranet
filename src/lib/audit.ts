@@ -11,6 +11,7 @@ const EMAIL_TYPES = new Set([
   "FEEDBACK",
   "ANNOUNCEMENT",
   "PAYMENT_RECEIVED",
+  "PEER_BODY_REVIEW",
 ]);
 
 // Types that also fire a browser push. Deliberately narrower than the in-app
@@ -24,6 +25,7 @@ const PUSH_TYPES = new Set([
   "ANNOUNCEMENT",
   "PAYMENT_RECEIVED",
   "COURSE_COMPLETED",
+  "PEER_BODY_REVIEW",
 ]);
 
 export async function auditLog(input: {

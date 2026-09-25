@@ -59,5 +59,7 @@ export async function POST(request: Request) {
     metadata: { hasAvatar: Boolean(avatarDocumentId) },
   });
 
-  return NextResponse.json({ ok: true, redirect: "/student" });
+  // Hand back to /onboarding so the router can pick the next outstanding step
+  // (the pathway picker for returning creators) instead of assuming we're done.
+  return NextResponse.json({ ok: true, redirect: "/onboarding" });
 }

@@ -15,6 +15,7 @@ export type CreatorCard = {
   isFollowing: boolean;
   isFollowedBy: boolean;
   verificationTier: string | null;
+  eliteMemberNumber: number | null;
 };
 
 /** Shape shared by every creator query so one mapper covers all of them. */
@@ -22,6 +23,7 @@ type CreatorRow = {
   id: string;
   username: string | null;
   verificationTier: string | null;
+  eliteMemberNumber: number | null;
   profile: { fullName: string; headline: string | null; avatarDocumentId: string | null } | null;
   enrollments: { pathway: string | null }[];
   _count: { projects: number; followers: number };
@@ -45,6 +47,7 @@ function toCreatorCard(
     isFollowing: opts.isFollowing,
     isFollowedBy: opts.isFollowedBy,
     verificationTier: c.verificationTier,
+    eliteMemberNumber: c.eliteMemberNumber,
   };
 }
 
@@ -53,6 +56,7 @@ const CREATOR_SELECT = {
   id: true,
   username: true,
   verificationTier: true,
+  eliteMemberNumber: true,
   profile: { select: { fullName: true, headline: true, avatarDocumentId: true } },
   enrollments: {
     where: { enrollmentType: "ELECTIVE" },

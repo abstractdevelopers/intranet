@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/creators/avatar";
 import { VerificationBadge } from "@/components/verification-badge";
+import { EliteBadge } from "@/components/elite-badge";
 import { FollowButton } from "@/components/creators/follow-button";
 import { IconCourses, IconUsers } from "@/components/icons";
 import type { CreatorCard as CreatorCardData } from "@/lib/creators";
@@ -29,6 +30,7 @@ export function CreatorCard({
             className="flex items-center gap-1 text-sm font-semibold hover:text-brand-1 dark:hover:text-brand-3"
           >
             <span className="truncate">{creator.fullName}</span>
+            <EliteBadge memberNumber={creator.eliteMemberNumber} />
             <VerificationBadge tier={creator.verificationTier} />
           </Link>
           {creator.username ? (
