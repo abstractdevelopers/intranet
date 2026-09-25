@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { PROMISE_GOALS, type PromiseGoal } from "./constants";
+import { PROMISE_GOALS, PATHWAYS, type PromiseGoal } from "./constants";
 
 /**
  * Warm-up — the pre-class course task.
@@ -15,6 +15,7 @@ export type WallEntry = {
   body: string;
   goal: string | null;
   pathway: string | null;
+  ambition: string | null;
   createdAt: Date;
   cheerCount: number;
   cheeredByViewer: boolean;
@@ -52,6 +53,7 @@ export async function getWall(
       body: true,
       goal: true,
       pathway: true,
+      ambition: true,
       createdAt: true,
       userId: true,
       user: {
@@ -80,6 +82,7 @@ export async function getWall(
     body: p.body,
     goal: p.goal,
     pathway: p.pathway,
+    ambition: p.ambition,
     createdAt: p.createdAt,
     cheerCount: p._count.cheers,
     cheeredByViewer: p.cheers.length > 0,
@@ -100,7 +103,7 @@ export async function getWall(
 export async function getMyPromise(userId: string) {
   return db.promise.findUnique({
     where: { userId },
-    select: { id: true, body: true, goal: true, pathway: true },
+    select: { id: true, body: true, goal: true, pathway: true, ambition: true },
   });
 }
 
@@ -121,6 +124,39 @@ export async function getCraftCounts(): Promise<Record<string, number>> {
   const out: Record<string, number> = {};
   for (const r of rows) {
     if (r.pathway) out[r.pathway] = r._count._all;
+  }
+  return out;
+}
+
+/**
+ * The four studios ranked by how many promises each has posted, plus how many
+ * cheers their work has drawn. Equal cohort sizes make this winnable for every
+ * craft — which is what makes it fair competition rather than a popularity
+ * contest. Pure function so the page can reuse counts it already loaded.
+ */
+export function rankStudios(
+  counts: Record<string, number>,
+  cheersByPathway: Record<string, number> = {}
+): { pathway: string; promises: number; cheers: number }[] {
+  return Object.keys(PATHWAYS)
+    .map((pathway) => ({
+      pathway,
+      promises: counts[pathway] ?? 0,
+      cheers: cheersByPathway[pathway] ?? 0,
+    }))
+    .sort((a, b) => b.promises - a.promises || b.cheers - a.cheers);
+}
+
+/** Cheers received per craft, for the studio standings. */
+export async function getCheersByPathway(): Promise<Record<string, number>> {
+  const rows = await db.promise.findMany({
+    where: { pathway: { not: null } },
+    select: { pathway: true, _count: { select: { cheers: true } } },
+  });
+  const out: Record<string, number> = {};
+  for (const r of rows) {
+    if (!r.pathway) continue;
+    out[r.pathway] = (out[r.pathway] ?? 0) + r._count.cheers;
   }
   return out;
 }

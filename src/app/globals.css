@@ -328,4 +328,301 @@ body {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   In-app status bar (installed app only)
+   ---------------------------------------------------------------------------
+   The manifest launches in `fullscreen`, so the app owns the space where a
+   native status bar would be. Rather than leave it empty (or let the OS draw a
+   second clock in `standalone`), the app draws its own band: mark, name, and a
+   live clock, padded clear of the notch. Hidden on the website, and hidden
+   behind the splash/preloader (z-index 100) so it appears only once the app
+   itself is on screen. */
+
+.app-status-bar {
+  display: none;
+}
+
+.pwa-installed .app-status-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  height: calc(2rem + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) calc(0.9rem + env(safe-area-inset-right)) 0
+    calc(0.9rem + env(safe-area-inset-left));
+  background: #570e83;
+  color: #fff;
+}
+
+.app-status-bar__brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-status-bar__mark {
+  height: 0.85rem;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.app-status-bar__name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.app-status-bar__portal {
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(255 255 255 / 0.62);
+}
+
+.app-status-bar__clock {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* The shell clears the fixed bar so content never hides behind it. */
+.pwa-installed .app-shell-header {
+  margin-top: calc(2rem + env(safe-area-inset-top));
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile app tab bar (installed app only)
+   ---------------------------------------------------------------------------
+   The browser keeps the horizontal header strip. The installed app replaces it
+   with a fixed bottom bar of primary destinations, plus a sheet for the rest —
+   which is what makes it read as an app rather than a site on a phone. */
+
+.app-tabbar,
+.app-sheet {
+  display: none;
+}
+
+.pwa-installed .app-tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(12px);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.app-tabbar__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.25rem 0.45rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.app-tabbar__item[data-active="true"] {
+  color: var(--color-brand-1);
+}
+
+.dark .app-tabbar__item[data-active="true"] {
+  color: var(--color-brand-3);
+}
+
+.app-tabbar__icon {
+  position: relative;
+  display: inline-flex;
+}
+
+.app-tabbar__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.app-tabbar__badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  display: inline-flex;
+  min-width: 15px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--color-brand-1);
+  padding: 0 4px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* The bar is fixed, so the page needs room beneath it or the last row hides. */
+.pwa-installed .app-shell-main {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+/* The header strip and its scrolling nav are redundant once tabs exist. */
+.pwa-installed .app-shell-header,
+.pwa-installed .app-shell-nav {
+  display: none;
+}
+
+/* --- The "More" sheet ---------------------------------------------------- */
+
+.pwa-installed .app-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: block;
+}
+
+.app-sheet__scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgb(0 0 0 / 0.45);
+}
+
+.app-sheet__panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 78dvh;
+  overflow-y: auto;
+  border-radius: 1.25rem 1.25rem 0 0;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  animation: sheet-rise 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes sheet-rise {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.app-sheet__grabber {
+  width: 36px;
+  height: 4px;
+  margin: 0.5rem auto 0;
+  border-radius: 9999px;
+  background: var(--color-border);
+}
+
+.app-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.1rem 0.5rem;
+}
+
+.app-sheet__body {
+  padding: 0 1.1rem;
+}
+
+.app-sheet__group + .app-sheet__group {
+  margin-top: 1.1rem;
+}
+
+.app-sheet__group-label {
+  margin-bottom: 0.5rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.app-sheet__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.app-sheet__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  padding: 0.7rem 0.8rem;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.app-sheet__item[data-active="true"] {
+  border-color: color-mix(in srgb, var(--color-brand-1) 45%, transparent);
+  background: color-mix(in srgb, var(--color-brand-1) 10%, transparent);
+  color: var(--color-brand-1);
+}
+
+.dark .app-sheet__item[data-active="true"] {
+  color: var(--color-brand-3);
+}
+
+.app-sheet__badge {
+  margin-left: auto;
+  display: inline-flex;
+  min-width: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--color-brand-1);
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  /* Tablets and desktop keep the sidebar; the tab bar is a phone affordance. */
+  .pwa-installed .app-tabbar {
+    display: none;
+  }
+  .pwa-installed .app-shell-header,
+  .pwa-installed .app-shell-nav {
+    display: flex;
+  }
+  .pwa-installed .app-shell-main {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sheet__panel {
+    animation: none;
+  }
+}
+
 

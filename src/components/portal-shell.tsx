@@ -7,6 +7,8 @@ import { BrandLockup } from "./crest";
 import { IconLogout, ICONS, type IconName } from "./icons";
 import { VerificationBadge } from "./verification-badge";
 import { EliteBadge } from "./elite-badge";
+import { AppStatusBar } from "./pwa/app-status-bar";
+import { MobileTabBar, type TabItem } from "./pwa/mobile-tab-bar";
 
 export type NavItem = {
   href: string;
@@ -16,6 +18,28 @@ export type NavItem = {
 };
 
 export type NavSection = { label: string; items: NavItem[] };
+
+/**
+ * The five primary destinations for the installed app's bottom bar. Everything
+ * else lives behind "More". Kept to five so each target is a comfortable
+ * thumb-sized tap.
+ */
+const MOBILE_TABS: TabItem[] = [
+  { href: "/student", label: "Home", icon: "Dashboard" },
+  { href: "/student/courses", label: "Courses", icon: "Courses" },
+  { href: "/student/creators", label: "Creators", icon: "Students" },
+  { href: "/student/notifications", label: "Alerts", icon: "Bell" },
+  { href: "/student/profile", label: "You", icon: "Profile" },
+];
+
+/** Admin keeps its own primary tabs — the portals don't share destinations. */
+const ADMIN_TABS: TabItem[] = [
+  { href: "/admin", label: "Home", icon: "Dashboard" },
+  { href: "/admin/students", label: "Students", icon: "Students" },
+  { href: "/admin/courses", label: "Courses", icon: "Courses" },
+  { href: "/admin/notifications", label: "Alerts", icon: "Bell" },
+  { href: "/admin/settings", label: "Settings", icon: "Settings" },
+];
 
 /**
  * Highlight only the most specific matching nav item. A plain prefix test would
@@ -55,9 +79,14 @@ export function PortalShell({
   const allItems = sections.flatMap((s) => s.items);
   // One winner across every section, so sibling sections can't double-highlight.
   const active = activeHref(pathname, allItems.map((i) => i.href));
+  // The installed app gets the app-style chrome; the website keeps the header
+  // strip. Chosen by the portal rather than sniffed from the URL.
+  const tabs = portal.toLowerCase().includes("admin") ? ADMIN_TABS : MOBILE_TABS;
 
   return (
     <div className="flex min-h-screen">
+      {/* In-app status bar — installed app only, drawn above everything. */}
+      <AppStatusBar portal={portal} />
       <aside className="app-shell-sidebar hidden w-64 shrink-0 flex-col border-r border-border bg-surface md:flex">
         <div className="border-b border-border px-5 py-5">
           <Link href="/" aria-label="UCA Sandbox home">
@@ -166,6 +195,9 @@ export function PortalShell({
         </nav>
         <main className="app-shell-main flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>
+
+      {/* Mobile app tab bar — installed app only; the website keeps the strip. */}
+      <MobileTabBar tabs={tabs} sections={sections} badges={badges} />
     </div>
   );
 }

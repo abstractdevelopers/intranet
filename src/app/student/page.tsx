@@ -19,6 +19,7 @@ import {
   IconTarget,
   IconAssignments,
   IconCommunication,
+  IconSpark,
 } from "@/components/icons";
 import { getCourseProgress } from "@/lib/progress";
 import { buildMilestones } from "@/lib/milestones";
@@ -131,24 +132,26 @@ export default async function StudentDashboard() {
         </div>
       </section>
 
-      {/* Pre-class window — the course warm-up, before classes begin */}
+      {/* Pre-class window — the Studio Wall, before classes begin */}
       {isPromiseWallOpen() ? (
         <Card className="border-brand-3/50 bg-brand-3/10 dark:border-brand-1/40 dark:bg-brand-1/10">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-start gap-3">
-              <IconCommunication className="mt-0.5 h-5 w-5 shrink-0 text-brand-1 dark:text-brand-3" />
+              <IconSpark className="mt-0.5 h-5 w-5 shrink-0 text-brand-1 dark:text-brand-3" />
               <div>
-                <p className="text-sm font-semibold">Classes begin {formatDate(CLASSES_START)} — start with your warm-up</p>
+                <p className="text-sm font-semibold">
+                  Classes begin {formatDate(CLASSES_START)} — declare your work
+                </p>
                 <p className="mt-1 max-w-xl text-sm text-text-muted">
                   {myPromise
-                    ? `You've written your line. See what your coursemates are working toward.`
-                    : "A small first task for your course: write one line about what you want to make. Nothing graded — just how we begin."}
+                    ? "You're on the wall. See what the other three studios are building."
+                    : "Four studios, one academy. Say what you'll make and what you'll walk out with — then see what everyone else is building."}
                 </p>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <ButtonLink href="/student/warm-up" variant={myPromise ? "secondary" : "primary"}>
-                {myPromise ? "See the warm-up" : "Start your warm-up"}
+                {myPromise ? "View the wall" : "Add to the wall"}
               </ButtonLink>
               <ButtonLink href="/student/peer-body" variant="secondary">
                 Peer Body

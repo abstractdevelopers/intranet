@@ -116,7 +116,7 @@ export default async function CreatorProfilePage({
               </p>
               <h1 className="mt-1.5 flex items-center gap-2 text-2xl font-bold tracking-tight md:text-3xl">
                 <span>{displayName}</span>
-                <EliteBadge memberNumber={creator.eliteMemberNumber} className="h-5 w-5" />
+                <EliteBadge memberNumber={creator.eliteMemberNumber} />
                 <VerificationBadge tier={creator.verificationTier} className="h-5 w-5" />
               </h1>
               {creator.username ? (

@@ -58,7 +58,7 @@ export function PathwayPicker({ courses }: { courses: Course[] }) {
   if (elite) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-brand-1/30 bg-brand-1/5 px-6 py-12 text-center">
-        <EliteBadge memberNumber={elite} className="h-12 w-12" />
+        <EliteBadge memberNumber={elite} size="lg" />
         <p className="mt-4 text-lg font-bold tracking-tight">You&apos;re an Elite Member</p>
         <p className="mt-1 text-sm text-text-muted">
           Badge&nbsp;#{elite} of {ELITE_BADGE_LIMIT} — carried on your profile from now on.

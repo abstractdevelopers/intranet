@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { requireStudent } from "@/lib/rbac";
 import { EmptyState } from "@/components/ui/empty";
-import { PromiseComposer } from "@/components/promise-wall/promise-composer";
-import { PromiseCard } from "@/components/promise-wall/promise-card";
+import { StudioComposer } from "@/components/promise-wall/studio-composer";
+import { StudioCard } from "@/components/promise-wall/studio-card";
+import { StudioStandings } from "@/components/promise-wall/studio-standings";
 import {
   getWall,
   getMyPromise,
   getWallCount,
   getCraftCounts,
+  getCheersByPathway,
+  rankStudios,
   getViewerPathway,
   PROMISE_MAX_LENGTH,
 } from "@/lib/promises";
@@ -17,21 +20,23 @@ import {
   PATHWAY_LABELS,
   PATHWAYS,
   PATHWAY_TONES,
-  PROMISE_PROMPTS,
-  PROMISE_PROMPTS_BY_PATHWAY,
+  STUDIO_CRAFT,
   type Pathway,
 } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 
-export const metadata = { title: "Warm-up" };
+export const metadata = { title: "Studio Wall" };
 
 /**
- * The course warm-up before classes begin. Every student writes one line for
- * their craft — a small, real first thought — and can see what everyone else
- * wrote. Filtered by course so it reads as four groups getting started, not a
- * competition.
+ * The Studio Wall — the academy's pre-class declaration.
+ *
+ * Each of the four studios declares what it will make. A student posts the work
+ * they promise to produce and the deliverable they'll walk out with, tagged to
+ * their craft. The wall is therefore tied to the curriculum: it shows what the
+ * academy actually teaches, in the students' own words, and lets each studio
+ * see itself forming before day one.
  */
-export default async function WarmUpPage({
+export default async function StudioWallPage({
   searchParams,
 }: {
   searchParams: Promise<{ course?: string }>;
@@ -42,59 +47,59 @@ export default async function WarmUpPage({
   const viewerPathway = await getViewerPathway(user.id);
   const courseFilter = Object.keys(PATHWAYS).includes(course) ? course : "";
 
-  const [entries, mine, count, craftCounts] = await Promise.all([
+  const [entries, mine, count, craftCounts, cheersByPathway] = await Promise.all([
     getWall(user.id, { pathway: courseFilter || null }),
     getMyPromise(user.id),
     getWallCount(),
     getCraftCounts(),
+    getCheersByPathway(),
   ]);
+  const standings = rankStudios(craftCounts, cheersByPathway);
 
   const open = isPromiseWallOpen();
-
-  // Prompts are written for the student's course when we know it.
-  const paths = viewerPathway
-    ? PROMISE_PROMPTS_BY_PATHWAY[viewerPathway as Pathway]
-    : [...PROMISE_PROMPTS];
-  const prompt = paths[count % paths.length] ?? paths[0];
-
   const craftKeys = Object.keys(PATHWAYS) as Pathway[];
+  const viewerCraft = viewerPathway ? STUDIO_CRAFT[viewerPathway as Pathway] : null;
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-5xl space-y-6">
+      {/* Editorial hero */}
       <div className="hero-band relative overflow-hidden rounded-2xl p-6 md:p-8">
         <p className="hero-eyebrow text-[11px] font-semibold uppercase tracking-[0.18em]">
-          Before classes begin
+          UCA Sandbox · Before classes begin
         </p>
         <h1 className="mt-2 text-2xl font-bold tracking-tight text-white md:text-3xl">
-          Your first warm-up
+          The Studio Wall
         </h1>
         <p className="hero-muted mt-2 max-w-2xl text-sm">
-          A small first task to get your craft moving before term. Write one line for your course,
-          and read what your coursemates are working toward. Nothing here is graded — it&apos;s how
-          we begin as creators. Classes begin {formatDate(CLASSES_START)}.
+          Four studios, one academy. Declare the work you&apos;ll make and the deliverable
+          you&apos;ll walk out with — then read what everyone else is building. Classes begin{" "}
+          {formatDate(CLASSES_START)}.
         </p>
       </div>
 
-      <div className="mt-6">
+      {/* The brief */}
+      <div>
         {open ? (
-          <PromiseComposer
+          <StudioComposer
             initialBody={mine?.body ?? null}
             initialGoal={mine?.goal ?? null}
-            paths={paths}
-            prompt={prompt}
+            initialAmbition={mine?.ambition ?? null}
             pathway={(mine?.pathway ?? viewerPathway) || null}
             maxLength={PROMISE_MAX_LENGTH}
           />
         ) : (
           <div className="rounded-2xl border border-border bg-surface p-5 text-sm text-text-muted">
-            This warm-up closed when classes began — but every line below stays.{" "}
+            The wall closed to new declarations when classes began — every card below stays.{" "}
             {mine ? "Yours is still here." : ""}
           </div>
         )}
       </div>
 
-      {/* Course filters — see your coursemates at a glance */}
-      <div className="mt-6 flex flex-wrap gap-2">
+      {/* The four studios */}
+      <StudioStandings standings={standings} viewerPathway={viewerPathway} />
+
+      {/* Studio filter */}
+      <div className="flex flex-wrap gap-2">
         <Link
           href="/student/warm-up"
           className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
@@ -103,7 +108,7 @@ export default async function WarmUpPage({
               : "border-brand-1 bg-brand-1 text-white"
           }`}
         >
-          Everyone ({count})
+          All studios ({count})
         </Link>
         {craftKeys.map((key) => {
           const n = craftCounts[key] ?? 0;
@@ -124,34 +129,38 @@ export default async function WarmUpPage({
         })}
       </div>
 
-      <div className="mt-6">
-        {entries.length === 0 ? (
-          <EmptyState
-            title={
-              courseFilter ? "No one from this course has started yet" : "No one has started yet — go first"
-            }
-            body={
-              courseFilter
-                ? "Try another course, or be the first from yours to write your line."
-                : "Write your line above and it'll appear here for everyone."
-            }
-          />
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {entries.map((entry) => (
-              <PromiseCard key={entry.id} entry={entry} />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* The wall */}
+      {entries.length === 0 ? (
+        <EmptyState
+          title={
+            courseFilter
+              ? `No ${PATHWAY_LABELS[courseFilter as Pathway]} declarations yet`
+              : "The wall is empty — declare first"
+          }
+          body={
+            courseFilter
+              ? "Be the first from your studio to put your work on the wall."
+              : "Add your promise above and it appears here for the whole academy."
+          }
+        />
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {entries.map((entry) => (
+            <StudioCard key={entry.id} entry={entry} />
+          ))}
+        </div>
+      )}
 
-      <p className="mt-8 text-center text-xs text-text-muted">
-        Ready to share work and get feedback from your coursemates?{" "}
-        <Link href="/student/peer-body" className="text-brand-1 hover:underline dark:text-brand-3">
-          Open Peer Body
-        </Link>
-        .
-      </p>
+      {viewerCraft ? (
+        <p className="text-center text-xs text-text-muted">
+          Your studio works in {viewerCraft.medium.toLowerCase()}. Ready to share work and get
+          feedback?{" "}
+          <Link href="/student/peer-body" className="text-brand-1 hover:underline dark:text-brand-3">
+            Open Peer Body
+          </Link>
+          .
+        </p>
+      ) : null}
     </div>
   );
 }

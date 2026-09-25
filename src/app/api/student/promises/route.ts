@@ -16,9 +16,14 @@ const schema = z.object({
     .min(3, "Write a little more than that.")
     .max(PROMISE_MAX_LENGTH, `Keep it to ${PROMISE_MAX_LENGTH} characters.`),
   goal: z.enum(PROMISE_GOAL_KEYS as [string, ...string[]]).optional(),
+  ambition: z
+    .string()
+    .trim()
+    .max(PROMISE_MAX_LENGTH, `Keep it to ${PROMISE_MAX_LENGTH} characters.`)
+    .optional(),
 });
 
-/** Post or update the viewer's warm-up line. */
+/** Post or update the viewer's studio card: the promise plus the deliverable. */
 export async function POST(request: Request) {
   const guard = await requireOnboardedStudentApi();
   if (!guard.ok) return guard.response;
@@ -34,11 +39,18 @@ export async function POST(request: Request) {
   // The craft is derived server-side from the student's own elective, never
   // taken from the client.
   const pathway = await getViewerPathway(user.id);
+  const ambition = parsed.data.ambition?.trim() || null;
 
   const promise = await db.promise.upsert({
     where: { userId: user.id },
-    update: { body: parsed.data.body, goal: parsed.data.goal ?? null, pathway },
-    create: { userId: user.id, body: parsed.data.body, goal: parsed.data.goal ?? null, pathway },
+    update: { body: parsed.data.body, goal: parsed.data.goal ?? null, pathway, ambition },
+    create: {
+      userId: user.id,
+      body: parsed.data.body,
+      goal: parsed.data.goal ?? null,
+      pathway,
+      ambition,
+    },
     select: { id: true },
   });
 

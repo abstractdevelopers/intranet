@@ -1027,6 +1027,9 @@ model Promise {
   // The craft this promise belongs to, copied from the student's elective so
   // the wall can be filtered by craft. Null = not yet assigned.
   pathway   String?
+  // What the student intends to walk out with. One-line "the work" half of the
+  // Studio Wall: the promise is the declaration, this is the deliverable.
+  ambition  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

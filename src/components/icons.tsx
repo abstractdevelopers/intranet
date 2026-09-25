@@ -87,6 +87,9 @@ export const IconMilestone = (p: IconProps) => (
 export const IconSpark = (p: IconProps) => (
   <Svg {...p}><path d="M12 3.5 13.8 10l6.5 2-6.5 2L12 20.5 10.2 14l-6.5-2 6.5-2L12 3.5Z" /></Svg>
 );
+export const IconMore = (p: IconProps) => (
+  <Svg {...p}><circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" /><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none" /></Svg>
+);
 export const IconTarget = (p: IconProps) => (
   <Svg {...p}><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" /></Svg>
 );
@@ -205,6 +208,7 @@ export const ICONS = {
   Trophy: IconTrophy,
   Medal: IconMedal,
   Spark: IconSpark,
+  More: IconMore,
   Target: IconTarget,
   Heart: IconHeart,
   Compass: IconCompass,

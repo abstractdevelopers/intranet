@@ -99,6 +99,14 @@ export function pathwayFromSlug(slug: string): Pathway | null {
   return ELECTIVE_SLUG_TO_PATHWAY[slug] ?? null;
 }
 
+/** The course slug for a pathway — used to draw the right course mark. */
+export const PATHWAY_TO_SLUG: Record<Pathway, string> = {
+  GRAPHIC_DESIGN: "graphics-design",
+  VIDEO_EDITING: "video-editing",
+  COMMUNICATION_INFLUENCE: "communication-influence",
+  CONTENT_WRITING: "content-writing",
+};
+
 /**
  * Verification badges. GOLD marks the founding team; BLUE marks every other
  * signed-up account. Null on User.verificationTier means no badge.
@@ -267,6 +275,77 @@ export const PROMISE_PROMPTS = [
   "The first thing I want to make here is…",
   "I'm here because…",
 ] as const;
+
+/**
+ * The Studio Wall — one card per craft.
+ *
+ * The academy's premise is that a creator walks out with work, not notes. So the
+ * wall is built around what each course actually produces: a craft, the medium
+ * its students work in, the deliverable they are aiming at, and the promise
+ * they make to get there. This is what ties the wall to the curriculum instead
+ * of being a generic social feed.
+ */
+export const STUDIO_CRAFT: Record<
+  Pathway,
+  {
+    /** What the course produces. */
+    craft: string;
+    /** The raw material — how students talk about their own work. */
+    medium: string;
+    /** Suggested deliverables for the ambition field. */
+    deliverables: string[];
+    /** Editorial blurb shown on the craft card. */
+    ethos: string;
+  }
+> = {
+  GRAPHIC_DESIGN: {
+    craft: "Visual identity",
+    medium: "Brand, type, colour",
+    deliverables: ["A logo suite", "A brand book", "A poster series", "A packaging set"],
+    ethos: "Designers don't decorate. They decide what a brand means, then make it impossible to ignore.",
+  },
+  VIDEO_EDITING: {
+    craft: "Story on screen",
+    medium: "Cut, pace, sound",
+    deliverables: ["A 60-second film", "A reel", "A title sequence", "A mini-documentary"],
+    ethos: "An edit is an argument. Every cut either earns the next second or loses it.",
+  },
+  CONTENT_WRITING: {
+    craft: "Words that move",
+    medium: "Voice, structure, truth",
+    deliverables: ["A published essay", "A newsletter issue", "A long-form feature", "A campaign script"],
+    ethos: "Writing is thinking made visible. The first draft is you finding out what you meant.",
+  },
+  COMMUNICATION_INFLUENCE: {
+    craft: "Presence and persuasion",
+    medium: "Voice, story, room",
+    deliverables: ["A keynote", "A pitch deck", "A campaign idea", "A public talk"],
+    ethos: "Influence isn't volume. It's the clarity to be believed, and the nerve to say it plainly.",
+  },
+};
+
+/**
+ * The creative brief each craft answers on the wall — the same shape for all
+ * four so they are comparable, but worded in each discipline's own language.
+ */
+export const STUDIO_BRIEF: Record<Pathway, { promise: string; ambition: string }> = {
+  GRAPHIC_DESIGN: {
+    promise: "The brand I'd love to design is…",
+    ambition: "By the end of term, I'll have made…",
+  },
+  VIDEO_EDITING: {
+    promise: "The story I'd love to put on screen is…",
+    ambition: "By the end of term, I'll have made…",
+  },
+  CONTENT_WRITING: {
+    promise: "The piece I'd love to publish is…",
+    ambition: "By the end of term, I'll have made…",
+  },
+  COMMUNICATION_INFLUENCE: {
+    promise: "The idea I'd love people to believe is…",
+    ambition: "By the end of term, I'll have made…",
+  },
+};
 
 /** Craft chip colours, kept in step with the course marks. */
 export const PATHWAY_TONES: Record<Pathway, string> = {
