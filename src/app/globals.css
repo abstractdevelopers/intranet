@@ -169,8 +169,6 @@ html {
      scrolls rather than pushing the layout wider than the screen. */
   .pwa-installed .app-shell-body {
     min-height: 0;
-    /* Clears the fixed status bar. */
-    margin-top: calc(2rem + env(safe-area-inset-top));
   }
   /* Bottom inset keeps the last row above the home indicator, on top of the
      clearance already reserved for the fixed tab bar. */
@@ -363,21 +361,42 @@ html {
   display: none;
 }
 
-.pwa-installed .app-status-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  height: calc(2rem + env(safe-area-inset-top));
-  padding: env(safe-area-inset-top) calc(0.9rem + env(safe-area-inset-right)) 0
-    calc(0.9rem + env(safe-area-inset-left));
-  background: #570e83;
-  color: #fff;
+/*
+ * Two cases, and they must never disagree:
+ *
+ *  - `display-mode: fullscreen` — the OS has hidden its status bar and the app
+ *    owns that region, so we draw our own bar and reserve its height.
+ *  - anything else (`standalone`, the Android fallback when `fullscreen` can't
+ *    be granted) — the OS keeps its own status bar, drawn outside the web view
+ *    where no CSS can touch it. Drawing a second bar there would leave an
+ *    unpaintable gap below it, which renders black. So we draw nothing and
+ *    reserve nothing.
+ *
+ * Gating both the bar and the offset on the same media query is what makes a
+ * leftover black strip structurally impossible.
+ */
+@media (display-mode: fullscreen) {
+  .pwa-installed .app-status-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    height: calc(2rem + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) calc(0.9rem + env(safe-area-inset-right)) 0
+      calc(0.9rem + env(safe-area-inset-left));
+    background: #570e83;
+    color: #fff;
+  }
+
+  .pwa-installed .app-shell-body {
+    /* Clears the fixed bar above. */
+    margin-top: calc(2rem + env(safe-area-inset-top));
+  }
 }
 
 .app-status-bar__brand {

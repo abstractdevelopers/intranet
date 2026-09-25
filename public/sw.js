@@ -9,7 +9,7 @@
  * Kept dependency-free. Bump SW_VERSION to invalidate every cache on deploy.
  */
 
-const SW_VERSION = "uca-sw-v4";
+const SW_VERSION = "uca-sw-v5";
 const SHELL_CACHE = `${SW_VERSION}-shell`;
 const ASSET_CACHE = `${SW_VERSION}-assets`;
 const OFFLINE_URL = "/offline";
