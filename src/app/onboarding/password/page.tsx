@@ -2,7 +2,9 @@ import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { StepProgress } from "@/components/onboarding/step-progress";
 import { PasswordSetupForm } from "@/components/onboarding/password-setup-form";
+import { ReclaimPerks } from "@/components/onboarding/reclaim-perks";
 import { requireStudent } from "@/lib/rbac";
+import { elitePlacesRemaining } from "@/lib/elite";
 
 export const metadata = { title: "Set your password" };
 
@@ -10,6 +12,7 @@ export const metadata = { title: "Set your password" };
 export default async function OnboardingPasswordPage() {
   const user = await requireStudent();
   if (!user.mustChangePassword) redirect("/onboarding");
+  const eliteRemaining = await elitePlacesRemaining();
 
   return (
     <div className="space-y-6">
@@ -25,6 +28,7 @@ export default async function OnboardingPasswordPage() {
       <Card className="p-6">
         <PasswordSetupForm />
       </Card>
+      <ReclaimPerks eliteRemaining={eliteRemaining} />
     </div>
   );
 }

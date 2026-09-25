@@ -2,10 +2,12 @@ import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { PathwayPicker } from "@/components/onboarding/pathway-picker";
 import { StepProgress } from "@/components/onboarding/step-progress";
+import { ReclaimPerks } from "@/components/onboarding/reclaim-perks";
 import { db } from "@/lib/db";
 import { requireStudent } from "@/lib/rbac";
 import { hasProgramme } from "@/lib/enrollment";
 import { isPathwayAutoApprovalActive } from "@/lib/constants";
+import { elitePlacesRemaining } from "@/lib/elite";
 
 export const metadata = { title: "Choose your pathway" };
 
@@ -24,11 +26,14 @@ export default async function OnboardingPathwayPage() {
   if (await hasProgramme(user.id)) redirect("/student");
   if (!isPathwayAutoApprovalActive()) redirect("/student/apply");
 
-  const courses = await db.course.findMany({
-    where: { type: "ELECTIVE", isActive: true },
-    orderBy: { name: "asc" },
-    select: { id: true, name: true, description: true, slug: true, price: true },
-  });
+  const [courses, eliteRemaining] = await Promise.all([
+    db.course.findMany({
+      where: { type: "ELECTIVE", isActive: true },
+      orderBy: { name: "asc" },
+      select: { id: true, name: true, description: true, slug: true, price: true },
+    }),
+    elitePlacesRemaining(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -37,9 +42,9 @@ export default async function OnboardingPathwayPage() {
         <p className="eyebrow">Step 04</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight">Choose your pathway</h1>
         <p className="mt-2 text-sm text-text-muted">
-          Pick the specialism you want to build. You&apos;ll start straight away — your two
-          compulsory foundations (Personal Branding and Social Media) are included
-          automatically, and your first month is free.
+          Pick the specialism you want to build. Your two compulsory foundations (Personal
+          Branding and Social Media) come with it, and there&apos;s no waiting on approval while
+          the reclaim window is open.
         </p>
       </div>
       <Card className="p-6">
@@ -59,6 +64,7 @@ export default async function OnboardingPathwayPage() {
           />
         )}
       </Card>
+      <ReclaimPerks eliteRemaining={eliteRemaining} />
     </div>
   );
 }
