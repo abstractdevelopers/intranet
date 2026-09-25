@@ -45,6 +45,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/*
+ * The `html` element paints the canvas. Only `body` was set, so anywhere the
+ * body box did not reach — the area behind the OS insets in a fullscreen PWA —
+ * fell through to the browser default, which is black on a standalone launch.
+ * Setting it here keeps the whole canvas on-brand, in both themes.
+ */
+html {
+  min-height: 100%;
+  background-color: var(--color-bg);
+}
+
 ::selection {
   background: var(--color-brand-3);
   color: var(--color-ink);
@@ -134,27 +145,37 @@ body {
    Full-screen (installed) layout
    ---------------------------------------------------------------------------
    In `fullscreen` mode the app draws under the status bar and the home
-   indicator / gesture bar, so those edges need the OS-reported insets or
-   content sits under system chrome. Scoped to `.pwa-installed` (a browser tab
-   already reserves that space) and to phone widths, so desktop keeps its own
-   padding and only the device that has a notch pays for it. */
+   indicator / gesture bar. Two things must therefore be true:
 
-.pwa-installed body {
-  /* Draw into the notch and rounded corners. */
+     1. The shell fills the whole viewport (100dvh) — `min-h-screen` is 100vh,
+        which is a *viewport* unit and excludes the area behind the OS insets,
+        so on a phone it stops short and leaves a band at the top and bottom.
+     2. Something paints behind that band. The purple app status bar covers the
+        top; the shell root covers everything below it.
+
+   Both are scoped to `.pwa-installed` and to phone widths, so a browser tab
+   (which already reserves the insets) and desktop are untouched. */
+
+.pwa-installed .app-shell {
   min-height: 100dvh;
+  /* Paints the canvas behind the tab bar and past the bottom inset. */
+  background-color: var(--color-bg);
 }
 
 @media (max-width: 767px) {
-  /* Top inset clears the status bar / clock. */
-  .pwa-installed .app-shell-header {
-    padding-top: calc(0.75rem + env(safe-area-inset-top));
+  /* The shell is already at least a full dynamic viewport (set above), which
+     is what removes the short band that `100vh` left at the bottom. */
+  /* The column holding the page must be allowed to shrink, so a tall page
+     scrolls rather than pushing the layout wider than the screen. */
+  .pwa-installed .app-shell-body {
+    min-height: 0;
+    /* Clears the fixed status bar. */
+    margin-top: calc(2rem + env(safe-area-inset-top));
   }
-  /* Bottom inset keeps the last row above the home indicator. */
+  /* Bottom inset keeps the last row above the home indicator, on top of the
+     clearance already reserved for the fixed tab bar. */
   .pwa-installed .app-shell-main {
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-  }
-  .pwa-installed .app-shell-nav {
-    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
   }
   /* Left/right insets matter in landscape, against the rounded edges. */
   .pwa-installed .app-shell-header,
@@ -394,10 +415,8 @@ body {
   font-weight: 600;
 }
 
-/* The shell clears the fixed bar so content never hides behind it. */
-.pwa-installed .app-shell-header {
-  margin-top: calc(2rem + env(safe-area-inset-top));
-}
+/* The tab bar clears the fixed status bar; the shell body's top offset is set
+   in the full-screen layout block above. */
 
 /* ---------------------------------------------------------------------------
    Mobile app tab bar (installed app only)
@@ -476,10 +495,8 @@ body {
   color: #fff;
 }
 
-/* The bar is fixed, so the page needs room beneath it or the last row hides. */
-.pwa-installed .app-shell-main {
-  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
-}
+/* The bar is fixed, so the page needs room beneath it — that clearance lives
+   with the rest of the full-screen layout above, so it isn't repeated here. */
 
 /* The header strip and its scrolling nav are redundant once tabs exist. */
 .pwa-installed .app-shell-header,

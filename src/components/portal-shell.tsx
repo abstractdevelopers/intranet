@@ -84,7 +84,7 @@ export function PortalShell({
   const tabs = portal.toLowerCase().includes("admin") ? ADMIN_TABS : MOBILE_TABS;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="app-shell flex min-h-screen">
       {/* In-app status bar — installed app only, drawn above everything. */}
       <AppStatusBar portal={portal} />
       <aside className="app-shell-sidebar hidden w-64 shrink-0 flex-col border-r border-border bg-surface md:flex">
@@ -156,7 +156,7 @@ export function PortalShell({
           </form>
         </div>
       </aside>
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="app-shell-body flex min-w-0 flex-1 flex-col">
         <header className="app-shell-header flex items-center justify-between border-b border-border bg-surface px-4 py-3 md:hidden">
           <Link href="/" aria-label="UCA Sandbox home">
             <BrandLockup subtitle={portal} />
