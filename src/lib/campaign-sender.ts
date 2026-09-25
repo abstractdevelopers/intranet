@@ -12,7 +12,14 @@ import { SignJWT, jwtVerify } from "jose";
 import { db } from "./db";
 import type { Prisma } from "@prisma/client";
 
-export type AudienceKind = "ALL_STUDENTS" | "SIGNED_UP" | "NOT_SIGNED_UP" | "COURSE" | "PATHWAY";
+export type AudienceKind =
+  | "ALL_STUDENTS"
+  | "SIGNED_UP"
+  | "SIGNED_UP_NO_COURSE"
+  | "ELECTIVE"
+  | "NOT_SIGNED_UP"
+  | "COURSE"
+  | "PATHWAY";
 
 export type AudienceRules = {
   audience: AudienceKind;
@@ -37,14 +44,38 @@ const SIGNED_UP: Prisma.UserWhereInput = {
   ],
 };
 
+/**
+ * Signed up but has no course yet — finished onboarding (or picked a username)
+ * without applying, so nothing is enrolled. This is the "signed up and hasn't
+ * chosen a course" audience the academy nudges to complete their application.
+ */
+const SIGNED_UP_NO_COURSE: Prisma.UserWhereInput = {
+  OR: [{ username: { not: null } }, { onboardingCompletedAt: { not: null } }],
+  applications: { none: {} },
+  enrollments: { none: {} },
+};
+
+/** Includes students with any elective enrolment at all, whatever its status. */
+const ELECTIVE: Prisma.UserWhereInput = {
+  enrollments: { some: { enrollmentType: "ELECTIVE" } },
+};
+
+/** Recognised audience kinds, used for validation and parsing. */
+export const AUDIENCE_KINDS: AudienceKind[] = [
+  "ALL_STUDENTS",
+  "SIGNED_UP",
+  "SIGNED_UP_NO_COURSE",
+  "ELECTIVE",
+  "NOT_SIGNED_UP",
+  "COURSE",
+  "PATHWAY",
+];
+
 /** Reasonable upper bound so a stray rule can't target the wrong population. */
 export function parseAudience(raw: string): AudienceRules {
   try {
     const parsed = JSON.parse(raw) as AudienceRules;
-    if (
-      parsed &&
-      ["ALL_STUDENTS", "SIGNED_UP", "NOT_SIGNED_UP", "COURSE", "PATHWAY"].includes(parsed.audience)
-    ) {
+    if (parsed && AUDIENCE_KINDS.includes(parsed.audience)) {
       return parsed;
     }
   } catch {
@@ -58,39 +89,63 @@ export function parseAudience(raw: string): AudienceRules {
  * email are always excluded, and suspended accounts are skipped.
  */
 export async function resolveAudience(rules: AudienceRules) {
-  const base: Prisma.UserWhereInput = {
-    role: "STUDENT",
-    status: "ACTIVE",
-    emailOptOutAt: null,
-  };
-
-  let audienceFilter: Prisma.UserWhereInput = {};
-  if (rules.audience === "SIGNED_UP") audienceFilter = SIGNED_UP;
-  else if (rules.audience === "NOT_SIGNED_UP") audienceFilter = NOT_SIGNED_UP;
-  else if (rules.audience === "COURSE") {
-    audienceFilter = { enrollments: { some: { courseId: { in: rules.courseIds ?? [] } } } };
-  } else if (rules.audience === "PATHWAY") {
-    // Applications record the chosen elective as a course, so the pathway is
-    // read through that relation rather than stored on the application itself.
-    audienceFilter = {
-      OR: [
-        { enrollments: { some: { pathway: rules.pathway ?? undefined } } },
-        { applications: { some: { selectedElective: { pathway: rules.pathway ?? undefined } } } },
-      ],
-    };
-  }
-
   return db.user.findMany({
-    where: { AND: [base, audienceFilter] },
+    where: {
+      AND: [{ role: "STUDENT", status: "ACTIVE", emailOptOutAt: null }, audienceWhere(rules)],
+    },
     select: { id: true, email: true },
     orderBy: { createdAt: "asc" },
   });
+}
+
+/**
+ * The push-audience variant of resolveAudience: same categories, but no email
+ * opt-out (push is opted into by subscribing the device) and suspended
+ * accounts still excluded.
+ */
+export async function resolveAudienceForPush(rules: AudienceRules) {
+  return db.user.findMany({
+    where: { AND: [{ role: "STUDENT", status: "ACTIVE" }, audienceWhere(rules)] },
+    select: { id: true, email: true },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
+/** Shared audience predicate, reused by email and push resolution. */
+function audienceWhere(rules: AudienceRules): Prisma.UserWhereInput {
+  switch (rules.audience) {
+    case "SIGNED_UP":
+      return SIGNED_UP;
+    case "SIGNED_UP_NO_COURSE":
+      return SIGNED_UP_NO_COURSE;
+    case "ELECTIVE":
+      return ELECTIVE;
+    case "NOT_SIGNED_UP":
+      return NOT_SIGNED_UP;
+    case "COURSE":
+      return { enrollments: { some: { courseId: { in: rules.courseIds ?? [] } } } };
+    case "PATHWAY":
+      // Applications record the chosen elective as a course, so the pathway is
+      // read through that relation rather than stored on the application itself.
+      return {
+        OR: [
+          { enrollments: { some: { pathway: rules.pathway ?? undefined } } },
+          { applications: { some: { selectedElective: { pathway: rules.pathway ?? undefined } } } },
+        ],
+      };
+    default:
+      return {};
+  }
 }
 
 export function describeAudience(rules: AudienceRules, courseNames: string[] = []): string {
   switch (rules.audience) {
     case "SIGNED_UP":
       return "Students who signed up";
+    case "SIGNED_UP_NO_COURSE":
+      return "Signed up, no course chosen";
+    case "ELECTIVE":
+      return "Students on an elective course";
     case "NOT_SIGNED_UP":
       return "Waiting list (not signed up)";
     case "COURSE":

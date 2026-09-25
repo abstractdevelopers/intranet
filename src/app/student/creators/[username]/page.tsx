@@ -61,13 +61,21 @@ export default async function CreatorProfilePage({
 
   const isSelf = creator.id === viewer.id;
 
-  const [projects, isFollowing] = await Promise.all([
+  const [projects, isFollowing, followsYou] = await Promise.all([
     getCreatorProjects(creator.id, { includeHidden: isSelf }),
     isSelf
       ? Promise.resolve(false)
       : db.follow
           .findUnique({
             where: { followerId_followingId: { followerId: viewer.id, followingId: creator.id } },
+            select: { id: true },
+          })
+          .then((f) => Boolean(f)),
+    isSelf
+      ? Promise.resolve(false)
+      : db.follow
+          .findUnique({
+            where: { followerId_followingId: { followerId: creator.id, followingId: viewer.id } },
             select: { id: true },
           })
           .then((f) => Boolean(f)),
@@ -121,8 +129,22 @@ export default async function CreatorProfilePage({
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <IconUsers className="h-3.5 w-3.5" />
-                  {creator._count.followers} follower{creator._count.followers === 1 ? "" : "s"} ·{" "}
-                  {creator._count.following} following
+                  {isSelf ? (
+                    <>
+                      <Link href="/student/creators?view=followers" className="hover:underline">
+                        {creator._count.followers} follower{creator._count.followers === 1 ? "" : "s"}
+                      </Link>
+                      {" · "}
+                      <Link href="/student/creators?view=following" className="hover:underline">
+                        {creator._count.following} following
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      {creator._count.followers} follower{creator._count.followers === 1 ? "" : "s"} ·{" "}
+                      {creator._count.following} following
+                    </>
+                  )}
                 </span>
                 {creator.profile?.location ? <span>{creator.profile.location}</span> : null}
               </div>
@@ -134,7 +156,16 @@ export default async function CreatorProfilePage({
                 Edit profile
               </ButtonLink>
             ) : (
-              <FollowButton userId={creator.id} initialFollowing={isFollowing} />
+              <>
+                <FollowButton
+                  userId={creator.id}
+                  initialFollowing={isFollowing}
+                  followsYou={followsYou}
+                />
+                {!isFollowing && followsYou ? (
+                  <span className="hero-muted text-xs">Follows you</span>
+                ) : null}
+              </>
             )}
           </div>
         </div>

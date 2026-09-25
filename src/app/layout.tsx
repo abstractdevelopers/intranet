@@ -1,5 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
+import { PwaProvider } from "@/components/pwa/pwa-provider";
+import { AppSplash } from "@/components/pwa/app-splash";
+import { APPLE_SPLASH_IMAGES } from "@/lib/pwa";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -12,18 +15,59 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: { default: "UCA Sandbox", template: "%s · UCA Sandbox" },
   description: "UCA Sandbox — the digital academy platform.",
+  applicationName: "UCA Sandbox",
+  // iOS installs use these; Android/desktop read the web manifest.
+  appleWebApp: {
+    capable: true,
+    title: "UCA Sandbox",
+    // black-translucent lets content sit under the status bar for a
+    // full-screen, chrome-free launch.
+    statusBarStyle: "black-translucent",
+    startupImage: APPLE_SPLASH_IMAGES,
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#570e83",
+  colorScheme: "light dark",
+  // cover draws into the notch/safe areas so an installed app has no band of
+  // system chrome above it.
+  viewportFit: "cover",
 };
 
 // Prevent a flash of the wrong theme before hydration.
 const themeInit = `(function(){try{var t=localStorage.getItem("uca-theme");var d=t==="dark"||((!t||t==="system")&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");}catch(e){}})();`;
+
+// Hide the launch splash before first paint on a repeat visit in the same
+// session, so a hard refresh doesn't flash it. The splash component owns the
+// session flag; this only mirrors it early enough to avoid the flash.
+const splashSkip = `(function(){try{if(sessionStorage.getItem("uca-splash-shown")==="1")document.documentElement.classList.add("splash-skip");}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script dangerouslySetInnerHTML={{ __html: splashSkip }} />
+        {/*
+          Next emits the standards-based `mobile-web-app-capable`, but iOS
+          Safari still reads the apple-prefixed tag to launch fullscreen with
+          no browser chrome.
+        */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
-      <body className={`${poppins.variable} min-h-screen antialiased`}>{children}</body>
+      <body className={`${poppins.variable} min-h-screen antialiased`}>
+        <PwaProvider />
+        <AppSplash />
+        {children}
+      </body>
     </html>
   );
 }

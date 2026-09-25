@@ -1,5 +1,8 @@
 import { requireOnboardedStudent } from "@/lib/rbac";
+import { db } from "@/lib/db";
 import { PortalShell, type NavSection } from "@/components/portal-shell";
+import { InstallBanner } from "@/components/pwa/install-banner";
+import { PushSubscribe } from "@/components/pwa/push-subscribe";
 
 const SECTIONS: NavSection[] = [
   {
@@ -37,6 +40,8 @@ const SECTIONS: NavSection[] = [
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const user = await requireOnboardedStudent();
+  const unread = await db.notification.count({ where: { userId: user.id, readAt: null } });
+
   return (
     <PortalShell
       portal="Student Portal"
@@ -44,7 +49,10 @@ export default async function StudentLayout({ children }: { children: React.Reac
       userName={user.fullName}
       userRole="Student"
       userTier={user.verificationTier}
+      badges={{ "/student/notifications": unread }}
     >
+      <InstallBanner />
+      <PushSubscribe />
       {children}
     </PortalShell>
   );

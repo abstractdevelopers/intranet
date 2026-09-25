@@ -1,17 +1,22 @@
 import Link from "next/link";
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty";
-import { Avatar } from "@/components/creators/avatar";
-import { VerificationBadge } from "@/components/verification-badge";
-import { FollowButton } from "@/components/creators/follow-button";
-import { IconCompass, IconUsers, IconCourses } from "@/components/icons";
-import { searchCreators, getFollowedCreators } from "@/lib/creators";
+import { CreatorCard } from "@/components/creators/creator-card";
+import { IconCompass, IconUsers } from "@/components/icons";
+import { searchCreators, getFollowedCreators, getFollowers } from "@/lib/creators";
 import { PATHWAY_LABELS, PATHWAYS, type Pathway } from "@/lib/constants";
 
 export const metadata = { title: "Discover creators" };
+
+type View = "discover" | "following" | "followers";
+
+const TABS: { value: View; label: string; icon: typeof IconCompass }[] = [
+  { value: "discover", label: "Discover", icon: IconCompass },
+  { value: "following", label: "Following", icon: IconUsers },
+  { value: "followers", label: "Followers", icon: IconUsers },
+];
 
 export default async function CreatorsPage({
   searchParams,
@@ -22,20 +27,47 @@ export default async function CreatorsPage({
   const { q = "", pathway = "", view = "discover" } = await searchParams;
   const query = q.trim();
   const pathwayFilter = Object.keys(PATHWAYS).includes(pathway) ? pathway : "";
+  const activeView: View =
+    view === "following" ? "following" : view === "followers" ? "followers" : "discover";
 
-  const [creators, following, myPathway] = await Promise.all([
-    searchCreators(user.id, query, { pathway: pathwayFilter || undefined }),
-    view === "following" ? getFollowedCreators(user.id) : Promise.resolve([]),
+  const [creators, following, followers, myPathway, counts] = await Promise.all([
+    activeView === "discover"
+      ? searchCreators(user.id, query, { pathway: pathwayFilter || undefined })
+      : Promise.resolve([]),
+    activeView === "following" ? getFollowedCreators(user.id) : Promise.resolve([]),
+    activeView === "followers" ? getFollowers(user.id) : Promise.resolve([]),
     db.enrollment.findFirst({
       where: { userId: user.id, enrollmentType: "ELECTIVE" },
       select: { pathway: true },
     }),
+    db.user.findUnique({
+      where: { id: user.id },
+      select: { _count: { select: { followers: true, following: true } } },
+    }),
   ]);
 
-  const results = view === "following" ? following : creators;
+  const results =
+    activeView === "following" ? following : activeView === "followers" ? followers : creators;
   const myPathwayLabel = myPathway?.pathway
     ? PATHWAY_LABELS[myPathway.pathway as Pathway]
     : null;
+
+  const emptyCopy: Record<View, { title: string; body: string }> = {
+    discover: {
+      title: "No creators found",
+      body: query
+        ? "Try a different username or name."
+        : "Creators will appear here as students complete their account setup.",
+    },
+    following: {
+      title: "You're not following anyone yet",
+      body: "Follow creators you discover and they'll show up here.",
+    },
+    followers: {
+      title: "No followers yet",
+      body: "Publish work to your portfolio and share your profile — followers will appear here.",
+    },
+  };
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
@@ -54,128 +86,73 @@ export default async function CreatorsPage({
       </header>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Link
-          href="/student/creators"
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold ${
-            view !== "following"
-              ? "bg-brand-1 text-white"
-              : "border border-border text-text-muted hover:text-text"
-          }`}
-        >
-          <IconCompass className="h-4 w-4" /> Discover
-        </Link>
-        <Link
-          href="/student/creators?view=following"
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold ${
-            view === "following"
-              ? "bg-brand-1 text-white"
-              : "border border-border text-text-muted hover:text-text"
-          }`}
-        >
-          <IconUsers className="h-4 w-4" /> Following
-        </Link>
+        {TABS.map((tab) => {
+          const count =
+            tab.value === "following"
+              ? counts?._count.following
+              : tab.value === "followers"
+                ? counts?._count.followers
+                : null;
+          const TabIcon = tab.icon;
+          return (
+            <Link
+              key={tab.value}
+              href={
+                tab.value === "discover"
+                  ? "/student/creators"
+                  : `/student/creators?view=${tab.value}`
+              }
+              className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold ${
+                activeView === tab.value
+                  ? "bg-brand-1 text-white"
+                  : "border border-border text-text-muted hover:text-text"
+              }`}
+            >
+              <TabIcon className="h-4 w-4" /> {tab.label}
+              {count !== null ? <span className="opacity-75">{count}</span> : null}
+            </Link>
+          );
+        })}
       </div>
 
-      <form method="get" className="flex flex-wrap gap-2">
-        <input type="hidden" name="view" value={view} />
-        <input
-          type="search"
-          name="q"
-          defaultValue={query}
-          placeholder="Search by username or name…"
-          aria-label="Search creators"
-          className="w-full max-w-sm rounded-lg border border-border bg-surface px-3 py-2 text-sm placeholder:text-text-muted focus:border-brand-1 focus:outline-2 focus:outline-brand-3"
-        />
-        <select
-          name="pathway"
-          defaultValue={pathwayFilter}
-          aria-label="Filter by pathway"
-          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
-        >
-          <option value="">All pathways</option>
-          {Object.entries(PATHWAY_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-        <button
-          type="submit"
-          className="rounded-lg bg-brand-1 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-2"
-        >
-          Search
-        </button>
-      </form>
+      {activeView === "discover" ? (
+        <form method="get" className="flex flex-wrap gap-2">
+          <input
+            type="search"
+            name="q"
+            defaultValue={query}
+            placeholder="Search by username or name…"
+            aria-label="Search creators"
+            className="w-full max-w-sm rounded-lg border border-border bg-surface px-3 py-2 text-sm placeholder:text-text-muted focus:border-brand-1 focus:outline-2 focus:outline-brand-3"
+          />
+          <select
+            name="pathway"
+            defaultValue={pathwayFilter}
+            aria-label="Filter by pathway"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
+          >
+            <option value="">All pathways</option>
+            {Object.entries(PATHWAY_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            className="rounded-lg bg-brand-1 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-2"
+          >
+            Search
+          </button>
+        </form>
+      ) : null}
 
       {results.length === 0 ? (
-        <EmptyState
-          title={view === "following" ? "You're not following anyone yet" : "No creators found"}
-          body={
-            view === "following"
-              ? "Follow creators you discover and they'll show up here."
-              : query
-                ? "Try a different username or name."
-                : "Creators will appear here as students complete their account setup."
-          }
-        />
+        <EmptyState title={emptyCopy[activeView].title} body={emptyCopy[activeView].body} />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((creator) => (
-            <Card key={creator.id} className="flex flex-col p-5">
-              <div className="flex items-start gap-3">
-                <Avatar documentId={creator.avatarDocumentId} name={creator.fullName} />
-                <div className="min-w-0 flex-1">
-                  <Link
-                    href={`/student/creators/${creator.username ?? creator.id}`}
-                    className="flex items-center gap-1 text-sm font-semibold hover:text-brand-1 dark:hover:text-brand-3"
-                  >
-                    <span className="truncate">{creator.fullName}</span>
-                    <VerificationBadge tier={creator.verificationTier} />
-                  </Link>
-                  {creator.username ? (
-                    <p className="truncate text-xs text-text-muted">@{creator.username}</p>
-                  ) : null}
-                </div>
-              </div>
-
-              {creator.headline ? (
-                <p className="mt-3 flex-1 text-sm text-text-muted">{creator.headline}</p>
-              ) : (
-                <p className="mt-3 flex-1 text-sm text-text-muted opacity-60">
-                  No headline yet.
-                </p>
-              )}
-
-              {creator.pathwayLabel ? (
-                <p className="mt-3 text-xs font-medium uppercase tracking-wide text-text-muted">
-                  {creator.pathwayLabel}
-                </p>
-              ) : null}
-
-              <div className="mt-3 flex items-center gap-4 text-xs text-text-muted">
-                <span className="inline-flex items-center gap-1">
-                  <IconCourses className="h-3.5 w-3.5" />
-                  {creator.projectCount} project{creator.projectCount === 1 ? "" : "s"}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <IconUsers className="h-3.5 w-3.5" />
-                  {creator.followerCount} follower{creator.followerCount === 1 ? "" : "s"}
-                </span>
-              </div>
-
-              <div className="mt-4">
-                {creator.id === user.id ? (
-                  <Link
-                    href="/student/profile"
-                    className="text-xs font-semibold text-brand-1 hover:underline dark:text-brand-3"
-                  >
-                    This is you — edit your profile
-                  </Link>
-                ) : (
-                  <FollowButton userId={creator.id} initialFollowing={creator.isFollowing} size="sm" />
-                )}
-              </div>
-            </Card>
+            <CreatorCard key={creator.id} creator={creator} viewerId={user.id} />
           ))}
         </div>
       )}

@@ -88,3 +88,132 @@ body {
   border-top: 1px solid var(--color-border);
 }
 
+/* ---------------------------------------------------------------------------
+   PWA launch splash + fluid motion
+   --------------------------------------------------------------------------- */
+
+/*
+ * Full-screen launch splash shown over the app shell. It matches the iOS
+ * startup image (brand gradient + centred mark), so a cold start on any
+ * platform opens on the same branded surface, then fades away.
+ */
+.app-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background:
+    radial-gradient(120% 160% at 85% -20%, rgba(230, 169, 255, 0.22), transparent 55%),
+    linear-gradient(135deg, #570e83 0%, #410b61 55%, #2d0745 100%);
+  transition: opacity 480ms ease, visibility 480ms ease;
+}
+
+.app-splash[data-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Set before first paint on a repeat visit in the same session, so a hard
+   refresh never flashes the splash. */
+.splash-skip .app-splash {
+  display: none;
+}
+
+.app-splash__mark {
+  animation: splash-mark 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-splash__word {
+  color: rgba(246, 241, 248, 0.85);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  animation: splash-word 900ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* A thin brand sheen that sweeps once beneath the mark. */
+.app-splash__bar {
+  position: relative;
+  width: 108px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(246, 241, 248, 0.16);
+}
+
+.app-splash__bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, var(--color-brand-3), transparent);
+  animation: splash-sheen 1.1s ease-in-out infinite;
+}
+
+@keyframes splash-mark {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splash-word {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes splash-sheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Fluid entrance used by banners and cards as they mount. */
+.animate-rise {
+  animation: rise-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Honour reduced-motion: keep the splash, drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .app-splash__mark,
+  .app-splash__word,
+  .app-splash__bar::after,
+  .animate-rise {
+    animation: none;
+  }
+  .app-splash {
+    transition: opacity 200ms ease;
+  }
+}
+
+

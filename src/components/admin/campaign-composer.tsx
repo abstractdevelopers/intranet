@@ -22,11 +22,20 @@ type SavedTemplate = {
   kind: string | null;
 };
 
-type Audience = "ALL_STUDENTS" | "SIGNED_UP" | "NOT_SIGNED_UP" | "COURSE" | "PATHWAY";
+type Audience =
+  | "ALL_STUDENTS"
+  | "SIGNED_UP"
+  | "SIGNED_UP_NO_COURSE"
+  | "ELECTIVE"
+  | "NOT_SIGNED_UP"
+  | "COURSE"
+  | "PATHWAY";
 
 const AUDIENCE_LABELS: Record<Audience, string> = {
   ALL_STUDENTS: "Everyone",
   SIGNED_UP: "Signed-up students",
+  SIGNED_UP_NO_COURSE: "Signed up, no course",
+  ELECTIVE: "On an elective course",
   NOT_SIGNED_UP: "Waiting list (not signed up)",
   COURSE: "By course",
   PATHWAY: "By elective pathway",
@@ -110,22 +119,30 @@ export function CampaignComposer({ courses, styles }: { courses: Course[]; style
   }, []);
 
   /** Ask the server how many people the current rules reach. */
-  const refreshAudience = useCallback(async () => {
-    setAudienceCount(null);
-    const res = await fetch("/api/admin/campaigns/preview", {
+  useEffect(() => {
+    let cancelled = false;
+    // Reset the count (and defer past the effect body so React doesn't see a
+    // synchronous setState, which would trigger a cascading render).
+    const t = setTimeout(() => {
+      if (!cancelled) setAudienceCount(null);
+    }, 0);
+    fetch("/api/admin/campaigns/preview", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mode: "AUDIENCE", audience, courseIds, pathway }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setAudienceCount(data.count ?? null);
-    }
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled) setAudienceCount(data?.count ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setAudienceCount(null);
+      });
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
   }, [audience, courseIds, pathway]);
-
-  useEffect(() => {
-    void refreshAudience();
-  }, [refreshAudience]);
 
   /** Render the branded preview, debounced so typing stays smooth. */
   const refreshPreview = useCallback(async () => {

@@ -35,6 +35,7 @@ export function PortalShell({
   userName,
   userRole,
   userTier,
+  badges,
   children,
 }: {
   portal: string;
@@ -42,6 +43,8 @@ export function PortalShell({
   userName: string;
   userRole: string;
   userTier?: string | null;
+  /** Optional unread counts keyed by nav href, e.g. notifications. */
+  badges?: Record<string, number>;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -67,6 +70,7 @@ export function PortalShell({
                 {section.items.map((item) => {
                   const isCurrent = active === item.href;
                   const NavIcon = ICONS[item.icon];
+                  const badge = badges?.[item.href] ?? 0;
                   return (
                     <Link
                       key={item.href}
@@ -85,7 +89,12 @@ export function PortalShell({
                             : "text-text-muted group-hover:text-brand-1 dark:group-hover:text-brand-3"
                         }`}
                       />
-                      {item.label}
+                      <span className="flex-1">{item.label}</span>
+                      {badge > 0 ? (
+                        <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-brand-1 px-1.5 text-[11px] font-semibold text-white">
+                          {badge > 99 ? "99+" : badge}
+                        </span>
+                      ) : null}
                     </Link>
                   );
                 })}
@@ -127,6 +136,7 @@ export function PortalShell({
           {allItems.map((item) => {
             const isCurrent = active === item.href;
             const NavIcon = ICONS[item.icon];
+            const badge = badges?.[item.href] ?? 0;
             return (
               <Link
                 key={item.href}
@@ -140,6 +150,11 @@ export function PortalShell({
               >
                 <NavIcon className="h-4 w-4" />
                 {item.label}
+                {badge > 0 ? (
+                  <span className="inline-flex min-w-4 items-center justify-center rounded-full bg-brand-1 px-1 text-[10px] font-semibold text-white">
+                    {badge > 9 ? "9+" : badge}
+                  </span>
+                ) : null}
               </Link>
             );
           })}
@@ -149,3 +164,4 @@ export function PortalShell({
     </div>
   );
 }
+

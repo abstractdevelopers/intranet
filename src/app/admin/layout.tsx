@@ -19,6 +19,7 @@ const SECTIONS: NavSection[] = [
       { href: "/admin/submissions", label: "Submissions", icon: "File" },
       { href: "/admin/announcements", label: "Announcements", icon: "Announcement" },
       { href: "/admin/campaigns", label: "Email campaigns", icon: "Communication" },
+      { href: "/admin/push", label: "Push notifications", icon: "Bell" },
       { href: "/admin/calendar", label: "Calendar", icon: "Calendar" },
     ],
   },

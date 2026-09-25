@@ -18,7 +18,15 @@ const schema = z.object({
   templateId: z.string().trim().nullable().optional(),
   imageIds: z.array(z.string().trim().min(1)).max(4).optional(),
   style: z.enum(["BANNER", "SPLIT", "TICKET", "SPOTLIGHT", "NOTE"]).optional(),
-  audience: z.enum(["ALL_STUDENTS", "SIGNED_UP", "NOT_SIGNED_UP", "COURSE", "PATHWAY"]),
+  audience: z.enum([
+    "ALL_STUDENTS",
+    "SIGNED_UP",
+    "SIGNED_UP_NO_COURSE",
+    "ELECTIVE",
+    "NOT_SIGNED_UP",
+    "COURSE",
+    "PATHWAY",
+  ]),
   courseIds: z.array(z.string().trim().min(1)).max(20).optional(),
   pathway: z.string().trim().max(60).nullable().optional(),
 });
