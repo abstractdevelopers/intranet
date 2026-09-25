@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { PortalShell, type NavSection } from "@/components/portal-shell";
 import { InstallBanner } from "@/components/pwa/install-banner";
 import { PushSubscribe } from "@/components/pwa/push-subscribe";
+import { NotificationSound } from "@/components/pwa/notification-sound";
 
 const SECTIONS: NavSection[] = [
   {
@@ -53,6 +54,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
     >
       <InstallBanner />
       <PushSubscribe />
+      <NotificationSound unreadCount={unread} />
       {children}
     </PortalShell>
   );

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { PwaProvider } from "@/components/pwa/pwa-provider";
 import { AppSplash } from "@/components/pwa/app-splash";
+import { AppPreloader } from "@/components/pwa/app-preloader";
 import { APPLE_SPLASH_IMAGES } from "@/lib/pwa";
 import "./globals.css";
 
@@ -45,9 +46,14 @@ export const viewport: Viewport = {
 // Prevent a flash of the wrong theme before hydration.
 const themeInit = `(function(){try{var t=localStorage.getItem("uca-theme");var d=t==="dark"||((!t||t==="system")&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");}catch(e){}})();`;
 
-// Hide the launch splash before first paint on a repeat visit in the same
-// session, so a hard refresh doesn't flash it. The splash component owns the
-// session flag; this only mirrors it early enough to avoid the flash.
+// Mark the document when running as the installed app, before first paint.
+// The launch splash and full-screen safe-area padding are scoped to this
+// class, so the normal website never shows a splash and needs no notch
+// padding. Must match isInstalledApp() in src/lib/display-mode.ts.
+const installedInit = `(function(){try{var n=window.navigator;var modes=["fullscreen","standalone","minimal-ui","window-controls-overlay"];var installed=n.standalone===true||modes.some(function(m){return window.matchMedia("(display-mode: "+m+")").matches;});if(installed)document.documentElement.classList.add("pwa-installed");}catch(e){}})();`;
+
+// Skip the launch splash before first paint on a repeat launch, so reopening
+// the installed app within the same session doesn't flash it again.
 const splashSkip = `(function(){try{if(sessionStorage.getItem("uca-splash-shown")==="1")document.documentElement.classList.add("splash-skip");}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -55,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script dangerouslySetInnerHTML={{ __html: installedInit }} />
         <script dangerouslySetInnerHTML={{ __html: splashSkip }} />
         {/*
           Next emits the standards-based `mobile-web-app-capable`, but iOS
@@ -66,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${poppins.variable} min-h-screen antialiased`}>
         <PwaProvider />
         <AppSplash />
+        <AppPreloader />
         {children}
       </body>
     </html>

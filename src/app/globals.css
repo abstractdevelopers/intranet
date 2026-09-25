@@ -93,11 +93,17 @@ body {
    --------------------------------------------------------------------------- */
 
 /*
- * Full-screen launch splash shown over the app shell. It matches the iOS
- * startup image (brand gradient + centred mark), so a cold start on any
- * platform opens on the same branded surface, then fades away.
+ * Full-screen launch splash shown over the app shell in the INSTALLED app,
+ * covering the cold-start gap between the OS launch image and first paint. It
+ * matches the iOS startup image (brand gradient + centred mark). Scoped to
+ * `.pwa-installed` so the normal website never shows it, and hidden when
+ * `.splash-skip` is set (a repeat launch in the same session).
  */
 .app-splash {
+  display: none;
+}
+
+.pwa-installed .app-splash {
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -112,16 +118,118 @@ body {
   transition: opacity 480ms ease, visibility 480ms ease;
 }
 
-.app-splash[data-hidden="true"] {
+.pwa-installed .app-splash[data-hidden="true"] {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-/* Set before first paint on a repeat visit in the same session, so a hard
-   refresh never flashes the splash. */
+/* Set before first paint on a repeat launch in the same session, so reopening
+   the installed app never flashes the splash. */
 .splash-skip .app-splash {
   display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Full-screen (installed) layout
+   ---------------------------------------------------------------------------
+   In `fullscreen` mode the app draws under the status bar and the home
+   indicator / gesture bar, so those edges need the OS-reported insets or
+   content sits under system chrome. Scoped to `.pwa-installed` (a browser tab
+   already reserves that space) and to phone widths, so desktop keeps its own
+   padding and only the device that has a notch pays for it. */
+
+.pwa-installed body {
+  /* Draw into the notch and rounded corners. */
+  min-height: 100dvh;
+}
+
+@media (max-width: 767px) {
+  /* Top inset clears the status bar / clock. */
+  .pwa-installed .app-shell-header {
+    padding-top: calc(0.75rem + env(safe-area-inset-top));
+  }
+  /* Bottom inset keeps the last row above the home indicator. */
+  .pwa-installed .app-shell-main {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+  .pwa-installed .app-shell-nav {
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
+  /* Left/right insets matter in landscape, against the rounded edges. */
+  .pwa-installed .app-shell-header,
+  .pwa-installed .app-shell-nav,
+  .pwa-installed .app-shell-main {
+    padding-left: calc(1rem + env(safe-area-inset-left));
+    padding-right: calc(1rem + env(safe-area-inset-right));
+  }
+}
+
+@media (min-width: 768px) {
+  /* Tablets in fullscreen still need the landscape side insets, but keep their
+     roomier padding. */
+  .pwa-installed .app-shell-main {
+    padding-left: calc(2rem + env(safe-area-inset-left));
+    padding-right: calc(2rem + env(safe-area-inset-right));
+  }
+  .pwa-installed .app-shell-sidebar > div:first-child {
+    padding-top: calc(1.25rem + env(safe-area-inset-top));
+  }
+  .pwa-installed .app-shell-sidebar > div:last-child {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Refresh preloader (installed app only)
+   ---------------------------------------------------------------------------
+   A hard refresh in the installed app means a full document reload, so a
+   branded spinner covers the gap instead of a white flash. Scoped to
+   `.pwa-installed` AND `.splash-skip` (the launch splash has already run this
+   session), so the website never sees it and the first cold start keeps the
+   full splash rather than two overlays racing. */
+
+.app-preloader {
+  display: none;
+}
+
+.pwa-installed.splash-skip .app-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg);
+  transition: opacity 320ms ease, visibility 320ms ease;
+}
+
+.app-preloader[data-done="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Brand-gradient ring: a conic sweep masked into a 3px annulus. */
+.app-preloader__ring {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    var(--color-brand-1) 45%,
+    var(--color-brand-3) 100%
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  animation: preloader-spin 800ms linear infinite;
+}
+
+@keyframes preloader-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .app-splash__mark {
@@ -209,6 +317,10 @@ body {
   .app-splash__word,
   .app-splash__bar::after,
   .animate-rise {
+    animation: none;
+  }
+  /* Keep the preloader visible but stop it spinning. */
+  .app-preloader__ring {
     animation: none;
   }
   .app-splash {

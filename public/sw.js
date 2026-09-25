@@ -9,7 +9,7 @@
  * Kept dependency-free. Bump SW_VERSION to invalidate every cache on deploy.
  */
 
-const SW_VERSION = "uca-sw-v2";
+const SW_VERSION = "uca-sw-v3";
 const SHELL_CACHE = `${SW_VERSION}-shell`;
 const ASSET_CACHE = `${SW_VERSION}-assets`;
 const OFFLINE_URL = "/offline";
@@ -21,6 +21,8 @@ const SHELL_ASSETS = [
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/apple-touch-icon.png",
+  // In-app notification chime, so it's ready the moment a push arrives.
+  "/sounds/notification.wav",
 ];
 
 self.addEventListener("install", (event) => {
@@ -117,13 +119,35 @@ self.addEventListener("push", (event) => {
   }
 
   event.waitUntil(
-    self.registration.showNotification(payload.title, {
-      body: payload.body,
-      icon: "/icons/icon-192.png",
-      badge: "/icons/icon-192.png",
-      data: { url: payload.url || "/student/notifications" },
-      tag: payload.tag || undefined,
-    })
+    (async () => {
+      // If a window is currently in front of the user, the branded in-app
+      // chime plays instead of the OS tone — otherwise the two would sound at
+      // once. Backgrounded, the system notification carries the sound.
+      const clients = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+      const focused = clients.filter((c) => c.focused && c.visibilityState === "visible");
+
+      focused.forEach((c) => c.postMessage({ type: "uca-push", payload }));
+
+      await self.registration.showNotification(payload.title, {
+        body: payload.body,
+        icon: "/icons/icon-192.png",
+        badge: "/icons/icon-192.png",
+        image: payload.image || undefined,
+        data: { url: payload.url || "/student/notifications" },
+        tag: payload.tag || undefined,
+        // `sound` is not honoured by any browser, so when the app isn't in
+        // front we rely on the OS default tone plus vibration. Setting
+        // silent:true suppresses both, which is what we want when the chime
+        // is already playing in the foreground app.
+        silent: focused.length > 0,
+        vibrate: focused.length > 0 ? [] : [180, 90, 180],
+        requireInteraction: false,
+        timestamp: payload.timestamp || Date.now(),
+      });
+    })()
   );
 });
 

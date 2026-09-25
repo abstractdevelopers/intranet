@@ -2,28 +2,31 @@
 
 import { useEffect, useState } from "react";
 import { Crest } from "@/components/crest";
+import { isInstalledApp } from "@/lib/display-mode";
 
 /**
- * Branded launch splash.
+ * Branded launch splash — installed app only.
  *
- * Server-rendered so it covers the app shell on a cold start, then fades out
- * once the page is ready. It mirrors the iOS startup image (brand gradient +
- * centred mark), so installed and browser launches open on the same surface.
+ * A website visitor never sees this; it exists to cover the cold-start gap
+ * between the OS launch image and the first painted frame of the installed
+ * PWA. The `.pwa-installed` class is set pre-paint by an inline script in the
+ * root layout (and re-checked here after mount), which is what gates it.
  *
- * Shown once per browser session: an inline script in the root layout adds
- * `.splash-skip` before first paint on a repeat visit, so a hard refresh never
- * flashes it. A short minimum stops it flickering on fast connections, and a
- * hard cap guarantees it never blocks the portal.
+ * Shown once per session, with a short minimum so it can't flicker and a hard
+ * cap so it can never block the portal.
  */
 const MIN_VISIBLE_MS = 700;
 const MAX_VISIBLE_MS = 2600;
 const SESSION_KEY = "uca-splash-shown";
 
 export function AppSplash() {
-  // Starts visible so the server HTML paints the splash before hydration.
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
+    // Not the installed app → the splash never rendered, so nothing to do.
+    if (!isInstalledApp()) return;
+    // Already shown this session: the layout's pre-paint script added
+    // `.splash-skip`, and CSS hides it — nothing to do here either.
     if (sessionStorage.getItem(SESSION_KEY) === "1") return;
     sessionStorage.setItem(SESSION_KEY, "1");
 
@@ -48,17 +51,14 @@ export function AppSplash() {
     };
   }, []);
 
+  // CSS scopes `.app-splash` to the installed app, so on the website this is
+  // in the DOM but never painted; on a later launch it's already hidden.
   return (
-    <div
-      className="app-splash"
-      data-hidden={hidden ? "true" : "false"}
-      role="status"
-      aria-label="Loading UCA Sandbox"
-    >
+    <div className="app-splash" data-hidden={hidden ? "true" : "false"} aria-hidden>
       {/* White mark on the dark brand band — no invert. */}
       <Crest className="app-splash__mark h-16 w-auto" />
       <span className="app-splash__word">UCA Sandbox</span>
-      <span className="app-splash__bar" aria-hidden />
+      <span className="app-splash__bar" />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { IconClose, IconDownload, IconSpark } from "@/components/icons";
+import { isInstalledApp } from "@/lib/display-mode";
 
 /**
  * Premium install prompt.
@@ -16,13 +17,6 @@ import { IconClose, IconDownload, IconSpark } from "@/components/icons";
 type PromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
 
 const DISMISS_KEY = "uca-install-dismissed";
-
-function isStandalone() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    (window.navigator as unknown as { standalone?: boolean }).standalone === true
-  );
-}
 
 function isIos() {
   return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
@@ -39,7 +33,7 @@ export function InstallBanner() {
     // hydration, and a synchronous setState in the effect body would cascade.
     queueMicrotask(() => {
       if (cancelled) return;
-      if (isStandalone()) return;
+      if (isInstalledApp()) return;
       if (sessionStorage.getItem(DISMISS_KEY) === "1") return;
       if (isIos()) {
         setIosHint(true);

@@ -54,7 +54,7 @@ export function PortalShell({
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-surface md:flex">
+      <aside className="app-shell-sidebar hidden w-64 shrink-0 flex-col border-r border-border bg-surface md:flex">
         <div className="border-b border-border px-5 py-5">
           <Link href="/" aria-label="UCA Sandbox home">
             <BrandLockup subtitle={portal} />
@@ -123,14 +123,14 @@ export function PortalShell({
         </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-border bg-surface px-4 py-3 md:hidden">
+        <header className="app-shell-header flex items-center justify-between border-b border-border bg-surface px-4 py-3 md:hidden">
           <Link href="/" aria-label="UCA Sandbox home">
             <BrandLockup subtitle={portal} />
           </Link>
           <ThemeToggle />
         </header>
         <nav
-          className="flex gap-1 overflow-x-auto border-b border-border bg-surface px-3 py-2 md:hidden"
+          className="app-shell-nav flex gap-1 overflow-x-auto border-b border-border bg-surface px-3 py-2 md:hidden"
           aria-label="Portal mobile"
         >
           {allItems.map((item) => {
@@ -159,7 +159,7 @@ export function PortalShell({
             );
           })}
         </nav>
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
+        <main className="app-shell-main flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>
     </div>
   );
