@@ -46,6 +46,10 @@ model User {
   // each audience tracks its own send: waiting-list vs already-signed-up.
   onboardingWeekEmailSentAt        DateTime?
   onboardingWeekSignedUpEmailSentAt DateTime?
+  // When the "four clicks away" reclaim nudge was emailed. Separate from
+  // welcomeEmailSentAt, which the first reclaim send already stamped, so this
+  // follow-up can be resumed without ever re-sending the first one.
+  reclaimNudgeEmailSentAt DateTime?
   // Set when someone unsubscribes from bulk email. Bulk campaigns honour it;
   // transactional mail (password resets, enrollment decisions) does not.
   emailOptOutAt         DateTime?

@@ -42,6 +42,13 @@ type LayoutOptions = {
   highlights?: string[];
   /** Optional sub-heading introducing the highlights. */
   highlightsLabel?: string;
+  /**
+   * Numbered storyboard beats, rendered in the app's editorial "01 —" pattern.
+   * Used to walk through a sequence rather than list perks.
+   */
+  storyboard?: { title: string; body: string }[];
+  /** Optional sub-heading introducing the storyboard. */
+  storyboardLabel?: string;
   /** Primary call to action. */
   cta?: { label: string; url: string };
   /** Optional note rendered in a muted box under the CTA. */
@@ -121,6 +128,44 @@ function layout(options: LayoutOptions) {
         </table>`
       : "";
 
+  const storyboard =
+    options.storyboard && options.storyboard.length
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0 4px;">
+          ${
+            options.storyboardLabel
+              ? `<tr><td style="padding:0 0 14px;"><p style="margin:0;font-family:${FONT};font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:${BRAND_1};">${esc(
+                  options.storyboardLabel
+                )}</p></td></tr>`
+              : ""
+          }
+          ${options.storyboard
+            .map((beat, i) => {
+              const num = String(i + 1).padStart(2, "0");
+              return `<tr>
+            <td style="padding:0 0 18px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="46" valign="top" style="width:46px;padding:2px 0 0;">
+                    <span style="font-family:${FONT};font-size:13px;font-weight:700;color:${ACCENT};">${num}</span>
+                    <span style="font-family:${FONT};font-size:13px;color:${BORDER};">&#8212;</span>
+                  </td>
+                  <td valign="top">
+                    <p style="margin:0 0 3px;font-family:${FONT};font-size:15px;line-height:22px;font-weight:600;color:${INK};">${esc(
+                      beat.title
+                    )}</p>
+                    <p style="margin:0;font-family:${FONT};font-size:14px;line-height:22px;color:${TEXT_MUTED};">${esc(
+                      beat.body
+                    )}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+            })
+            .join("")}
+        </table>`
+      : "";
+
   const note = options.note
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
           <tr>
@@ -185,6 +230,7 @@ function layout(options: LayoutOptions) {
           <td style="padding:32px 36px 36px;">
             ${images}
             ${paragraphs}
+            ${storyboard}
             ${highlights}
             ${cta}
             ${note}
@@ -454,4 +500,85 @@ export function accountReclaimEmail(input: { email: string; link: string }) {
   ].join("\n");
 
   return { subject: "Your UCA Sandbox account is restored — reclaim it here", html, text };
+}
+
+/**
+ * The creative follow-up for accounts that still have not come back.
+ *
+ * Opens on a hook ("You're four clicks away"), then walks the reclaim flow as
+ * a numbered storyboard in the app's own editorial "01 —" pattern, so the email
+ * reads like the academy teaches rather than like a reminder.
+ *
+ * The beats are the real flow: set password, choose username, pick pathway,
+ * start. The four pathways are named in the third beat — the 665 who have not
+ * returned have none on record, so the copy lists them all and lets each
+ * person recognise their own.
+ *
+ * No signup counts and no countdown; the only limit named is the real Elite cap.
+ */
+export function reclaimPressureEmail(input: { email: string; link: string }) {
+  const storyboard = [
+    {
+      title: "Set your password",
+      body: "One new password. Your old one is gone — that's the point.",
+    },
+    {
+      title: "Claim your username",
+      body: "The name your work will carry. Pick it before someone else does.",
+    },
+    {
+      title: "Pick your pathway",
+      body: "Graphics Design · Video Editing · Content Writing · Communication & Influence.",
+    },
+    {
+      title: "Walk in",
+      body: "Free month starts the day you're back. Classes begin 5 October.",
+    },
+  ];
+
+  const html = layout({
+    eyebrow: "Your seat is still open",
+    heading: "You're four clicks away.",
+    preheader: "Password. Username. Pathway. In.",
+    paragraphs: [
+      "Your account is rebuilt. Your seat is saved. Your pathway is still sitting there, untouched.",
+      "Here's the whole thing, start to finish:",
+    ],
+    storyboardLabel: "The way back in",
+    storyboard,
+    highlightsLabel: "Waiting on the other side",
+    highlights: [
+      "Your free month restarts the day you're back — 30 days, on us.",
+      "Elite Member status, permanent gold crest — first 100 only.",
+    ],
+    cta: { label: "Start step 01", url: input.link },
+    note: "This link is single-use and stays valid for 14 days. If it expires, use “Forgot password” on the sign-in page to get a new one.",
+    signoff: "— The UCA Sandbox team",
+  });
+
+  const text = [
+    "You're four clicks away.",
+    "",
+    "Your account is rebuilt. Your seat is saved. Your pathway is still sitting there, untouched.",
+    "",
+    "Here's the whole thing, start to finish:",
+    "",
+    "THE WAY BACK IN",
+    ...storyboard.flatMap((b, i) => [
+      `  ${String(i + 1).padStart(2, "0")} — ${b.title}`,
+      `       ${b.body}`,
+      "",
+    ]),
+    "WAITING ON THE OTHER SIDE",
+    "  • Your free month restarts the day you're back — 30 days, on us.",
+    "  • Elite Member status, permanent gold crest — first 100 only.",
+    "",
+    `Start step 01: ${input.link}`,
+    "",
+    "This link is single-use and stays valid for 14 days. If it expires, use \"Forgot password\" on the sign-in page to get a new one.",
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+
+  return { subject: "You're four clicks away.", html, text };
 }
