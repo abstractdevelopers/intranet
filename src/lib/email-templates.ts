@@ -582,3 +582,80 @@ export function reclaimPressureEmail(input: { email: string; link: string }) {
 
   return { subject: "You're four clicks away.", html, text };
 }
+
+/**
+ * Sunday countdown follow-up — "eight days out".
+ *
+ * Anchored to two real, verifiable facts: classes start Monday 5 October, and
+ * there are exactly two Sundays between now and then (27 Sep and 4 Oct), the
+ * second being the day before classes begin. The countdown is the real number
+ * of days, not a timer.
+ *
+ * Deliberately still no signup counts — those were dropped at the client's
+ * request and are not needed here.
+ */
+export function reclaimCountdownEmail(input: { email: string; link: string }) {
+  const storyboard = [
+    {
+      title: "Reclaim your seat",
+      body: "Set a new password. Your account is rebuilt and waiting.",
+    },
+    {
+      title: "Pick your pathway",
+      body: "Graphics Design · Video Editing · Content Writing · Communication & Influence.",
+    },
+    {
+      title: "Walk in ready",
+      body: "Your free month starts the day you're back.",
+    },
+  ];
+
+  const html = layout({
+    eyebrow: "Eight days out",
+    heading: "Eight days. Sunday's for getting settled.",
+    preheader: "Two Sundays left before classes begin.",
+    paragraphs: [
+      "Classes begin Monday 5 October. That's eight days.",
+      "There are two Sundays between now and then. This is the first. The second is the day before we begin — too late to settle, too late to choose properly.",
+      "So take this one. It's quiet, it's yours, and it takes about eight minutes.",
+    ],
+    storyboardLabel: "How to be settled before day one",
+    storyboard,
+    highlightsLabel: "Worth knowing",
+    highlights: [
+      "Elite Member status, permanent gold crest — first 100 only.",
+      "Classes begin Monday 5 October.",
+    ],
+    cta: { label: "Get settled", url: input.link },
+    note: "This link is single-use and stays valid for 14 days. If it expires, use “Forgot password” on the sign-in page to get a new one.",
+    signoff: "— The UCA Sandbox team",
+  });
+
+  const text = [
+    "Eight days. Sunday's for getting settled.",
+    "",
+    "Classes begin Monday 5 October. That's eight days.",
+    "",
+    "There are two Sundays between now and then. This is the first. The second is the day before we begin — too late to settle, too late to choose properly.",
+    "",
+    "So take this one. It's quiet, it's yours, and it takes about eight minutes.",
+    "",
+    "HOW TO BE SETTLED BEFORE DAY ONE",
+    ...storyboard.flatMap((b, i) => [
+      `  ${String(i + 1).padStart(2, "0")} — ${b.title}`,
+      `       ${b.body}`,
+      "",
+    ]),
+    "WORTH KNOWING",
+    "  • Elite Member status, permanent gold crest — first 100 only.",
+    "  • Classes begin Monday 5 October.",
+    "",
+    `Get settled: ${input.link}`,
+    "",
+    "This link is single-use and stays valid for 14 days. If it expires, use \"Forgot password\" on the sign-in page to get a new one.",
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+
+  return { subject: "Eight days out. Sunday's for getting settled.", html, text };
+}

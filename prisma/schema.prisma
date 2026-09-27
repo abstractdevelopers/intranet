@@ -50,6 +50,9 @@ model User {
   // welcomeEmailSentAt, which the first reclaim send already stamped, so this
   // follow-up can be resumed without ever re-sending the first one.
   reclaimNudgeEmailSentAt DateTime?
+  // When the Sunday "eight days out" countdown email was sent. Its own column
+  // for the same reason: each reclaim wave resumes independently.
+  reclaimSundayEmailSentAt DateTime?
   // Set when someone unsubscribes from bulk email. Bulk campaigns honour it;
   // transactional mail (password resets, enrollment decisions) does not.
   emailOptOutAt         DateTime?
