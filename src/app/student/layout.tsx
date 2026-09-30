@@ -10,6 +10,7 @@ const SECTIONS: NavSection[] = [
     label: "Learn",
     items: [
       { href: "/student", label: "Dashboard", icon: "Dashboard" },
+      { href: "/student/intranet-101", label: "Intranet 101", icon: "Compass" },
       { href: "/student/courses", label: "My Courses", icon: "Courses" },
       { href: "/student/assignments", label: "Assignments", icon: "Assignments" },
       { href: "/student/captains-log", label: "Captain's Log", icon: "Announcement" },

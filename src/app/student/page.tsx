@@ -20,6 +20,7 @@ import {
   IconAssignments,
   IconCommunication,
   IconSpark,
+  IconCompass,
 } from "@/components/icons";
 import { getCourseProgress } from "@/lib/progress";
 import { buildMilestones } from "@/lib/milestones";
@@ -30,6 +31,7 @@ import { getStudentPathway, getStudentCommunities } from "@/lib/communities";
 import { syncStudentNotifications } from "@/lib/notification-triggers";
 import { formatNaira, formatDate, formatDateTime } from "@/lib/format";
 import { subscriptionMonthlyTotal } from "@/lib/enrollment";
+import { needsIntranet101 } from "@/lib/quiz";
 
 export const metadata = { title: "Dashboard" };
 
@@ -85,6 +87,10 @@ export default async function StudentDashboard() {
     }),
     db.promise.findUnique({ where: { userId: user.id }, select: { id: true } }),
   ]);
+
+  // The compulsory intro is a separate gate from courses, so it is checked
+  // after the batch (it needs its own query anyway).
+  const needsIntro = await needsIntranet101(user.id);
 
   const milestones = buildMilestones(enrollments, lessonDone, submissions, grades);
   const accepted = enrollments.filter((e) => e.status === "ACCEPTED");
@@ -157,6 +163,25 @@ export default async function StudentDashboard() {
                 Peer Body
               </ButtonLink>
             </div>
+          </div>
+        </Card>
+      ) : null}
+
+      {/* Compulsory intro — the first thing a new student should see */}
+      {needsIntro ? (
+        <Card className="border-brand-1/40 bg-brand-3/15">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <IconCompass className="mt-0.5 h-5 w-5 shrink-0 text-brand-1 dark:text-brand-3" />
+              <div>
+                <p className="text-sm font-semibold">Start here — Intranet 101</p>
+                <p className="mt-1 max-w-md text-sm text-text-muted">
+                  A short walkthrough of the intranet, then a quick assessment. It&rsquo;s
+                  compulsory, and it&rsquo;ll save you hunting around later.
+                </p>
+              </div>
+            </div>
+            <ButtonLink href="/student/intranet-101">Take Intranet 101</ButtonLink>
           </div>
         </Card>
       ) : null}

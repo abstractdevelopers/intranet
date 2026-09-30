@@ -57,6 +57,10 @@ model User {
   openingCeremonyEmailSentAt DateTime?
   // When the Tuesday "six days out" countdown email was sent.
   reclaimTuesdayEmailSentAt DateTime?
+  // Set once the student passes the Intranet 101 assessment. The academy-wide
+  // intro quiz is not attached to a course, so its completion lives here rather
+  // than in LessonProgress.
+  intranet101PassedAt DateTime?
   // Set when someone unsubscribes from bulk email. Bulk campaigns honour it;
   // transactional mail (password resets, enrollment decisions) does not.
   emailOptOutAt         DateTime?
@@ -106,6 +110,76 @@ model User {
   peerBodyReviewsReceived PeerBodyReview[]           @relation("PeerBodyAuthor")
   promises                Promise[]
   promiseCheers           PromiseCheer[]
+  quizAttempts            QuizAttempt[]
+}
+
+// ---------------------------------------------------------------------------
+// Assessments
+// ---------------------------------------------------------------------------
+
+/**
+ * A standalone assessment, not attached to a course. Intranet 101 is the
+ * academy-wide intro quiz every student must pass.
+ *
+ * `isRequired` marks it compulsory. `maxAttempts` is enforced server-side in
+ * the submit route, never in the client.
+ */
+model Quiz {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  passMark    Int      @default(70) // percentage required to pass
+  maxAttempts Int      @default(2)
+  isRequired  Boolean  @default(false)
+  status      String   @default("PUBLISHED") // DRAFT | PUBLISHED | ARCHIVED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+}
+
+model QuizQuestion {
+  id          String @id @default(cuid())
+  quizId      String
+  quiz        Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  prompt      String
+  explanation String? // shown after answering, right or wrong
+  order       Int
+
+  options QuizOption[]
+
+  @@index([quizId, order])
+}
+
+model QuizOption {
+  id         String  @id @default(cuid())
+  questionId String
+  question   QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  label      String
+  isCorrect  Boolean @default(false)
+  order      Int
+
+  @@index([questionId, order])
+}
+
+/**
+ * One submission. `answers` stores the chosen option ids keyed by question id so
+ * a result can be reviewed later without re-deriving it.
+ */
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId      String
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  score       Int // percentage
+  passed      Boolean
+  answers     Json
+  submittedAt DateTime @default(now())
+
+  @@index([userId, quizId])
 }
 
 model Profile {
