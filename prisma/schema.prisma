@@ -55,6 +55,8 @@ model User {
   reclaimSundayEmailSentAt DateTime?
   // When the live opening-ceremony announcement went out (all active students).
   openingCeremonyEmailSentAt DateTime?
+  // When the Tuesday "six days out" countdown email was sent.
+  reclaimTuesdayEmailSentAt DateTime?
   // Set when someone unsubscribes from bulk email. Bulk campaigns honour it;
   // transactional mail (password resets, enrollment decisions) does not.
   emailOptOutAt         DateTime?

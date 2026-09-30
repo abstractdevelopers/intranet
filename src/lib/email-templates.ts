@@ -713,3 +713,85 @@ export function openingCeremonyEmail(input: { link: string }) {
 
   return { subject: "We're live now — UCA opening ceremony", html, text };
 }
+
+/**
+ * Tuesday countdown follow-up — "six days out".
+ *
+ * Anchored to verifiable facts only: classes start Monday 5 October (six days
+ * from the send), and Elite is capped at 100 with 35 places left at send time.
+ * Elite is granted in `claimEliteStatus`, which fires on the pathway step of
+ * onboarding — so "picking your pathway is what claims it" is literally true,
+ * not a flourish.
+ *
+ * The Elite remaining count is hardcoded here. If this template is reused,
+ * recompute `places left` from ELITE_BADGE_LIMIT minus the live count first.
+ */
+export function reclaimTuesdayEmail(input: { email: string; link: string }) {
+  const storyboard = [
+    {
+      title: "Reclaim your seat",
+      body: "Set a new password. Your account is already rebuilt.",
+    },
+    {
+      title: "Pick your pathway",
+      body: "Graphics Design · Video Editing · Content Writing · Communication & Influence.",
+    },
+    {
+      title: "Claim your Elite place",
+      body: "Picking your pathway is what claims it — 35 of 100 left.",
+    },
+    {
+      title: "Walk in ready",
+      body: "Your free month starts the day you're back.",
+    },
+  ];
+
+  const html = layout({
+    eyebrow: "Six days out",
+    heading: "Six days. Tuesday's for starting.",
+    preheader: "Classes begin Monday. 35 Elite places left.",
+    paragraphs: [
+      "Classes begin Monday 5 October — six days from today.",
+      "Your account is rebuilt and your seat is saved. What's missing is you actually in it, and that takes about eight minutes.",
+      "Six days is plenty. It isn't plenty for another week of “later”, though — Monday doesn't move.",
+    ],
+    storyboardLabel: "How to be in before Monday",
+    storyboard,
+    highlightsLabel: "Worth knowing",
+    highlights: [
+      "Elite Member status, permanent gold crest — 35 of 100 places left.",
+      "Classes begin Monday 5 October.",
+    ],
+    cta: { label: "Start step 01", url: input.link },
+    note: "This link is single-use and stays valid for 14 days. If it expires, use “Forgot password” on the sign-in page to get a new one.",
+    signoff: "— The UCA Sandbox team",
+  });
+
+  const text = [
+    "Six days. Tuesday's for starting.",
+    "",
+    "Classes begin Monday 5 October — six days from today.",
+    "",
+    "Your account is rebuilt and your seat is saved. What's missing is you actually in it, and that takes about eight minutes.",
+    "",
+    "Six days is plenty. It isn't plenty for another week of \"later\", though — Monday doesn't move.",
+    "",
+    "HOW TO BE IN BEFORE MONDAY",
+    ...storyboard.flatMap((b, i) => [
+      `  ${String(i + 1).padStart(2, "0")} — ${b.title}`,
+      `       ${b.body}`,
+      "",
+    ]),
+    "WORTH KNOWING",
+    "  • Elite Member status, permanent gold crest — 35 of 100 places left.",
+    "  • Classes begin Monday 5 October.",
+    "",
+    `Start step 01: ${input.link}`,
+    "",
+    "This link is single-use and stays valid for 14 days. If it expires, use \"Forgot password\" on the sign-in page to get a new one.",
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+
+  return { subject: "Six days out. Tuesday's for starting.", html, text };
+}
