@@ -30,23 +30,68 @@ const APP_URL = (process.env.NEXT_PUBLIC_APP_URL ?? "https://intranet.launchvers
  */
 const CTA_URL = `${APP_URL}/forgot-password`;
 
-const COPY = {
-  eyebrow: "Your seat is still here",
-  heading: "You picked a lane. We built the whole road.",
-  body: [
-    "You signed up for UCA Sandbox a while back. Then life did what life does.",
-    "Everything is built now — four pathways, real classes, and a studio to put your work in. Your account has been sitting here the whole time, and it is still yours.",
-    "Four crafts: Graphics Design, Video Editing, Communication & Influence, Content Writing. Pick one and we will build the rest of your programme around it.",
-    "Classes start Monday 5 October. 21 Elite Member spots are still unclaimed. And your free month starts the day you come back — not the day you signed up.",
-  ].join("\n\n"),
-  ctaLabel: "Take back my account",
-  ctaUrl: CTA_URL,
-  note: "₦15,000/month per course after your free month. Nothing to pay to get started.",
-  signoff: "— The UCA Sandbox team",
+/**
+ * Alternative takes on the same email, so the voice can be compared before
+ * anything goes out. Every factual claim here is read from the database or a
+ * constant — see the verification block in main().
+ */
+const VARIANTS: Record<string, {
+  title: string;
+  style: string;
+  copy: {
+    eyebrow: string;
+    heading: string;
+    body: string;
+    ctaLabel: string;
+    ctaUrl: string;
+    note: string;
+    signoff: string;
+  };
+}> = {
+  "1": {
+    title: "Reclaim v1 — your seat is still here",
+    style: "NOTE",
+    copy: {
+      eyebrow: "Your seat is still here",
+      heading: "You picked a lane. We built the whole road.",
+      body: [
+        "You signed up for UCA Sandbox a while back. Then life did what life does.",
+        "Everything is built now — four pathways, real classes, and a studio to put your work in. Your account has been sitting here the whole time, and it is still yours.",
+        "Four crafts: Graphics Design, Video Editing, Communication & Influence, Content Writing. Pick one and we will build the rest of your programme around it.",
+        "Classes start Monday 5 October. 21 Elite Member spots are still unclaimed. And your free month starts the day you come back — not the day you signed up.",
+      ].join("\n\n"),
+      ctaLabel: "Take back my account",
+      ctaUrl: CTA_URL,
+      note: "₦15,000/month per course after your free month. Nothing to pay to get started.",
+      signoff: "— The UCA Sandbox team",
+    },
+  },
+  "2": {
+    title: "Reclaim v2 — you didn't quit, you got busy",
+    style: "SPLIT",
+    copy: {
+      eyebrow: "No judgement here",
+      heading: "You didn't quit. You got busy.",
+      body: [
+        "Signing up was the easy part. Then life got loud, and the thing you were waiting for wasn't ready yet. That part is on us.",
+        "It's ready now. Four crafts, live classes, and a studio where your work actually lives — not a folder on your laptop nobody sees.",
+        "Graphics Design. Video Editing. Communication & Influence. Content Writing. Pick the one you keep coming back to.",
+        "Classes start Monday 5 October. Your free month hasn't been ticking this whole time — it starts the day you walk back in.",
+      ].join("\n\n"),
+      ctaLabel: "Finish what you started",
+      ctaUrl: CTA_URL,
+      note: "₦15,000/month per course after your free month. Nothing today.",
+      signoff: "— The UCA Sandbox team",
+    },
+  },
 };
 
-const TITLE = "Reclaim — you signed up, your seat is still here";
-const STYLE = "NOTE";
+const variantArg = process.argv.find((a) => a.startsWith("--variant="))?.slice("--variant=".length) ?? "1";
+const VARIANT = VARIANTS[variantArg];
+if (!VARIANT) throw new Error(`Unknown variant "${variantArg}". Available: ${Object.keys(VARIANTS).join(", ")}`);
+const COPY = VARIANT.copy;
+const TITLE = VARIANT.title;
+const STYLE = VARIANT.style;
 
 async function main() {
   const audience = await db.user.count({
