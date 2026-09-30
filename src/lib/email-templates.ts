@@ -659,3 +659,57 @@ export function reclaimCountdownEmail(input: { email: string; link: string }) {
 
   return { subject: "Eight days out. Sunday's for getting settled.", html, text };
 }
+
+/**
+ * Live opening-ceremony announcement, sent to every active student while the
+ * event is running.
+ *
+ * The link is shared by everyone (a Google Meet room), so this template needs
+ * no per-recipient token and no personalisation — the same message goes to the
+ * whole cohort. Nothing here promises a recording or a repeat session.
+ */
+export function openingCeremonyEmail(input: { link: string }) {
+  const html = layout({
+    eyebrow: "Live now",
+    heading: "The opening ceremony is live.",
+    preheader: "Join us now — we're taking questions.",
+    paragraphs: [
+      "We're live right now for the UCA Sandbox opening ceremony.",
+      "We're walking through what the academy is, how the four pathways work, and what happens after you reclaim your account. Then we're opening the floor — ask us anything.",
+      "Come through. Doors are open while we're live.",
+    ],
+    highlightsLabel: "What we're covering",
+    highlights: [
+      "What UCA Sandbox is and how the academy works.",
+      "The four pathways: Graphics Design, Video Editing, Content Writing, Communication & Influence.",
+      "Your questions — anything at all, answered live.",
+    ],
+    cta: { label: "Join the ceremony", url: input.link },
+    note: "Joining opens Google Meet — works from a phone or a laptop. If the room has closed by the time you see this, we'll be in touch with what's next.",
+    signoff: "— The UCA Sandbox team",
+  });
+
+  const text = [
+    "The opening ceremony is live.",
+    "",
+    "We're live right now for the UCA Sandbox opening ceremony.",
+    "",
+    "We're walking through what the academy is, how the four pathways work, and what happens after you reclaim your account. Then we're opening the floor — ask us anything.",
+    "",
+    "Come through. Doors are open while we're live.",
+    "",
+    "WHAT WE'RE COVERING",
+    "  • What UCA Sandbox is and how the academy works.",
+    "  • The four pathways: Graphics Design, Video Editing, Content Writing, Communication & Influence.",
+    "  • Your questions — anything at all, answered live.",
+    "",
+    `Join the ceremony: ${input.link}`,
+    "",
+    "Joining opens Google Meet — works from a phone or a laptop.",
+    "If the room has closed by the time you see this, we'll be in touch with what's next.",
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+
+  return { subject: "We're live now — UCA opening ceremony", html, text };
+}
