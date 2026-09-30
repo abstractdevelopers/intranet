@@ -486,7 +486,7 @@ async function runCampaignLocked(
     const claimed = await claimRecipients(campaignId, CLAIM_CHUNK);
     if (claimed.length === 0) break;
 
-    const sentIds: string[] = [];
+    const sentIds: { id: string; at: Date }[] = [];
     const failures: { id: string; error: string }[] = [];
 
     // Send in bounded slices, and reserve each slice against the shared provider
@@ -505,7 +505,11 @@ async function runCampaignLocked(
               html: baseHtml.replaceAll(UNSUBSCRIBE_TOKEN, unsubscribe),
               text: `${baseText}\n\nUnsubscribe: ${unsubscribe}`,
             });
-            return { id: recipient.id, ok: true as const };
+            // Stamp when the provider accepted this send, not when the chunk was
+            // flushed. A shared flush timestamp made rate audits unreliable: a
+            // 25-row bulk write can land inside one wall-clock minute and look
+            // like 25 sends in the same second, hiding the real pacing.
+            return { id: recipient.id, ok: true as const, at: new Date() };
           } catch (err) {
             return {
               id: recipient.id,
@@ -516,17 +520,24 @@ async function runCampaignLocked(
         })
       );
       for (const o of outcomes) {
-        if (o.ok) sentIds.push(o.id);
+        if (o.ok) sentIds.push({ id: o.id, at: o.at });
         else failures.push({ id: o.id, error: o.error });
       }
     }
 
-    // Bulk success write; failures carry a per-row message so they stay visible.
-    if (sentIds.length > 0) {
-      await db.emailCampaignRecipient.updateMany({
-        where: { id: { in: sentIds } },
-        data: { status: "SENT", sentAt: new Date() },
-      });
+    // Write outcomes. Each successful send carries its own timestamp so the
+    // record reflects when the provider accepted it, not when this flush ran.
+    // Chunked to keep the statement small on large claims.
+    for (let i = 0; i < sentIds.length; i += 100) {
+      const chunk = sentIds.slice(i, i + 100);
+      await db.$transaction(
+        chunk.map((s) =>
+          db.emailCampaignRecipient.updateMany({
+            where: { id: s.id },
+            data: { status: "SENT", sentAt: s.at },
+          })
+        )
+      );
     }
     for (const f of failures) {
       await db.emailCampaignRecipient.update({
