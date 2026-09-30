@@ -174,10 +174,41 @@ const CONCURRENCY = 8;
 const RATE_LIMIT_PER_MIN = 100;
 const RATE_WINDOW_MS = 60_000;
 
-/** How long a sender may hold the single-flight lease before it is reclaimed. */
-const LEASE_TTL_MS = 70_000;
+/**
+ * How long a sender may hold the single-flight lease before it is reclaimed.
+ *
+ * This MUST exceed the longest budget a single run may take. A round that
+ * outlives its own lease gets its lease stolen by the next cron tick, which then
+ * sends alongside it — the exact overlap the lease exists to prevent. A 240s
+ * round under a 70s lease did that on 2026-09-30 and left 25 rows claimed with
+ * no outcome.
+ */
+const LEASE_TTL_MS = 330_000;
+
+/**
+ * Hard ceiling for one invocation, whatever budget the caller asks for.
+ *
+ * The cron endpoint sets maxDuration 60s and an admin click wants a quick reply,
+ * so nothing should run longer than that. A caller passing a longer budget would
+ * otherwise outlive the lease above.
+ */
+const MAX_RUN_BUDGET_MS = 55_000;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Renew the lease so a long run keeps it.
+ *
+ * The holder check matters: after a steal the holder is someone else, and
+ * renewing unconditionally would take the lease back from a live sender.
+ */
+async function renewLease(holder: string): Promise<void> {
+  await db.$executeRaw`
+    UPDATE "CampaignRunLease"
+    SET "acquiredAt" = NOW()
+    WHERE "id" = 'campaign-sender' AND "holder" = ${holder}
+  `;
+}
 
 /**
  * Reserve `n` sends against the shared provider window, waiting if the window is
@@ -229,7 +260,7 @@ async function reserveSendSlots(n: number): Promise<void> {
  * Acquire and steal are both conditional UPDATEs, so two callers racing cannot
  * both win. A stale lease (crashed worker) is reclaimed after LEASE_TTL_MS.
  */
-async function acquireLease(): Promise<boolean> {
+async function acquireLease(): Promise<string | null> {
   const holder = `${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const acquired = await db.$executeRaw`
     UPDATE "CampaignRunLease"
@@ -237,7 +268,7 @@ async function acquireLease(): Promise<boolean> {
     WHERE "id" = 'campaign-sender'
       AND "acquiredAt" < NOW() - ${`${LEASE_TTL_MS} milliseconds`}::interval
   `;
-  if (acquired > 0) return true;
+  if (acquired > 0) return holder;
 
   // No row yet — create it. A racing insert loses on the primary key and simply
   // reports the lease as taken.
@@ -246,15 +277,17 @@ async function acquireLease(): Promise<boolean> {
     VALUES ('campaign-sender', ${holder}, NOW())
     ON CONFLICT ("id") DO NOTHING
   `;
-  return created > 0;
+  return created > 0 ? holder : null;
 }
 
-async function releaseLease(): Promise<void> {
+async function releaseLease(holder: string): Promise<void> {
   // Expire it rather than delete, so the row always exists for the next claim.
+  // Scoped to our own holder: if the lease was stolen, expiring it here would
+  // release a lease another sender is actively using.
   await db.$executeRaw`
     UPDATE "CampaignRunLease"
     SET "acquiredAt" = NOW() - ${`${LEASE_TTL_MS + 1000} milliseconds`}::interval
-    WHERE "id" = 'campaign-sender'
+    WHERE "id" = 'campaign-sender' AND "holder" = ${holder}
   `;
 }
 
@@ -413,10 +446,13 @@ export type SendProgress = {
  */
 export async function runCampaign(campaignId: string, timeBudgetMs = TIME_BUDGET_MS): Promise<SendProgress> {
   const startedAt = Date.now();
+  // Never run longer than the lease can be held.
+  const budget = Math.min(timeBudgetMs, MAX_RUN_BUDGET_MS);
 
   // Single-flight: the pg_cron worker and an admin "Drain" would otherwise send
   // in parallel, and two callers each pacing to 100/min still total 200/min.
-  if (!(await acquireLease())) {
+  const holder = await acquireLease();
+  if (!holder) {
     const [sent, failed, remaining] = await Promise.all([
       db.emailCampaignRecipient.count({ where: { campaignId, status: "SENT" } }),
       db.emailCampaignRecipient.count({
@@ -438,10 +474,17 @@ export async function runCampaign(campaignId: string, timeBudgetMs = TIME_BUDGET
     };
   }
 
+  // Keep the lease fresh for as long as this run is alive. Without this, a run
+  // longer than LEASE_TTL_MS gets its lease stolen mid-flight.
+  const heartbeat = setInterval(() => {
+    renewLease(holder).catch(() => {});
+  }, 20_000);
+
   try {
-    return await runCampaignLocked(campaignId, startedAt, timeBudgetMs);
+    return await runCampaignLocked(campaignId, startedAt, budget);
   } finally {
-    await releaseLease();
+    clearInterval(heartbeat);
+    await releaseLease(holder);
   }
 }
 
