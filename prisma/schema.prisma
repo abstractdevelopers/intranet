@@ -971,6 +971,37 @@ model EmailCampaignRecipient {
 }
 
 // ---------------------------------------------------------------------------
+// Campaign sending guards
+// ---------------------------------------------------------------------------
+
+/**
+ * Shared token bucket for the email provider's rate limit.
+ *
+ * SendByte allows 120 requests per 60s per API key, counted across every caller.
+ * A per-process limiter is therefore not enough — the pg_cron worker and an
+ * admin "Drain" can each stay under 120/min while together exceeding it. The
+ * window lives here so the ceiling is global.
+ */
+model CampaignRateWindow {
+  id          String   @id @default("global")
+  windowStart DateTime
+  count       Int      @default(0)
+}
+
+/**
+ * Single-flight lease, so two senders cannot run at once.
+ *
+ * Held via an atomic conditional UPDATE rather than a read-then-write, because
+ * DATABASE_URL goes through the transaction pooler and advisory locks are not
+ * safe across pooled connections.
+ */
+model CampaignRunLease {
+  id         String   @id @default("campaign-sender")
+  holder     String
+  acquiredAt DateTime
+}
+
+// ---------------------------------------------------------------------------
 // Web push (browser notifications)
 // ---------------------------------------------------------------------------
 

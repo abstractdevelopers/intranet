@@ -164,7 +164,99 @@ export function describeAudience(rules: AudienceRules, courseNames: string[] = [
  * one chunk.
  */
 const CLAIM_CHUNK = 25;
-const CONCURRENCY = 15;
+const CONCURRENCY = 8;
+
+/**
+ * Provider ceiling: SendByte allows 120 requests per 60s per API key, counted
+ * across every caller. We aim below it to leave room for the other mail paths
+ * (scripts, transactional mail) that share the same key.
+ */
+const RATE_LIMIT_PER_MIN = 100;
+const RATE_WINDOW_MS = 60_000;
+
+/** How long a sender may hold the single-flight lease before it is reclaimed. */
+const LEASE_TTL_MS = 70_000;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Reserve `n` sends against the shared provider window, waiting if the window is
+ * full.
+ *
+ * The counter lives in the database rather than in memory because the ceiling is
+ * per API key, not per process: the pg_cron worker and an admin "Drain" can run
+ * at the same time, and two in-process limiters would each stay under 120/min
+ * while together blowing through it.
+ *
+ * The increment is a single atomic upsert, so concurrent callers serialise on
+ * the row and cannot both read the same count.
+ */
+async function reserveSendSlots(n: number): Promise<void> {
+  for (;;) {
+    const rows = await db.$queryRaw<{ count: number; windowStart: Date }[]>`
+      INSERT INTO "CampaignRateWindow" ("id", "windowStart", "count")
+      VALUES ('global', NOW(), ${n})
+      ON CONFLICT ("id") DO UPDATE SET
+        "count" = CASE
+          WHEN "CampaignRateWindow"."windowStart" < NOW() - ${`${RATE_WINDOW_MS} milliseconds`}::interval
+            THEN ${n}
+          ELSE "CampaignRateWindow"."count" + ${n}
+        END,
+        "windowStart" = CASE
+          WHEN "CampaignRateWindow"."windowStart" < NOW() - ${`${RATE_WINDOW_MS} milliseconds`}::interval
+            THEN NOW()
+          ELSE "CampaignRateWindow"."windowStart"
+        END
+      RETURNING "count", "windowStart"
+    `;
+    const row = rows[0];
+    if (row.count <= RATE_LIMIT_PER_MIN) return;
+
+    // Window is full. Undo the reservation and wait for it to roll over.
+    await db.$executeRaw`
+      UPDATE "CampaignRateWindow" SET "count" = "count" - ${n} WHERE "id" = 'global'
+    `;
+    const elapsed = Date.now() - new Date(row.windowStart).getTime();
+    const wait = Math.max(250, RATE_WINDOW_MS - elapsed + 100);
+    console.log(`[campaign] rate window full, waiting ${Math.round(wait / 1000)}s`);
+    await sleep(Math.min(wait, RATE_WINDOW_MS));
+  }
+}
+
+/**
+ * Take the single-flight lease, or report that another sender holds it.
+ *
+ * Acquire and steal are both conditional UPDATEs, so two callers racing cannot
+ * both win. A stale lease (crashed worker) is reclaimed after LEASE_TTL_MS.
+ */
+async function acquireLease(): Promise<boolean> {
+  const holder = `${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const acquired = await db.$executeRaw`
+    UPDATE "CampaignRunLease"
+    SET "holder" = ${holder}, "acquiredAt" = NOW()
+    WHERE "id" = 'campaign-sender'
+      AND "acquiredAt" < NOW() - ${`${LEASE_TTL_MS} milliseconds`}::interval
+  `;
+  if (acquired > 0) return true;
+
+  // No row yet — create it. A racing insert loses on the primary key and simply
+  // reports the lease as taken.
+  const created = await db.$executeRaw`
+    INSERT INTO "CampaignRunLease" ("id", "holder", "acquiredAt")
+    VALUES ('campaign-sender', ${holder}, NOW())
+    ON CONFLICT ("id") DO NOTHING
+  `;
+  return created > 0;
+}
+
+async function releaseLease(): Promise<void> {
+  // Expire it rather than delete, so the row always exists for the next claim.
+  await db.$executeRaw`
+    UPDATE "CampaignRunLease"
+    SET "acquiredAt" = NOW() - ${`${LEASE_TTL_MS + 1000} milliseconds`}::interval
+    WHERE "id" = 'campaign-sender'
+  `;
+}
 
 /**
  * Wall-clock budget for one invocation. Vercel Hobby caps functions at 60s, so
@@ -217,6 +309,11 @@ export async function verifyUnsubscribeToken(token: string): Promise<string | nu
 /**
  * Send one email through SendByte. Throws on failure so the caller can record
  * the error against the recipient row.
+ *
+ * A 429 is retried rather than treated as a dead recipient: the provider says
+ * exactly when to come back (the Retry-After header, or its `x-ratelimit-reset`
+ * equivalent), and the mail is still perfectly deliverable. Marking these FAILED
+ * is what stranded 888 recipients.
  */
 export async function sendCampaignEmail(input: {
   to: string;
@@ -224,20 +321,36 @@ export async function sendCampaignEmail(input: {
   html: string;
   text: string;
 }) {
-  const res = await fetch("https://api.sendbyte.africa/v1/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey()}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: fromAddress(),
-      to: [input.to],
-      subject: input.subject,
-      text: input.text,
-      html: input.html,
-    }),
-  });
-  if (!res.ok) {
+  const MAX_ATTEMPTS = 4;
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch("https://api.sendbyte.africa/v1/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey()}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: fromAddress(),
+        to: [input.to],
+        subject: input.subject,
+        text: input.text,
+        html: input.html,
+      }),
+    });
+
+    if (res.ok) return;
+
     const body = await res.text();
-    throw new Error(`${res.status} ${body.slice(0, 200)}`);
+    const retriable = res.status === 429 || res.status >= 500;
+    if (!retriable || attempt >= MAX_ATTEMPTS) {
+      throw new Error(`${res.status} ${body.slice(0, 200)}`);
+    }
+
+    // Honour the provider's own timing; fall back to exponential backoff.
+    const header = res.headers.get("retry-after") ?? res.headers.get("x-ratelimit-reset");
+    const parsed = header ? Number(header) : NaN;
+    const waitMs = Number.isFinite(parsed) && parsed > 0
+      ? Math.min(parsed * 1000, RATE_WINDOW_MS)
+      : Math.min(2 ** attempt * 1000, 30_000);
+    console.log(`[campaign] ${res.status} for ${input.to}, retry ${attempt}/${MAX_ATTEMPTS - 1} in ${Math.round(waitMs / 1000)}s`);
+    await sleep(waitMs);
   }
 }
 
@@ -300,6 +413,43 @@ export type SendProgress = {
  */
 export async function runCampaign(campaignId: string, timeBudgetMs = TIME_BUDGET_MS): Promise<SendProgress> {
   const startedAt = Date.now();
+
+  // Single-flight: the pg_cron worker and an admin "Drain" would otherwise send
+  // in parallel, and two callers each pacing to 100/min still total 200/min.
+  if (!(await acquireLease())) {
+    const [sent, failed, remaining] = await Promise.all([
+      db.emailCampaignRecipient.count({ where: { campaignId, status: "SENT" } }),
+      db.emailCampaignRecipient.count({
+        where: { campaignId, status: { in: ["FAILED", "SENDING"] } },
+      }),
+      db.emailCampaignRecipient.count({ where: { campaignId, status: "PENDING" } }),
+    ]);
+    const current = await db.emailCampaign.findUnique({
+      where: { id: campaignId },
+      select: { status: true },
+    });
+    return {
+      campaignId,
+      status: current?.status ?? "SENDING",
+      sent,
+      failed,
+      remaining,
+      done: remaining === 0,
+    };
+  }
+
+  try {
+    return await runCampaignLocked(campaignId, startedAt, timeBudgetMs);
+  } finally {
+    await releaseLease();
+  }
+}
+
+async function runCampaignLocked(
+  campaignId: string,
+  startedAt: number,
+  timeBudgetMs: number
+): Promise<SendProgress> {
   const campaign = await db.emailCampaign.findUnique({
     where: { id: campaignId },
     select: {
@@ -339,10 +489,11 @@ export async function runCampaign(campaignId: string, timeBudgetMs = TIME_BUDGET
     const sentIds: string[] = [];
     const failures: { id: string; error: string }[] = [];
 
-    // Send in parallel but in bounded slices, so a chunk never opens more
-    // sockets than the provider will tolerate.
+    // Send in bounded slices, and reserve each slice against the shared provider
+    // window first so parallel runs cannot together exceed the rate limit.
     for (let i = 0; i < claimed.length; i += CONCURRENCY) {
       const slice = claimed.slice(i, i + CONCURRENCY);
+      await reserveSendSlots(slice.length);
       const outcomes = await Promise.all(
         slice.map(async (recipient) => {
           try {
@@ -398,10 +549,20 @@ export async function runCampaign(campaignId: string, timeBudgetMs = TIME_BUDGET
   ]);
 
   const done = remaining === 0;
+  // Only call a campaign SENT when it truly finished. A run that stopped with
+  // recipients still PENDING (budget exhausted) stays SENDING and resumes; one
+  // that finished the queue but left FAILED rows is reported as FAILED so the
+  // failures are visible instead of hiding behind a SENT badge.
   if (done) {
+    const failedCount = await db.emailCampaignRecipient.count({
+      where: { campaignId, status: { in: ["FAILED", "SENDING"] } },
+    });
     await db.emailCampaign.update({
       where: { id: campaignId },
-      data: { status: "SENT", completedAt: new Date() },
+      data: {
+        status: failedCount > 0 ? "FAILED" : "SENT",
+        completedAt: new Date(),
+      },
     });
   }
 
