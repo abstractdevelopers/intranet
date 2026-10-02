@@ -173,12 +173,15 @@ export const SUBMISSION_STATUS = {
  * creator picks a pathway and is enrolled immediately instead of waiting for
  * staff review — there are ~685 of them and manual approval is not practical.
  *
- * This is a deliberately time-boxed allowance: it lapses at the end of
- * 2026-10-01, after which the normal "staff approve the elective" rule applies
- * again (and the legacy full application form is used instead of the
- * one-click picker). Nothing else needs changing when the date passes.
+ * This is a deliberately time-boxed allowance. It was originally set to lapse at
+ * the end of 2026-10-01, then extended to the end of 2026-10-04 (the Sunday
+ * before classes start) so the weekend reclaim push can honestly promise
+ * one-click entry: a creator who claims on Saturday or Sunday is enrolled on the
+ * spot. After that the normal "staff approve the elective" rule applies again,
+ * and the legacy full application form is used instead of the one-click picker.
+ * Nothing else needs changing when the date passes.
  */
-export const PATHWAY_AUTO_APPROVAL_UNTIL = new Date("2026-10-01T23:59:59.999Z");
+export const PATHWAY_AUTO_APPROVAL_UNTIL = new Date("2026-10-04T23:59:59.999Z");
 
 export function isPathwayAutoApprovalActive(now: Date = new Date()) {
   return now.getTime() <= PATHWAY_AUTO_APPROVAL_UNTIL.getTime();
