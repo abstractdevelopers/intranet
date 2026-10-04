@@ -17,9 +17,20 @@ export default async function AssignmentsPage() {
   });
   const courseIds = enrollments.map((e) => e.courseId);
 
+  // Assignments live inside modules, so they inherit the module release gate.
+  // Without this filter an unreleased week's assignment appeared here in full
+  // while the course timeline still showed it locked.
   const assignments = courseIds.length
     ? await db.assignment.findMany({
-        where: { module: { courseId: { in: courseIds }, status: "PUBLISHED" } },
+        where: {
+          module: {
+            courseId: { in: courseIds },
+            status: "PUBLISHED",
+            ...(user.previewUnreleasedContent
+              ? {}
+              : { OR: [{ releaseAt: null }, { releaseAt: { lte: new Date() } }] }),
+          },
+        },
         include: {
           module: { include: { course: true } },
           submissions: {

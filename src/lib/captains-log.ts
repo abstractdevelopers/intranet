@@ -292,9 +292,15 @@ export function isModuleUnlocked(input: {
   weekNumber: number;
   loggedWeeks: Set<number>;
   now?: Date;
+  /**
+   * Skip the scheduled-release check (see User.previewUnreleasedContent).
+   * Only the release gate is bypassed: the sequential and Captain's Log rules
+   * still apply, so a reviewer sees the content without a broken progress state.
+   */
+  preview?: boolean;
 }): { unlocked: boolean; reason: "LOCKED_RELEASE" | "LOCKED_PREVIOUS" | "LOCKED_LOG" | null } {
   const now = input.now ?? new Date();
-  if (input.releaseAt && input.releaseAt > now) {
+  if (!input.preview && input.releaseAt && input.releaseAt > now) {
     return { unlocked: false, reason: "LOCKED_RELEASE" };
   }
   if (!input.previousComplete) {

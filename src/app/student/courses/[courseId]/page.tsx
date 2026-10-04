@@ -65,6 +65,7 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
       weekNumber: mod.weekNumber,
       loggedWeeks,
       now,
+      preview: user.previewUnreleasedContent,
     });
     if (!complete) previousComplete = false;
     moduleStates.push({

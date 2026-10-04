@@ -20,14 +20,16 @@ export type ModuleAccess = {
  * the timeline hiding something is never the only protection.
  */
 export async function getModuleAccess(userId: string, courseId: string): Promise<ModuleAccess[]> {
-  const [modules, loggedWeeks] = await Promise.all([
+  const [modules, loggedWeeks, user] = await Promise.all([
     db.module.findMany({
       where: { courseId, status: "PUBLISHED" },
       include: { lessons: { select: { id: true, progress: { where: { userId } } } } },
       orderBy: { order: "asc" },
     }),
     getLoggedWeeks(userId),
+    db.user.findUnique({ where: { id: userId }, select: { previewUnreleasedContent: true } }),
   ]);
+  const preview = user?.previewUnreleasedContent ?? false;
 
   const now = new Date();
   let previousComplete = true;
@@ -41,6 +43,7 @@ export async function getModuleAccess(userId: string, courseId: string): Promise
       weekNumber: mod.weekNumber,
       loggedWeeks,
       now,
+      preview,
     });
     if (!complete) previousComplete = false;
     return {

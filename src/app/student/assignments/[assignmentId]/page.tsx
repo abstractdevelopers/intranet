@@ -47,6 +47,11 @@ export default async function AssignmentPage({
   });
   if (!assignment) notFound();
 
+  // Inherit the module release gate: an unreleased assignment must not be
+  // readable even by direct URL. Mirrors the check in the submit route.
+  const released = !assignment.module.releaseAt || assignment.module.releaseAt <= new Date();
+  if (!released && !user.previewUnreleasedContent) notFound();
+
   const enrollment = await db.enrollment.findFirst({
     where: { userId: user.id, courseId: assignment.module.course.id, status: "ACCEPTED" },
     select: { id: true },

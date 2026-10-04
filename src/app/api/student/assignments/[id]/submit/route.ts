@@ -40,7 +40,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     select: { id: true },
   });
   if (!enrollment) return NextResponse.json({ error: "Not enrolled in this course." }, { status: 403 });
-  if (assignment.module.releaseAt && assignment.module.releaseAt > new Date()) {
+  if (assignment.module.releaseAt && assignment.module.releaseAt > new Date() && !user.previewUnreleasedContent) {
     return NextResponse.json({ error: "This module hasn't been released yet." }, { status: 403 });
   }
 

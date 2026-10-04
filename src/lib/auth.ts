@@ -20,6 +20,8 @@ export type SessionUser = {
   verificationTier: string | null;
   /** Reclaim-window rank (1–100) driving the Elite badge; null if not earned. */
   eliteMemberNumber: number | null;
+  /** Sees scheduled content before its releaseAt. See User.previewUnreleasedContent. */
+  previewUnreleasedContent: boolean;
 };
 
 export async function hashPassword(password: string) {
@@ -83,6 +85,7 @@ export const getSessionUser = cache(async function getSessionUser(): Promise<Ses
     onboardingCompletedAt: session.user.onboardingCompletedAt,
     verificationTier: session.user.verificationTier,
     eliteMemberNumber: session.user.eliteMemberNumber,
+    previewUnreleasedContent: session.user.previewUnreleasedContent,
   };
 });
 
