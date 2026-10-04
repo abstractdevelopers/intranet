@@ -7,7 +7,7 @@ import { EmptyState } from "@/components/ui/empty";
 import { CourseMark } from "@/components/course-mark";
 import { formatDate } from "@/lib/format";
 import { IconAssignments, IconCheckCircle, IconLock, IconPlay } from "@/components/icons";
-import { canAccessModule, isLessonReleased } from "@/lib/module-access";
+import { canAccessModule, isAssignmentReleased, isLessonReleased } from "@/lib/module-access";
 
 export default async function ModulePage({
   params,
@@ -167,20 +167,46 @@ export default async function ModulePage({
         <section>
           <p className="eyebrow">Assignments</p>
           <ul className="mt-3 space-y-2">
-            {mod.assignments.map((a) => (
-              <li key={a.id}>
-                <Link
-                  href={`/student/assignments/${a.id}`}
-                  className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 transition-colors hover:border-brand-1/40"
-                >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-3/25 text-brand-1 dark:text-brand-3">
-                    <IconAssignments className="h-5 w-5" />
-                  </span>
-                  <span className="flex-1 text-sm font-semibold">{a.title}</span>
-                  <span className="text-xs text-text-muted">{a.maxScore} pts</span>
-                </Link>
-              </li>
-            ))}
+            {mod.assignments.map((a) => {
+              const open = isAssignmentReleased({
+                assignmentReleaseAt: a.releaseAt,
+                moduleReleaseAt: mod.releaseAt,
+                now,
+                preview: user.previewUnreleasedContent,
+              });
+              if (!open) {
+                return (
+                  <li
+                    key={a.id}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 opacity-70"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-2 text-text-muted">
+                      <IconLock className="h-4 w-4" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block text-sm font-semibold">{a.title}</span>
+                      <span className="text-xs text-text-muted">
+                        Opens {formatDate(a.releaseAt ?? mod.releaseAt)}
+                      </span>
+                    </span>
+                  </li>
+                );
+              }
+              return (
+                <li key={a.id}>
+                  <Link
+                    href={`/student/assignments/${a.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 transition-colors hover:border-brand-1/40"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-3/25 text-brand-1 dark:text-brand-3">
+                      <IconAssignments className="h-5 w-5" />
+                    </span>
+                    <span className="flex-1 text-sm font-semibold">{a.title}</span>
+                    <span className="text-xs text-text-muted">{a.maxScore} pts</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : null}

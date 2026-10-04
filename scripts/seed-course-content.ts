@@ -51,11 +51,14 @@ type Seed = {
       description: string;
       instructions?: string;
       requirements?: string;
+      /** "YYYY-MM-DD" — opens at 10:00 WAT on this date. Omit to inherit the week's release. */
+      releaseDate?: string;
       /** "YYYY-MM-DD" — due 23:59 WAT on this date. */
       deadlineDate?: string;
       allowedTypes?: string[];
       maxAttempts?: number;
       latePolicy?: string;
+      maxFileSizeMb?: number;
     };
   }[];
 };
@@ -81,8 +84,13 @@ async function main() {
       if (l.releaseDate) console.log(`      · ${l.title} -> ${watLabel(atWat(l.releaseDate))}`);
     }
     if (w.assignment) {
+      const opens = w.assignment.releaseDate ? watLabel(atWat(w.assignment.releaseDate)) : "inherits the week";
       const due = w.assignment.deadlineDate ? watLabel(atWat(w.assignment.deadlineDate, 23)) : "(no deadline)";
-      console.log(`    assignment : ${w.assignment.title} — due ${due}`);
+      console.log(`    assignment : ${w.assignment.title}`);
+      console.log(`      opens    : ${opens}`);
+      console.log(`      due      : ${due}`);
+      console.log(`      accepts  : ${(w.assignment.allowedTypes ?? []).join(", ")}`);
+      console.log(`      late     : ${w.assignment.latePolicy ?? "ALLOW"}`);
     }
     console.log();
   }
@@ -174,9 +182,11 @@ async function main() {
         instructions: w.assignment.instructions ?? null,
         requirements: w.assignment.requirements ?? null,
         deadline,
+        releaseAt: w.assignment.releaseDate ? atWat(w.assignment.releaseDate) : null,
         allowedTypes: JSON.stringify(w.assignment.allowedTypes ?? ["PDF", "DOC", "DOCX", "ZIP", "IMAGE"]),
         maxAttempts: w.assignment.maxAttempts ?? 3,
         latePolicy: w.assignment.latePolicy ?? "ALLOW",
+        maxFileSizeMb: w.assignment.maxFileSizeMb ?? 10,
       };
       const existingA = await db.assignment.findFirst({
         where: { moduleId: mod.id },

@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge, statusTone } from "@/components/ui/badge";
 import { SubmissionForm } from "@/components/assignments/submission-form";
 import { formatDate } from "@/lib/format";
+import { isAssignmentReleased } from "@/lib/module-access";
 import { effectiveMaxBytes } from "@/lib/storage";
 
 function parseAllowed(raw: string): string[] {
@@ -49,8 +50,12 @@ export default async function AssignmentPage({
 
   // Inherit the module release gate: an unreleased assignment must not be
   // readable even by direct URL. Mirrors the check in the submit route.
-  const released = !assignment.module.releaseAt || assignment.module.releaseAt <= new Date();
-  if (!released && !user.previewUnreleasedContent) notFound();
+  const released = isAssignmentReleased({
+    assignmentReleaseAt: assignment.releaseAt,
+    moduleReleaseAt: assignment.module.releaseAt,
+    preview: user.previewUnreleasedContent,
+  });
+  if (!released) notFound();
 
   const enrollment = await db.enrollment.findFirst({
     where: { userId: user.id, courseId: assignment.module.course.id, status: "ACCEPTED" },

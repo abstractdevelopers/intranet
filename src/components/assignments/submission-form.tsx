@@ -3,6 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+/**
+ * Types submitted as an uploaded file.
+ *
+ * VIDEO is deliberately absent: a 30-60s 1080p export is far larger than the
+ * platform body ceiling (MAX_UPLOAD_BYTES, 4MB), so offering an upload tab for
+ * it would only produce a failure. Video submissions come as a hosted link.
+ */
+const FILE_TYPES = ["PDF", "DOC", "DOCX", "ZIP", "IMAGE"];
+/** Types submitted as a hosted link. */
+const LINK_TYPES = ["GITHUB", "GITLAB", "URL", "VIDEO", "REPO"];
+
 export function SubmissionForm({
   assignmentId,
   allowedTypes,
@@ -16,9 +27,9 @@ export function SubmissionForm({
 }) {
   const router = useRouter();
   const [mode, setMode] = useState<"file" | "url" | "text">(
-    allowedTypes.some((t) => ["PDF", "DOC", "DOCX", "ZIP", "IMAGE"].includes(t))
+    allowedTypes.some((t) => FILE_TYPES.includes(t))
       ? "file"
-      : allowedTypes.some((t) => ["GITHUB", "GITLAB", "URL", "REPO"].includes(t))
+      : allowedTypes.some((t) => LINK_TYPES.includes(t))
         ? "url"
         : "text"
   );
@@ -28,8 +39,8 @@ export function SubmissionForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const acceptsFile = allowedTypes.some((t) => ["PDF", "DOC", "DOCX", "ZIP", "IMAGE"].includes(t));
-  const acceptsUrl = allowedTypes.some((t) => ["GITHUB", "GITLAB", "URL", "REPO"].includes(t));
+  const acceptsFile = allowedTypes.some((t) => FILE_TYPES.includes(t));
+  const acceptsUrl = allowedTypes.some((t) => LINK_TYPES.includes(t));
   const acceptsText = allowedTypes.includes("TEXT");
 
   async function submit(e: React.FormEvent) {
@@ -115,6 +126,7 @@ export function SubmissionForm({
           </label>
           <input
             type="file"
+            accept={allowedTypes.includes("VIDEO") ? "video/mp4,video/quicktime,video/webm" : undefined}
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             className="mt-1.5 block w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-brand-3/25 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-brand-1 dark:file:text-brand-3"
           />
@@ -124,16 +136,27 @@ export function SubmissionForm({
       {mode === "url" ? (
         <div>
           <label htmlFor="sub-url" className="block text-xs font-semibold text-text-muted">
-            Repository or link
+            {allowedTypes.includes("VIDEO") ? "Video link" : "Repository or link"}
           </label>
           <input
             id="sub-url"
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://github.com/you/project"
+            placeholder={
+              allowedTypes.includes("VIDEO")
+                ? "https://drive.google.com/… or https://youtu.be/…"
+                : "https://github.com/you/project"
+            }
             className="mt-1.5 block w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm"
           />
+          {allowedTypes.includes("VIDEO") ? (
+            <p className="mt-1.5 text-xs text-text-muted">
+              Upload your export to Google Drive, YouTube or Dropbox, set it to
+              &ldquo;anyone with the link&rdquo;, and paste the link here. Video files are too
+              large to upload directly.
+            </p>
+          ) : null}
         </div>
       ) : null}
 

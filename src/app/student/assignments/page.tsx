@@ -20,6 +20,11 @@ export default async function AssignmentsPage() {
   // Assignments live inside modules, so they inherit the module release gate.
   // Without this filter an unreleased week's assignment appeared here in full
   // while the course timeline still showed it locked.
+  //
+  // An assignment may also open later than its week (Monday's week, Wednesday's
+  // assignment). Where releaseAt is null it inherits the module's, and the
+  // module filter above already ensures that has passed.
+  const now = new Date();
   const assignments = courseIds.length
     ? await db.assignment.findMany({
         where: {
@@ -28,8 +33,11 @@ export default async function AssignmentsPage() {
             status: "PUBLISHED",
             ...(user.previewUnreleasedContent
               ? {}
-              : { OR: [{ releaseAt: null }, { releaseAt: { lte: new Date() } }] }),
+              : { OR: [{ releaseAt: null }, { releaseAt: { lte: now } }] }),
           },
+          ...(user.previewUnreleasedContent
+            ? {}
+            : { OR: [{ releaseAt: null }, { releaseAt: { lte: now } }] }),
         },
         include: {
           module: { include: { course: true } },

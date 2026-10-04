@@ -84,6 +84,25 @@ export function isLessonReleased(input: {
 }
 
 /**
+ * Whether an assignment has opened.
+ *
+ * Assignments can open later than their week (a Monday week whose assignment
+ * opens Wednesday), so an assignment's own releaseAt wins; null inherits the
+ * module's. `preview` skips the check for reviewer accounts.
+ */
+export function isAssignmentReleased(input: {
+  assignmentReleaseAt: Date | null;
+  moduleReleaseAt: Date | null;
+  now?: Date;
+  preview?: boolean;
+}) {
+  if (input.preview) return true;
+  const now = input.now ?? new Date();
+  const effective = input.assignmentReleaseAt ?? input.moduleReleaseAt;
+  return !effective || effective <= now;
+}
+
+/**
  * Whether a specific module is currently accessible. Used by the module and
  * lesson pages so a direct URL can never bypass the timeline.
  */

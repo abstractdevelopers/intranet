@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { notify } from "@/lib/audit";
 import { storageKeyFor, writeToDiskIfPossible, effectiveMaxBytes } from "@/lib/storage";
+import { isAssignmentReleased } from "@/lib/module-access";
 
 const MIME_BY_TYPE: Record<string, string[]> = {
   PDF: ["application/pdf"],
@@ -10,6 +11,10 @@ const MIME_BY_TYPE: Record<string, string[]> = {
   DOCX: ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
   ZIP: ["application/zip", "application/x-zip-compressed"],
   IMAGE: ["image/png", "image/jpeg", "image/webp", "image/gif"],
+  // Small video clips only. A 30-60s 1080p export is far larger than the
+  // platform body ceiling, so full-size submissions come as a hosted link
+  // (URL/VIDEO) rather than an upload — see MAX_UPLOAD_BYTES in lib/storage.
+  VIDEO: ["video/mp4", "video/quicktime", "video/webm"],
 };
 
 function allowedTypes(assignment: { allowedTypes: string }): string[] {
@@ -40,8 +45,17 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     select: { id: true },
   });
   if (!enrollment) return NextResponse.json({ error: "Not enrolled in this course." }, { status: 403 });
-  if (assignment.module.releaseAt && assignment.module.releaseAt > new Date() && !user.previewUnreleasedContent) {
-    return NextResponse.json({ error: "This module hasn't been released yet." }, { status: 403 });
+
+  // An assignment can open later than its week (Monday's week, Wednesday's
+  // assignment), so check its own releaseAt as well as the module's.
+  if (
+    !isAssignmentReleased({
+      assignmentReleaseAt: assignment.releaseAt,
+      moduleReleaseAt: assignment.module.releaseAt,
+      preview: user.previewUnreleasedContent,
+    })
+  ) {
+    return NextResponse.json({ error: "This assignment isn't available yet." }, { status: 403 });
   }
 
   // Late policy
@@ -83,6 +97,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       (allowed.includes("GITHUB") && /github\.com/i.test(url)) ||
       (allowed.includes("GITLAB") && /gitlab\.com/i.test(url)) ||
       allowed.includes("URL") ||
+      allowed.includes("VIDEO") ||
       allowed.includes("REPO");
     if (!urlAllowed) {
       return NextResponse.json({ error: "That link type isn't allowed here." }, { status: 400 });

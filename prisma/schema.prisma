@@ -420,6 +420,10 @@ model Assignment {
   instructions  String?
   requirements  String?
   deadline      DateTime?
+  // When the assignment becomes visible. A week opens on Monday but its
+  // assignment may not open until midweek, so the module gate alone is too
+  // coarse. Null inherits the module's release time.
+  releaseAt     DateTime?
   maxScore      Int       @default(100)
   allowedTypes  String // JSON array: PDF,DOC,DOCX,ZIP,IMAGE,TEXT,GITHUB,GITLAB,URL,REPO
   maxFileSizeMb Int       @default(10)
