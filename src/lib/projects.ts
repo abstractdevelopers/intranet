@@ -5,13 +5,21 @@ import { notify } from "./audit";
 export const PUBLIC_PROJECT_VISIBILITY = "PUBLISHED";
 
 /**
- * Turn a passed submission into a portfolio piece the first time it is graded.
- * Idempotent — project.submissionId is unique, so re-grading never duplicates.
+ * Turn a submission into a portfolio piece. Idempotent — project.submissionId is
+ * unique, so re-grading never duplicates.
+ *
+ * Called for every submission, not only passing ones, so a student's work is
+ * never invisible while marking is pending. New pieces start HIDDEN; the
+ * grading route promotes a passing grade to PUBLISHED, and the student can
+ * publish anything themselves from /student/projects.
+ *
+ * `initialVisibility` lets a caller override that starting point.
  */
-export async function publishProjectFromSubmission(submissionId: string, userId: string) {
-  const existing = await db.project.findUnique({ where: { submissionId } });
-  if (existing) return existing;
-
+export async function publishProjectFromSubmission(
+  submissionId: string,
+  userId: string,
+  initialVisibility: string = "HIDDEN"
+) {
   const submission = await db.assignmentSubmission.findUnique({
     where: { id: submissionId },
     include: {
@@ -28,17 +36,63 @@ export async function publishProjectFromSubmission(submissionId: string, userId:
   const { assignment } = submission;
   const course = assignment.module.course;
 
+  // One piece per assignment. A later attempt refreshes the same piece rather
+  // than adding a second one, so a student who resubmits doesn't accumulate
+  // near-identical entries.
+  const existing = await db.project.findFirst({
+    where: { userId, assignmentId: assignment.id },
+    select: { id: true, visibility: true },
+  });
+
+  if (existing) {
+    // Only refresh a draft. Once a piece is PUBLISHED (or RESTRICTED by staff)
+    // it is the student's curated entry, so a new attempt updates the work
+    // behind it but must not overwrite their edits or visibility.
+    if (existing.visibility !== "HIDDEN") {
+      await db.project.update({
+        where: { id: existing.id },
+        data: {
+          submissionId: submission.id,
+          externalUrl: submission.externalUrl ?? null,
+          repoUrl: submission.repoUrl ?? null,
+        },
+      });
+      return db.project.findUnique({ where: { id: existing.id } });
+    }
+    await db.project.update({
+      where: { id: existing.id },
+      data: {
+        submissionId: submission.id,
+        summary: assignment.description.slice(0, 400),
+        description: submission.textContent ?? null,
+        externalUrl: submission.externalUrl ?? null,
+        repoUrl: submission.repoUrl ?? null,
+        completedAt: submission.submittedAt,
+        assets: {
+          deleteMany: {},
+          create: submission.files.map((f) => ({
+            title: f.fileName,
+            type: "FILE",
+            documentId: f.documentId,
+          })),
+        },
+      },
+    });
+    return db.project.findUnique({ where: { id: existing.id } });
+  }
+
   const project = await db.project.create({
     data: {
       userId,
       courseId: course.id,
       submissionId: submission.id,
+      assignmentId: assignment.id,
       title: assignment.title,
       summary: assignment.description.slice(0, 400),
       description: submission.textContent ?? null,
       externalUrl: submission.externalUrl ?? null,
       repoUrl: submission.repoUrl ?? null,
-      visibility: PUBLIC_PROJECT_VISIBILITY,
+      visibility: initialVisibility,
       completedAt: submission.submittedAt,
       assets: {
         create: submission.files.map((f) => ({
@@ -54,7 +108,7 @@ export async function publishProjectFromSubmission(submissionId: string, userId:
     userId,
     type: "PROJECT_ADDED",
     title: `Added to your portfolio: ${assignment.title}`,
-    body: `Your graded work from ${course.name} is now on your creator profile. You can edit or hide it any time.`,
+    body: `Your work from ${course.name} is now in your portfolio. You can edit, publish or hide it any time.`,
   });
 
   return project;

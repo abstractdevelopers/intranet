@@ -4,6 +4,8 @@ import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { notify } from "@/lib/audit";
 import { storageKeyFor, writeToDiskIfPossible, effectiveMaxBytes } from "@/lib/storage";
 import { isAssignmentReleased } from "@/lib/module-access";
+import { isBlockedForLateness, isLate } from "@/lib/late-policy";
+import { publishProjectFromSubmission } from "@/lib/projects";
 
 const MIME_BY_TYPE: Record<string, string[]> = {
   PDF: ["application/pdf"],
@@ -58,10 +60,19 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: "This assignment isn't available yet." }, { status: 403 });
   }
 
-  // Late policy
+  // Late policy. BLOCK refuses the submission outright; ALLOW and PENALTY
+  // accept it, and lateness is recorded so PENALTY can deduct at grading time.
   const now = new Date();
-  if (assignment.deadline && now > assignment.deadline && assignment.latePolicy === "BLOCK") {
-    return NextResponse.json({ error: "The deadline has passed." }, { status: 400 });
+  const late = isLate(now, assignment.deadline);
+  if (isBlockedForLateness(assignment.deadline, assignment.latePolicy, now)) {
+    return NextResponse.json(
+      {
+        error: assignment.deadline
+          ? `The deadline passed on ${assignment.deadline.toISOString().slice(0, 10)} and late submissions aren't accepted.`
+          : "Late submissions aren't accepted.",
+      },
+      { status: 400 }
+    );
   }
 
   // Attempt limit (submissions are never overwritten — history is preserved)
@@ -146,12 +157,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       userId: user.id,
       attempt: attempts + 1,
       status,
+      late,
       textContent,
       repoUrl: url && /github|gitlab/i.test(url) ? url : null,
       externalUrl: url && !/github|gitlab/i.test(url) ? url : null,
       files: documentId && fileName ? { create: { documentId, fileName } } : undefined,
     },
   });
+
+  // Every submission becomes a portfolio piece straight away, as a private
+  // draft. A student's work is then never invisible while marking is pending,
+  // and a passing grade later publishes it automatically.
+  await publishProjectFromSubmission(submission.id, user.id);
 
   // Notify reviewers/admins that work awaits review.
   const staff = await db.user.findMany({

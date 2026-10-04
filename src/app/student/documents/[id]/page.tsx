@@ -33,7 +33,7 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
   const lesson = doc.resources[0]?.lesson;
 
   return (
-    <div className="mx-auto max-w-4xl space-y-4">
+    <div className="mx-auto w-full max-w-6xl space-y-4">
       <nav className="text-xs text-text-muted">
         {lesson ? (
           <>

@@ -123,15 +123,17 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
   const btn =
     "inline-flex items-center justify-center rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text-muted transition-colors hover:border-brand-1 hover:text-brand-1 disabled:opacity-40 dark:hover:text-brand-3";
 
+  // The reader fills the page rather than sitting in a small box. The height is
+  // the viewport minus the surrounding chrome (shell padding, the breadcrumb,
+  // the caption below, and on mobile the header and nav strip). Mobile carries
+  // more chrome, hence the larger offset. dvh rather than vh so mobile browser
+  // toolbars don't clip the bottom.
+  const shellClass = fullscreen
+    ? "flex h-screen w-screen flex-col overflow-hidden bg-surface-2"
+    : "flex h-[calc(100dvh-15rem)] min-h-[28rem] flex-col overflow-hidden rounded-xl border border-border bg-surface-2 md:h-[calc(100dvh-10rem)]";
+
   return (
-    <div
-      ref={wrapperRef}
-      className={
-        fullscreen
-          ? "flex h-screen w-screen flex-col overflow-hidden bg-surface-2"
-          : "overflow-hidden rounded-xl border border-border bg-surface-2"
-      }
-    >
+    <div ref={wrapperRef} className={shellClass}>
       {/* Toolbar: page nav, zoom, search — no download */}
       <div className="flex flex-wrap items-center gap-2 border-b border-border bg-surface px-3 py-2.5">
         <span className="mr-auto truncate text-sm font-semibold">{title}</span>
@@ -181,7 +183,7 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
 
       <div
         ref={containerRef}
-        className={fullscreen ? "flex-1 overflow-auto p-4" : "max-h-[75vh] overflow-auto p-4"}
+        className="flex-1 overflow-auto bg-surface-2 p-4"
       >
         {error ? (
           <p className="py-16 text-center text-sm text-text-muted">{error}</p>

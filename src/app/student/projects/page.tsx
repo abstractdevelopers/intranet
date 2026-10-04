@@ -29,8 +29,9 @@ export default async function MyProjectsPage() {
           <p className="eyebrow">Portfolio</p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight">My Portfolio</h1>
           <p className="mt-1 max-w-xl text-sm text-text-muted">
-            Graded work is added to your portfolio automatically. Curate it here — feature
-            your best pieces, or hide ones you&rsquo;d rather not show.
+            Every assignment you submit is added here, so your work is never lost. Passing
+            work is published to your creator profile automatically — publish or hide
+            anything else yourself.
           </p>
         </div>
         {user.username ? (
@@ -57,7 +58,7 @@ export default async function MyProjectsPage() {
       {projects.length === 0 ? (
         <EmptyState
           title="No projects yet"
-          body="When an assignment you submit is graded and passed, it lands here and on your creator profile."
+          body="When you submit an assignment, it lands here. Passing work is published to your creator profile automatically."
           action={<ButtonLink href="/student/assignments">See your assignments</ButtonLink>}
         />
       ) : (

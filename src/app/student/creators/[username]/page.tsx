@@ -12,6 +12,7 @@ import { VerificationBadge } from "@/components/verification-badge";
 import { EliteBadge } from "@/components/elite-badge";
 import { FollowButton } from "@/components/creators/follow-button";
 import { LikeButton } from "@/components/creators/like-button";
+import { ProjectVideo } from "@/components/creators/project-video";
 import { IconUsers, IconCourses, IconFile, IconClock } from "@/components/icons";
 import { canViewCreator } from "@/lib/projects";
 import { getCreatorProjects } from "@/lib/creators";
@@ -285,6 +286,10 @@ function PortfolioCard({
   liked: boolean;
   showVisibility: boolean;
 }) {
+  // A piece whose link is an embeddable video shows a player instead of a bare
+  // URL. Repo links are never treated as video.
+  const videoUrl = project.repoUrl ? null : project.externalUrl;
+
   return (
     <Card className="flex flex-col p-5">
       <div className="flex items-start gap-3">
@@ -329,6 +334,10 @@ function PortfolioCard({
             </li>
           ))}
         </ul>
+      ) : null}
+
+      {videoUrl ? (
+        <ProjectVideo url={videoUrl} title={project.title} />
       ) : null}
 
       {project.repoUrl || project.externalUrl ? (
