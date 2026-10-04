@@ -62,6 +62,28 @@ export async function getModuleAccess(userId: string, courseId: string): Promise
 }
 
 /**
+ * Whether a specific lesson is released.
+ *
+ * A lesson's own releaseAt wins; null inherits the module's, so existing
+ * content behaves exactly as before. `preview` skips the check for reviewer
+ * accounts (see User.previewUnreleasedContent).
+ *
+ * The module gate is checked separately and first — this only answers the
+ * day-within-the-week question.
+ */
+export function isLessonReleased(input: {
+  lessonReleaseAt: Date | null;
+  moduleReleaseAt: Date | null;
+  now?: Date;
+  preview?: boolean;
+}) {
+  if (input.preview) return true;
+  const now = input.now ?? new Date();
+  const effective = input.lessonReleaseAt ?? input.moduleReleaseAt;
+  return !effective || effective <= now;
+}
+
+/**
  * Whether a specific module is currently accessible. Used by the module and
  * lesson pages so a direct URL can never bypass the timeline.
  */

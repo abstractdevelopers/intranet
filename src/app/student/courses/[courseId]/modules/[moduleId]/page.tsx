@@ -5,8 +5,9 @@ import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty";
 import { CourseMark } from "@/components/course-mark";
-import { IconAssignments, IconCheckCircle, IconPlay } from "@/components/icons";
-import { canAccessModule } from "@/lib/module-access";
+import { formatDate } from "@/lib/format";
+import { IconAssignments, IconCheckCircle, IconLock, IconPlay } from "@/components/icons";
+import { canAccessModule, isLessonReleased } from "@/lib/module-access";
 
 export default async function ModulePage({
   params,
@@ -45,6 +46,19 @@ export default async function ModulePage({
   if (!mod) notFound();
 
   const doneLessons = mod.lessons.filter((l) => l.progress[0]?.completedAt).length;
+
+  // Day-within-the-week release: a lesson whose own releaseAt is still ahead
+  // shows its title but cannot be opened.
+  const now = new Date();
+  const lessonStates = mod.lessons.map((lesson) => ({
+    lesson,
+    released: isLessonReleased({
+      lessonReleaseAt: lesson.releaseAt,
+      moduleReleaseAt: mod.releaseAt,
+      now,
+      preview: user.previewUnreleasedContent,
+    }),
+  }));
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -91,8 +105,26 @@ export default async function ModulePage({
           </div>
         ) : (
           <ul className="mt-3 space-y-2">
-            {mod.lessons.map((lesson) => {
+            {lessonStates.map(({ lesson, released }) => {
               const done = Boolean(lesson.progress[0]?.completedAt);
+              if (!released) {
+                return (
+                  <li
+                    key={lesson.id}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 opacity-70"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-2 text-text-muted">
+                      <IconLock className="h-4 w-4" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block text-sm font-semibold">{lesson.title}</span>
+                      <span className="text-xs text-text-muted">
+                        Unlocks {formatDate(lesson.releaseAt ?? mod.releaseAt)}
+                      </span>
+                    </span>
+                  </li>
+                );
+              }
               return (
                 <li key={lesson.id}>
                   <Link

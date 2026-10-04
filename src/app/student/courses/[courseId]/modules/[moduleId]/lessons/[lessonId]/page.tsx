@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { requireStudent } from "@/lib/rbac";
 import { db } from "@/lib/db";
 import { LessonView } from "@/components/lessons/lesson-view";
-import { canAccessModule } from "@/lib/module-access";
+import { canAccessModule, isLessonReleased } from "@/lib/module-access";
 
 export default async function LessonPage({
   params,
@@ -37,6 +37,15 @@ export default async function LessonPage({
     if (access.reason === "LOCKED_LOG") redirect("/student/captains-log");
     redirect(`/student/courses/${courseId}`);
   }
+
+  // Day-within-the-week gate: the module may be open while this day's lesson
+  // is not yet released.
+  const released = isLessonReleased({
+    lessonReleaseAt: lesson.releaseAt,
+    moduleReleaseAt: lesson.module.releaseAt,
+    preview: user.previewUnreleasedContent,
+  });
+  if (!released) redirect(`/student/courses/${courseId}/modules/${moduleId}`);
 
   // Next lesson in the week, for the "Complete & continue" flow.
   const next = await db.lesson.findFirst({

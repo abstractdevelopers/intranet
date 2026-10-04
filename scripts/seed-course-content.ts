@@ -41,6 +41,8 @@ type Seed = {
       content?: string;
       youtubeVideoId?: string;
       durationMin?: number;
+      /** "YYYY-MM-DD" — release this day's lessons at 10:00 WAT. Omit to inherit the week's release. */
+      releaseDate?: string;
       /** Attach a PDF to this lesson (embedded via the in-app reader). */
       pdf?: { title: string; documentId?: string; url?: string; localPath?: string };
     }[];
@@ -75,6 +77,9 @@ async function main() {
     console.log(`  Week ${w.weekNumber} — ${w.title}`);
     console.log(`    releases   : ${watLabel(releaseAt)}  (${releaseAt.toISOString()})`);
     console.log(`    lessons    : ${w.lessons?.length ?? 0}`);
+    for (const l of w.lessons ?? []) {
+      if (l.releaseDate) console.log(`      · ${l.title} -> ${watLabel(atWat(l.releaseDate))}`);
+    }
     if (w.assignment) {
       const due = w.assignment.deadlineDate ? watLabel(atWat(w.assignment.deadlineDate, 23)) : "(no deadline)";
       console.log(`    assignment : ${w.assignment.title} — due ${due}`);
@@ -124,6 +129,7 @@ async function main() {
         youtubeVideoId: l.youtubeVideoId ?? null,
         durationMin: l.durationMin ?? null,
         order: i + 1,
+        releaseAt: l.releaseDate ? atWat(l.releaseDate) : null,
       };
       const lesson = existingLesson
         ? await db.lesson.update({ where: { id: existingLesson.id }, data: lessonData })

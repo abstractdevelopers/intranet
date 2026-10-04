@@ -1,0 +1,99 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Video Editing",
+      "overview": "Welcome to the beginning of your video editing journey. Every great editor starts somewhere. Before you learn how to create transitions, add effects, sync music, or produce visually compelling videos, you first need to understand the foundation upon which everything else is built. This module is designed to give you that foundation.",
+      "objectives": "By the end of this week you should be able to:\n\n1. Explain what video editing actually is, and how raw footage becomes a finished video.\n2. Describe the role of an editor — how timing, pacing, selection and arrangement shape a viewer's experience.\n3. Recognise different types of shots and identify useful footage before you begin editing.\n4. Understand video formats and aspect ratios, and why videos take different shapes depending on where they are viewed.\n5. Understand frame rate and resolution, and how they affect how video looks, moves and is delivered.\n6. Find your way around the CapCut Mobile interface and workspace.\n7. Import footage and other assets — video clips, images, audio, music and other media — into CapCut.\n8. Cut and trim footage, split clips, and remove unwanted sections.\n9. Rearrange clips into a meaningful sequence.\n10. Apply basic transitions, add basic text, and add music.\n11. Change aspect ratio from landscape to portrait.\n12. Export your finished video with the correct settings.",
+      "releaseDate": "2026-10-05",
+      "lessons": [
+        {
+          "title": "Welcome to Your Creative Journey",
+          "releaseDate": "2026-10-05",
+          "content": "Welcome to the beginning of your video editing journey.\n\nEvery great editor starts somewhere. Before you learn how to create transitions, add effects, sync music, or produce visually compelling videos, you first need to understand the foundation upon which everything else is built.\n\nThis module is designed to give you that foundation.\n\nYou will begin by understanding what video editing actually is, how professional editors think and work, how to properly understand video footage, and the technical concepts that determine how video is recorded, displayed, and edited.\n\nYou will then begin working with CapCut Mobile, the primary editing application for this course.\n\nThe goal is not simply to teach you how to use CapCut. The goal is to help you understand the craft of editing and then give you the tools to begin applying that understanding.\n\nToday is focused entirely on building your foundation. You will learn seven key topics:\n\n1. What Video Editing Actually Is\n2. The Role of an Editor\n3. Understanding Footage\n4. Video Formats & Aspect Ratios\n5. Frame Rate & Resolution\n6. CapCut Mobile Interface & Workspace\n7. Importing Assets & Footage in CapCut"
+        },
+        {
+          "title": "Part 1 — Understanding the Foundations",
+          "releaseDate": "2026-10-05",
+          "content": "Before opening CapCut and making your first edit, you need to understand what you're actually doing.\n\nIn this section, you will learn what video editing actually is and how raw footage is transformed into a finished video.\n\nYou will also learn about the role of an editor — going beyond simply cutting clips to understanding how an editor uses timing, pacing, selection, and arrangement to shape a viewer's experience.\n\nNext, you will learn how to understand footage. This includes recognizing different types of shots, identifying useful footage, and understanding the material you are working with before you begin editing.\n\nYou will also be introduced to video formats and aspect ratios, helping you understand why videos can have different shapes and dimensions depending on where and how they will be viewed.\n\nFinally, you will learn about frame rate and resolution, two fundamental technical concepts that affect how video looks, moves, and is delivered.\n\nBrief Overview\n\nThe explanations above are only a brief introduction to these concepts. You are required to read the full resource below before proceeding, as these concepts form the foundation for everything you will learn throughout the course.",
+          "pdf": {
+            "title": "UCA Module 1 — Foundations of Video Editing",
+            "documentId": "cmuu34n4u0006200dsqoigqhq"
+          }
+        },
+        {
+          "title": "Part 2 — CapCut Mobile Interface & Workspace",
+          "releaseDate": "2026-10-05",
+          "content": "Now that you understand the foundations of video editing, it's time to become familiar with the environment where you will actually create your edits.\n\nIn this lesson, you will explore the CapCut Mobile interface and workspace.\n\nYou will learn what the major sections of the app are used for and where to find the tools and controls you will be using throughout this course.\n\nThe goal is to make the CapCut interface feel familiar before you begin performing actual editing tasks.",
+          "youtubeVideoId": "Fo5Rld_gN90"
+        },
+        {
+          "title": "Part 3 — Importing Assets & Footage in CapCut",
+          "releaseDate": "2026-10-05",
+          "content": "Before you can begin editing, you need to know how to bring your materials into CapCut.\n\nIn this lesson, you will learn how to import the footage and other assets required for your projects, including video clips, images, audio, music, and other media.\n\nYou will also begin understanding how your assets enter your project and become available for editing.",
+          "youtubeVideoId": "lt-ExpZCbsM"
+        },
+        {
+          "title": "Today's Goal",
+          "releaseDate": "2026-10-05",
+          "content": "Today's goal is simple:\n\nUnderstand the foundation before you start building.\n\nDon't worry about mastering everything immediately.\n\nFocus on understanding what video editing is, how an editor thinks, how footage works, and how the technical side of video affects your work.\n\nThen become familiar with CapCut and learn how to bring your assets into the application.\n\nBy the end of today, you should have a clear understanding of the editing environment and the fundamental concepts you will need for the rest of the course.\n\nThis is the beginning of your creative journey. Build the foundation properly."
+        },
+
+        {
+          "title": "Tuesday — Building Your First Edit",
+          "releaseDate": "2026-10-06",
+          "content": "Welcome back.\n\nToday, we continue with the second part of Module 1. Now that you have learned the fundamentals of video editing, understood the role of an editor, become familiar with footage and basic technical concepts, and explored the CapCut Mobile workspace, it is time to start putting those foundations into practice.\n\nToday's lessons focus on the core editing actions you will use in almost every video you create.\n\nYou will learn how to control your footage, build a sequence, connect clips, add simple visual and audio elements, and prepare your finished video for export.\n\nToday, you will learn:\n\n1. Cutting & Trimming\n2. Splitting Clips\n3. Removing Unwanted Footage\n4. Rearranging Clips\n5. Basic Transitions\n6. Basic Text\n7. Basic Music\n8. Export Settings"
+        },
+        {
+          "title": "Part 1 — Cutting, Trimming & Removing Unwanted Footage",
+          "releaseDate": "2026-10-06",
+          "content": "The first step to creating a good edit is learning how to control your footage.\n\nIn this section, you will learn how to cut and trim clips to keep only the parts you need, split clips into separate sections, and remove unwanted footage from your timeline.\n\nThese are some of the most fundamental skills in video editing because almost every edit begins with deciding what should stay and what should go.\n\nYou will learn how to:\n\n- Shorten clips\n- Remove unwanted sections\n- Split one clip into multiple sections\n- Isolate specific moments\n- Clean up your timeline\n- Create a more precise sequence\n\nImportant: The explanation above is only a brief overview. You are required to watch the full lesson below because these skills form the foundation of almost every editing task you will perform throughout this course.",
+          "youtubeVideoId": "OwyHzyp3GjQ"
+        },
+        {
+          "title": "Part 2 — Rearranging Clips",
+          "releaseDate": "2026-10-06",
+          "content": "Once you know how to cut and clean your footage, you need to learn how to arrange it into a meaningful sequence.\n\nIn this lesson, you will learn how to move clips around your timeline and place them in the correct order.\n\nYou will begin to understand how the order of your clips affects the flow, meaning, and story of your video.\n\nImportant: Watch the full lesson below and follow along in CapCut.",
+          "youtubeVideoId": "1ySv2WAb_Fw"
+        },
+        {
+          "title": "Part 3 — Basic Transitions",
+          "releaseDate": "2026-10-06",
+          "content": "Transitions help you move from one clip to another.\n\nIn this lesson, you will learn the fundamentals of using transitions in CapCut and understand when they can be useful in connecting different shots.\n\nYou will also begin to understand an important editing principle: a transition should serve the edit — not distract from it.\n\nImportant: Watch the full lesson below and follow along in CapCut.",
+          "youtubeVideoId": "iRi7DXyfZ2I"
+        },
+        {
+          "title": "Part 4 — Basic Text",
+          "releaseDate": "2026-10-06",
+          "content": "Text is an important part of modern video content.\n\nWhether you are creating subtitles, titles, labels, announcements, or social-media content, you need to know how to add and control text effectively.\n\nIn this lesson, you will learn the basics of adding text in CapCut and working with its fundamental text controls.\n\nImportant: Watch the full lesson below and follow along in CapCut.",
+          "youtubeVideoId": "LmN-NQEoG9o"
+        },
+        {
+          "title": "Part 5 — Basic Music",
+          "releaseDate": "2026-10-06",
+          "content": "Video is not only visual.\n\nSound and music can dramatically affect the way a video feels.\n\nIn this lesson, you will learn the basics of adding music to your project and working with it alongside your video footage.\n\nYou will begin to understand how music can support the pacing, mood, and overall experience of a video.\n\nImportant: Watch the full lesson below and follow along in CapCut.",
+          "youtubeVideoId": "kIsA__JSCMo"
+        },
+        {
+          "title": "Part 6 — Export Settings",
+          "releaseDate": "2026-10-06",
+          "content": "Creating the edit is only part of the process.\n\nOnce your video is finished, you need to export it correctly so that the final file has the appropriate settings for its intended use.\n\nIn this lesson, you will learn the basic export settings in CapCut and understand the key choices you need to make before saving your finished video.\n\nImportant: Watch the full lesson below and make sure you understand the recommended export settings.",
+          "youtubeVideoId": "j-g0ZHZsJCw"
+        },
+        {
+          "title": "Part 7 — Changing Aspect Ratio from Landscape to Portrait",
+          "releaseDate": "2026-10-06",
+          "content": "In this lesson, you will learn how to change the aspect ratio of your project from landscape to portrait.\n\nImportant: Watch the full lesson below and follow along in CapCut.",
+          "youtubeVideoId": "fmxlObk2FEs"
+        },
+        {
+          "title": "Tuesday's Goal",
+          "releaseDate": "2026-10-06",
+          "content": "Today's goal is to move from understanding editing to actually performing basic edits.\n\nBy the end of today's lessons, you should understand how to:\n\n- Cut and trim footage\n- Split clips\n- Remove unwanted sections\n- Arrange clips in the correct order\n- Apply basic transitions\n- Add basic text\n- Add music\n- Change aspect ratio\n- Export your finished video\n\nTake your time with each lesson and, where possible, follow along directly inside CapCut.\n\nTomorrow, you will begin applying what you have learned through practical assignments."
+        }
+      ]
+    }
+  ]
+}

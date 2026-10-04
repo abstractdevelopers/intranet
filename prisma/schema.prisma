@@ -364,6 +364,10 @@ model Lesson {
   youtubeVideoId String?
   durationMin    Int?
   order          Int
+  // Per-day release inside an already-released week: Monday's lessons and
+  // Tuesday's lessons share one Module, so the week-level Module.releaseAt
+  // cannot separate them. Null inherits the module's release time.
+  releaseAt      DateTime?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

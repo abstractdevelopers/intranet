@@ -13,6 +13,7 @@ type PdfJsModule = typeof PdfJs;
 export function PdfReader({ documentId, title }: { documentId: string; title: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const pdfjsRef = useRef<PdfJsModule | null>(null);
   const docRef = useRef<PdfJs.PDFDocumentProxy | null>(null);
   const taskRef = useRef<PdfJs.PDFDocumentLoadingTask | null>(null);
@@ -23,7 +24,26 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBusy, setSearchBusy] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
   const renderTaskRef = useRef<PdfJs.RenderTask | null>(null);
+
+  // Track the real fullscreen state so the button stays correct when the user
+  // leaves fullscreen with Esc or the browser's own control.
+  useEffect(() => {
+    const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await wrapperRef.current?.requestFullscreen();
+    } catch {
+      // Some browsers refuse fullscreen outside a user gesture; the layout below
+      // still fills the viewport, so this is not fatal.
+    }
+  }
 
   // Load the document once.
   useEffect(() => {
@@ -78,7 +98,7 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
         if ((err as { name?: string })?.name !== "RenderingCancelledException") throw err;
       }
     })();
-  }, [page, zoom, loading, numPages]);
+  }, [page, zoom, loading, numPages, fullscreen]);
 
   async function search() {
     const doc = docRef.current;
@@ -104,7 +124,14 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
     "inline-flex items-center justify-center rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-text-muted transition-colors hover:border-brand-1 hover:text-brand-1 disabled:opacity-40 dark:hover:text-brand-3";
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-surface-2">
+    <div
+      ref={wrapperRef}
+      className={
+        fullscreen
+          ? "flex h-screen w-screen flex-col overflow-hidden bg-surface-2"
+          : "overflow-hidden rounded-xl border border-border bg-surface-2"
+      }
+    >
       {/* Toolbar: page nav, zoom, search — no download */}
       <div className="flex flex-wrap items-center gap-2 border-b border-border bg-surface px-3 py-2.5">
         <span className="mr-auto truncate text-sm font-semibold">{title}</span>
@@ -141,9 +168,21 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
             {searchBusy ? "…" : "Find"}
           </button>
         </div>
+        <button
+          className={btn}
+          onClick={toggleFullscreen}
+          aria-pressed={fullscreen}
+          aria-label={fullscreen ? "Exit full screen" : "Read in full screen"}
+          title={fullscreen ? "Exit full screen" : "Read in full screen"}
+        >
+          {fullscreen ? "⤡ Exit full screen" : "⛶ Full screen"}
+        </button>
       </div>
 
-      <div ref={containerRef} className="max-h-[75vh] overflow-auto p-4">
+      <div
+        ref={containerRef}
+        className={fullscreen ? "flex-1 overflow-auto p-4" : "max-h-[75vh] overflow-auto p-4"}
+      >
         {error ? (
           <p className="py-16 text-center text-sm text-text-muted">{error}</p>
         ) : (

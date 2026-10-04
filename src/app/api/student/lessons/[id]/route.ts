@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { issueCertificateIfComplete } from "@/lib/certificates";
+import { isLessonReleased } from "@/lib/module-access";
 
 const schema = z.object({ action: z.enum(["OPEN", "COMPLETE"]) });
 
@@ -25,6 +26,21 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     select: { id: true },
   });
   if (!access) return NextResponse.json({ error: "Not enrolled in this course." }, { status: 403 });
+
+  // Day-within-the-week gate. Without this a student could mark a lesson
+  // complete by calling the API directly while the page still showed it locked.
+  const lessonRow = await db.lesson.findUnique({
+    where: { id },
+    select: { releaseAt: true, module: { select: { releaseAt: true } } },
+  });
+  const released =
+    lessonRow &&
+    isLessonReleased({
+      lessonReleaseAt: lessonRow.releaseAt,
+      moduleReleaseAt: lessonRow.module.releaseAt,
+      preview: user.previewUnreleasedContent,
+    });
+  if (!released) return NextResponse.json({ error: "This lesson isn't available yet." }, { status: 403 });
 
   const now = new Date();
   if (parsed.data.action === "OPEN") {
