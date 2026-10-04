@@ -25,6 +25,8 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBusy, setSearchBusy] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  /** Bumped to re-fit the page when the reader's box changes size. */
+  const [fitTick, setFitTick] = useState(0);
   const renderTaskRef = useRef<PdfJs.RenderTask | null>(null);
 
   // Track the real fullscreen state so the button stays correct when the user
@@ -33,6 +35,26 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
     const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
     document.addEventListener("fullscreenchange", onChange);
     return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
+  // Re-fit when the reader's box changes size — entering fullscreen, resizing
+  // the window, or rotating a device. Without this the page keeps the scale it
+  // was first rendered at and no longer fills the space.
+  useEffect(() => {
+    const box = containerRef.current;
+    if (!box || typeof ResizeObserver === "undefined") return;
+    let last = 0;
+    const ro = new ResizeObserver((entries) => {
+      const r = entries[0]?.contentRect;
+      if (!r) return;
+      const area = Math.round(r.width) * Math.round(r.height);
+      // Ignore sub-pixel churn; only re-render on a meaningful change.
+      if (Math.abs(area - last) < 4000) return;
+      last = area;
+      setFitTick((t) => t + 1);
+    });
+    ro.observe(box);
+    return () => ro.disconnect();
   }, []);
 
   async function toggleFullscreen() {
@@ -83,10 +105,17 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
     (async () => {
       try {
         const p = await doc.getPage(page);
-        const containerWidth = containerRef.current?.clientWidth ?? 800;
-        const baseViewport = p.getViewport({ scale: 1 });
-        const scale = (containerWidth / baseViewport.width) * zoom;
-        const viewport = p.getViewport({ scale });
+        const base = p.getViewport({ scale: 1 });
+        const box = containerRef.current;
+        // The scroll container carries p-4, so the usable box is inset 16px a
+        // side. Fit the WHOLE page, not just its width: a portrait page scaled
+        // to the reader's width is far taller than the reader, so only the top
+        // of it was ever visible. Fitting both axes shows the full page, and
+        // zoom then enlarges from there.
+        const availW = Math.max(120, (box?.clientWidth ?? 800) - 32);
+        const availH = Math.max(120, (box?.clientHeight ?? 600) - 32);
+        const fit = Math.min(availW / base.width, availH / base.height);
+        const viewport = p.getViewport({ scale: fit * zoom });
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
         canvas.width = viewport.width;
@@ -98,7 +127,7 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
         if ((err as { name?: string })?.name !== "RenderingCancelledException") throw err;
       }
     })();
-  }, [page, zoom, loading, numPages, fullscreen]);
+  }, [page, zoom, loading, numPages, fullscreen, fitTick]);
 
   async function search() {
     const doc = docRef.current;
@@ -152,7 +181,14 @@ export function PdfReader({ documentId, title }: { documentId: string; title: st
           <button className={btn} onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))} aria-label="Zoom out">
             −
           </button>
-          <span className="w-10 text-center text-xs font-medium text-text-muted">{Math.round(zoom * 100)}%</span>
+          <button
+            type="button"
+            onClick={() => setZoom(1)}
+            title="Fit the page to the reader"
+            className="w-12 text-center text-xs font-medium text-text-muted hover:text-brand-1 dark:hover:text-brand-3"
+          >
+            {zoom === 1 ? "Fit" : `${Math.round(zoom * 100)}%`}
+          </button>
           <button className={btn} onClick={() => setZoom((z) => Math.min(3, z + 0.25))} aria-label="Zoom in">
             +
           </button>

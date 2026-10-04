@@ -9,7 +9,7 @@
  * Kept dependency-free. Bump SW_VERSION to invalidate every cache on deploy.
  */
 
-const SW_VERSION = "uca-sw-v5";
+const SW_VERSION = "uca-sw-v6";
 const SHELL_CACHE = `${SW_VERSION}-shell`;
 const ASSET_CACHE = `${SW_VERSION}-assets`;
 const OFFLINE_URL = "/offline";
@@ -99,11 +99,18 @@ self.addEventListener("fetch", (event) => {
 
   // Next.js build output, fonts, icons and images are content-hashed or
   // effectively static, so cache-first is safe and makes repeat opens instant.
+  //
+  // Production only: in dev the chunk URLs are not content-hashed, so
+  // cache-first would serve stale JavaScript and edits would appear to have no
+  // effect until the caches were cleared by hand.
+  const isProduction = self.location.hostname !== "localhost" &&
+    self.location.hostname !== "127.0.0.1";
   const isStaticAsset =
-    url.pathname.startsWith("/_next/static/") ||
-    url.pathname.startsWith("/icons/") ||
-    url.pathname.startsWith("/splash/") ||
-    /\.(?:css|js|woff2?|png|jpg|jpeg|svg|webp|ico)$/.test(url.pathname);
+    isProduction &&
+    (url.pathname.startsWith("/_next/static/") ||
+      url.pathname.startsWith("/icons/") ||
+      url.pathname.startsWith("/splash/") ||
+      /\.(?:css|js|woff2?|png|jpg|jpeg|svg|webp|ico)$/.test(url.pathname));
 
   if (isStaticAsset) {
     event.respondWith(cacheFirst(request));
