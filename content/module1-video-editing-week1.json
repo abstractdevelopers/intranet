@@ -1,0 +1,41 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Video Editing",
+      "overview": "Welcome to the beginning of your video editing journey. Every great editor starts somewhere. Before you learn how to create transitions, add effects, sync music, or produce visually compelling videos, you first need to understand the foundation upon which everything else is built. This module is designed to give you that foundation.",
+      "objectives": "By the end of today you should be able to:\n\n1. Explain what video editing actually is, and how raw footage becomes a finished video.\n2. Describe the role of an editor — how timing, pacing, selection and arrangement shape a viewer's experience.\n3. Recognise different types of shots and identify useful footage before you begin editing.\n4. Understand video formats and aspect ratios, and why videos take different shapes depending on where they are viewed.\n5. Understand frame rate and resolution, and how they affect how video looks, moves and is delivered.\n6. Find your way around the CapCut Mobile interface and workspace.\n7. Import footage and other assets — video clips, images, audio, music and other media — into CapCut.",
+      "releaseDate": "2026-10-05",
+      "lessons": [
+        {
+          "title": "Welcome to Your Creative Journey",
+          "content": "Welcome to the beginning of your video editing journey.\n\nEvery great editor starts somewhere. Before you learn how to create transitions, add effects, sync music, or produce visually compelling videos, you first need to understand the foundation upon which everything else is built.\n\nThis module is designed to give you that foundation.\n\nYou will begin by understanding what video editing actually is, how professional editors think and work, how to properly understand video footage, and the technical concepts that determine how video is recorded, displayed, and edited.\n\nYou will then begin working with CapCut Mobile, the primary editing application for this course.\n\nThe goal is not simply to teach you how to use CapCut. The goal is to help you understand the craft of editing and then give you the tools to begin applying that understanding.\n\nToday is focused entirely on building your foundation. You will learn seven key topics:\n\n1. What Video Editing Actually Is\n2. The Role of an Editor\n3. Understanding Footage\n4. Video Formats & Aspect Ratios\n5. Frame Rate & Resolution\n6. CapCut Mobile Interface & Workspace\n7. Importing Assets & Footage in CapCut"
+        },
+        {
+          "title": "Part 1 — Understanding the Foundations",
+          "content": "Before opening CapCut and making your first edit, you need to understand what you're actually doing.\n\nIn this section, you will learn what video editing actually is and how raw footage is transformed into a finished video.\n\nYou will also learn about the role of an editor — going beyond simply cutting clips to understanding how an editor uses timing, pacing, selection, and arrangement to shape a viewer's experience.\n\nNext, you will learn how to understand footage. This includes recognizing different types of shots, identifying useful footage, and understanding the material you are working with before you begin editing.\n\nYou will also be introduced to video formats and aspect ratios, helping you understand why videos can have different shapes and dimensions depending on where and how they will be viewed.\n\nFinally, you will learn about frame rate and resolution, two fundamental technical concepts that affect how video looks, moves, and is delivered.\n\nBrief Overview\n\nThe explanations above are only a brief introduction to these concepts. You are required to read the full resource below before proceeding, as these concepts form the foundation for everything you will learn throughout the course.",
+          "pdf": {
+            "title": "UCA Module 1 — Foundations of Video Editing",
+            "localPath": "/home/openhands/workspace/project/UCA_Module1_Foundations_of_Video_Editing.pdf"
+          }
+        },
+        {
+          "title": "Part 2 — CapCut Mobile Interface & Workspace",
+          "content": "Now that you understand the foundations of video editing, it's time to become familiar with the environment where you will actually create your edits.\n\nIn this lesson, you will explore the CapCut Mobile interface and workspace.\n\nYou will learn what the major sections of the app are used for and where to find the tools and controls you will be using throughout this course.\n\nThe goal is to make the CapCut interface feel familiar before you begin performing actual editing tasks.",
+          "youtubeVideoId": "Fo5Rld_gN90"
+        },
+        {
+          "title": "Part 3 — Importing Assets & Footage in CapCut",
+          "content": "Before you can begin editing, you need to know how to bring your materials into CapCut.\n\nIn this lesson, you will learn how to import the footage and other assets required for your projects, including video clips, images, audio, music, and other media.\n\nYou will also begin understanding how your assets enter your project and become available for editing.",
+          "youtubeVideoId": "lt-ExpZCbsM"
+        },
+        {
+          "title": "Today's Goal",
+          "content": "Today's goal is simple:\n\nUnderstand the foundation before you start building.\n\nDon't worry about mastering everything immediately.\n\nFocus on understanding what video editing is, how an editor thinks, how footage works, and how the technical side of video affects your work.\n\nThen become familiar with CapCut and learn how to bring your assets into the application.\n\nBy the end of today, you should have a clear understanding of the editing environment and the fundamental concepts you will need for the rest of the course.\n\nThis is the beginning of your creative journey. Build the foundation properly."
+        }
+      ]
+    }
+  ]
+}

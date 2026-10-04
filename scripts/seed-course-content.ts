@@ -41,8 +41,8 @@ type Seed = {
       content?: string;
       youtubeVideoId?: string;
       durationMin?: number;
-      /** Attach a PDF to this lesson (see README note on uploads). */
-      pdf?: { title: string; documentId?: string; url?: string };
+      /** Attach a PDF to this lesson (embedded via the in-app reader). */
+      pdf?: { title: string; documentId?: string; url?: string; localPath?: string };
     }[];
     assignment?: {
       title: string;
@@ -132,9 +132,29 @@ async function main() {
       if (l.pdf) {
         const existingRes = await db.lessonResource.findFirst({
           where: { lessonId: lesson.id, type: "PDF" },
-          select: { id: true },
+          select: { id: true, documentId: true },
         });
-        const resData = { title: l.pdf.title, type: "PDF", url: l.pdf.url ?? null, documentId: l.pdf.documentId ?? null };
+
+        // Upload the bytes once. On a re-run the existing Document is reused
+        // rather than re-inserted, so the file is not duplicated in the DB.
+        let documentId = l.pdf.documentId ?? existingRes?.documentId ?? null;
+        if (!documentId && l.pdf.localPath) {
+          if (!existsSync(l.pdf.localPath)) throw new Error(`No PDF at ${l.pdf.localPath}`);
+          const bytes = readFileSync(l.pdf.localPath);
+          const doc = await db.document.create({
+            data: {
+              title: l.pdf.title,
+              storagePath: `${Date.now()}-${l.pdf.title.replace(/[^a-zA-Z0-9._-]/g, "_")}`,
+              data: bytes,
+              mimeType: "application/pdf",
+              sizeBytes: bytes.length,
+            },
+          });
+          documentId = doc.id;
+          console.log(`      pdf: uploaded ${l.pdf.title} (${(bytes.length / 1024).toFixed(0)}KB) -> ${doc.id}`);
+        }
+
+        const resData = { title: l.pdf.title, type: "PDF", url: l.pdf.url ?? null, documentId };
         if (existingRes) await db.lessonResource.update({ where: { id: existingRes.id }, data: resData });
         else await db.lessonResource.create({ data: { ...resData, lessonId: lesson.id } });
       }
