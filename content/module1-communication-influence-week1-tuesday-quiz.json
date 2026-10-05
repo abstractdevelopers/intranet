@@ -1,0 +1,99 @@
+{
+  "courseSlug": "communication-influence",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Communication",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "communication-influence-m1-week1-tuesday",
+        "title": "Module 1 — Tuesday — Becoming a Clear Communicator",
+        "description": "Tuesday's quiz covers the four lessons on clarity, conciseness, simplicity and precision — coherence practice, the CLEAR framework for explaining complex ideas, and why a larger usable vocabulary matters.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-06",
+        "questions": [
+          {
+            "prompt": "According to the clarity lesson, what is the main skill being developed when you practise speaking coherently?",
+            "options": [
+              "Memorising large amounts of information",
+              "Strengthening the connection between your thoughts and your spoken words",
+              "Speaking as quickly as possible",
+              "Using sophisticated vocabulary in every conversation"
+            ],
+            "correct": 1,
+            "explanation": "Coherence practice trains the link between thought and speech — turning what is in your mind into words that come out in a clear order."
+          },
+          {
+            "prompt": "In the coherence exercise, what is the purpose of using a random word generator?",
+            "options": [
+              "To test how many words you know",
+              "To give you prepared topics for memorisation",
+              "To force you to organise and express your thoughts on an unexpected topic",
+              "To help you avoid speaking about unfamiliar subjects"
+            ],
+            "correct": 2,
+            "explanation": "The randomness removes preparation. You have to organise your thinking on the spot, which is exactly the skill being built."
+          },
+          {
+            "prompt": "How long does the video recommend speaking about the randomly generated word during the exercise?",
+            "options": ["10–20 seconds", "30 seconds", "1–3 minutes", "5–10 minutes"],
+            "correct": 2,
+            "explanation": "A minute or three is long enough to force real structure, but short enough to repeat often."
+          },
+          {
+            "prompt": "What is one major problem that concise communication is designed to reduce?",
+            "options": [
+              "Having too much knowledge about a subject",
+              "Using unnecessary words and information that weaken the message",
+              "Speaking to people who already understand the topic",
+              "Using pauses while communicating"
+            ],
+            "correct": 1,
+            "explanation": "Extra words do not add meaning — they dilute it. Conciseness removes what does not help the listener understand."
+          },
+          {
+            "prompt": "When explaining a complicated idea to someone who is not familiar with the subject, what does the CLEAR framework recommend doing first?",
+            "options": [
+              "Use technical language to establish credibility",
+              "Give every available detail about the subject",
+              "Calibrate the explanation to the audience's existing knowledge",
+              "Ask the listener to research the topic beforehand"
+            ],
+            "correct": 2,
+            "explanation": "Start by gauging what your listener already knows. The same idea has to be pitched differently to a beginner and an expert."
+          },
+          {
+            "prompt": "In the CLEAR framework, what does the “L” stand for?",
+            "options": ["Listen", "Link", "Language", "Lead"],
+            "correct": 1,
+            "explanation": "The L is Link — connecting the new idea to something the listener already understands."
+          },
+          {
+            "prompt": "What is the purpose of using analogies or metaphors when explaining a complex idea?",
+            "options": [
+              "To make the explanation sound more sophisticated",
+              "To replace the need to understand the subject",
+              "To connect an unfamiliar idea to something the listener already understands",
+              "To make the explanation longer and more detailed"
+            ],
+            "correct": 2,
+            "explanation": "An analogy gives the listener something familiar to hang the new idea on, which is what makes it land."
+          },
+          {
+            "prompt": "According to the lesson on articulation and word choice, why is having a larger usable vocabulary valuable to a communicator?",
+            "options": [
+              "It allows the speaker to use complicated words in every situation.",
+              "It makes the speaker appear more intelligent than the listener.",
+              "It gives the speaker more language options for expressing thoughts precisely.",
+              "It eliminates the need to organise thoughts before speaking."
+            ],
+            "correct": 2,
+            "explanation": "A larger usable vocabulary means more options when you reach for the right word — which is precision, not complexity."
+          }
+        ]
+      }
+    }
+  ]
+}
