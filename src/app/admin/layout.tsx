@@ -16,6 +16,7 @@ const SECTIONS: NavSection[] = [
     items: [
       { href: "/admin/courses", label: "Courses", icon: "Courses" },
       { href: "/admin/assignments", label: "Assignments", icon: "Assignments" },
+      { href: "/admin/quizzes", label: "Quizzes", icon: "Target" },
       { href: "/admin/submissions", label: "Submissions", icon: "File" },
       { href: "/admin/peer-body", label: "Peer Body", icon: "Users" },
       { href: "/admin/announcements", label: "Announcements", icon: "Announcement" },

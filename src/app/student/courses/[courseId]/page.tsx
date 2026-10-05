@@ -14,9 +14,11 @@ import {
   IconAssignments,
   IconClock,
   IconAnnouncement,
+  IconTarget,
 } from "@/components/icons";
 import { getCourseProgress } from "@/lib/progress";
 import { getLoggedWeeks, isModuleUnlocked } from "@/lib/captains-log";
+import { isQuizReleased } from "@/lib/module-access";
 import { formatDate } from "@/lib/format";
 
 export default async function CoursePage({ params }: { params: Promise<{ courseId: string }> }) {
@@ -42,6 +44,11 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
           },
         },
         assignments: true,
+        quizzes: {
+          where: { status: "PUBLISHED" },
+          orderBy: { releaseAt: "asc" },
+          include: { _count: { select: { questions: true } } },
+        },
       },
       orderBy: { order: "asc" },
     }),
@@ -222,6 +229,45 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
                           </Link>
                         </li>
                       ))}
+                      {mod.quizzes.map((q) => {
+                        const open = isQuizReleased({
+                          quizReleaseAt: q.releaseAt,
+                          moduleReleaseAt: mod.releaseAt,
+                          now,
+                          preview: user.previewUnreleasedContent,
+                        });
+                        if (!open) {
+                          return (
+                            <li key={q.id}>
+                              <span className="flex items-center justify-between rounded-md px-2 py-2.5 opacity-70">
+                                <span className="flex items-center gap-2.5">
+                                  <IconLock className="h-4.5 w-4.5 text-text-muted" />
+                                  {q.title}
+                                </span>
+                                <span className="text-xs text-text-muted">
+                                  Opens {formatDate(q.releaseAt ?? mod.releaseAt)}
+                                </span>
+                              </span>
+                            </li>
+                          );
+                        }
+                        return (
+                          <li key={q.id}>
+                            <Link
+                              href={`/student/courses/${courseId}/modules/${mod.id}/quizzes/${q.id}`}
+                              className="flex items-center justify-between rounded-md px-2 py-2.5 transition-colors hover:bg-surface-2"
+                            >
+                              <span className="flex items-center gap-2.5">
+                                <IconTarget className="h-4.5 w-4.5 text-text-muted" />
+                                {q.title}
+                              </span>
+                              <span className="text-xs text-text-muted">
+                                Quiz · {q._count.questions} questions
+                              </span>
+                            </Link>
+                          </li>
+                        );
+                      })}
                     </ul>
                   ) : null}
                 </Card>
