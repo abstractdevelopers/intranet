@@ -114,7 +114,7 @@ async function main() {
     }
     if (w.assignment) {
       const opens = w.assignment.releaseDate ? watLabel(atWat(w.assignment.releaseDate)) : "inherits the week";
-      const due = w.assignment.deadlineDate ? watLabel(atWat(w.assignment.deadlineDate, 23)) : "(no deadline)";
+      const due = w.assignment.deadlineDate ? watLabel(atWat(w.assignment.deadlineDate, 23, 59)) : "(no deadline)";
       console.log(`    assignment : ${w.assignment.title}`);
       console.log(`      opens    : ${opens}`);
       console.log(`      due      : ${due}`);
@@ -232,7 +232,7 @@ async function main() {
     }
 
     if (w.assignment) {
-      const deadline = w.assignment.deadlineDate ? atWat(w.assignment.deadlineDate, 23) : null;
+      const deadline = w.assignment.deadlineDate ? atWat(w.assignment.deadlineDate, 23, 59) : null;
       const aData = {
         title: w.assignment.title,
         description: w.assignment.description,

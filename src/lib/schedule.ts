@@ -20,9 +20,9 @@ export const RELEASE_HOUR_WAT = 10;
  *
  * `atWat("2026-10-05")` -> 2026-10-05T09:00:00.000Z, i.e. 10:00 in Lagos.
  */
-export function atWat(date: string, hour: number = RELEASE_HOUR_WAT): Date {
+export function atWat(date: string, hour: number = RELEASE_HOUR_WAT, minute = 0): Date {
   const [y, m, d] = date.split("-").map(Number);
-  return new Date(Date.UTC(y, m - 1, d, hour - WAT_OFFSET_HOURS, 0, 0, 0));
+  return new Date(Date.UTC(y, m - 1, d, hour - WAT_OFFSET_HOURS, minute, 0, 0));
 }
 
 /** Render a UTC instant as a WAT clock label, e.g. "Mon 5 Oct, 10:00 WAT". */
