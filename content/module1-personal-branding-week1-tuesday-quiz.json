@@ -1,0 +1,109 @@
+{
+  "courseSlug": "personal-branding",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "Building Your Personal Brand Foundation",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "personal-branding-m1-week1-tuesday",
+        "title": "Module 1 — Tuesday — Introduction to Personal Branding",
+        "description": "Tuesday's quiz covers what personal branding actually is, what it is not, finding clarity about yourself before creating content, identifying a target audience, choosing content directions by pathway, and why consistency and starting before you feel ready both matter.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-06",
+        "questions": [
+          {
+            "prompt": "What is personal branding primarily about?",
+            "options": [
+              "Getting as many followers as possible",
+              "Intentionally presenting yourself and what you want people to associate with you",
+              "Creating a perfect image that hides your weaknesses",
+              "Posting every day to increase engagement"
+            ],
+            "correct": 1,
+            "explanation": "Personal branding is the intentional presentation of yourself and what people come to associate with you — not a follower count."
+          },
+          {
+            "prompt": "Which of the following is NOT presented as a fundamental part of developing a personal brand?",
+            "options": [
+              "Your interests and skills",
+              "Your experiences and perspective",
+              "Pretending to be someone you're not",
+              "The way you consistently communicate"
+            ],
+            "correct": 2,
+            "explanation": "Pretending to be someone you're not is explicitly ruled out. A brand grows from your real identity, interests, skills and perspective."
+          },
+          {
+            "prompt": "Before creating content for a personal brand, which question would be most useful to ask yourself?",
+            "options": [
+              "How can I become famous as quickly as possible?",
+              "What am I interested in, and what do I want people to associate with me?",
+              "How can I copy the most successful creator in my niche?",
+              "How many followers should I gain this week?"
+            ],
+            "correct": 1,
+            "explanation": "Clarity about your interests and what you want to be associated with is the starting point the lesson asks for."
+          },
+          {
+            "prompt": "What is the purpose of identifying a target audience?",
+            "options": [
+              "To make sure only one type of person can see your content",
+              "To understand who your content is intended to reach and what they may care about",
+              "To guarantee that every person who sees your content will follow you",
+              "To prevent your personal brand from evolving"
+            ],
+            "correct": 1,
+            "explanation": "Knowing your audience helps you understand who the content is for and what matters to them — it does not narrow who may see it."
+          },
+          {
+            "prompt": "A Video Editing student wants to build a personal brand. Which content direction would best align with the module?",
+            "options": [
+              "Posting unrelated viral memes exclusively",
+              "Only posting motivational quotes",
+              "Showcasing edits, documenting progress, sharing editing insights, and showing the creative process",
+              "Waiting until they become a professional editor before posting anything"
+            ],
+            "correct": 2,
+            "explanation": "The module lists exactly this for Video Editing — edits, progress, insights and process — over waiting until you feel qualified."
+          },
+          {
+            "prompt": "Why is consistency important when building a personal brand?",
+            "options": [
+              "It guarantees that every post will go viral",
+              "It allows people to repeatedly see and associate you with your work, ideas, or area of interest over time",
+              "It means you should never experiment with your content",
+              "It eliminates the need to understand your audience"
+            ],
+            "correct": 1,
+            "explanation": "A brand is built through repeated exposure — consistency is what lets people recognise you and what you stand for."
+          },
+          {
+            "prompt": "Which statement best describes how a personal brand develops?",
+            "options": [
+              "It is created completely before you publish your first piece of content",
+              "It develops through learning, experimenting, creating, and discovering more about yourself over time",
+              "It depends primarily on having a large number of followers",
+              "It requires you to choose one topic and never change it"
+            ],
+            "correct": 1,
+            "explanation": "The lesson is clear that your brand evolves as you learn, experiment and discover more about yourself."
+          },
+          {
+            "prompt": "A student says, \"I don't know exactly what my personal brand should become, so I'll wait until I have everything figured out before I start posting.\" Based on the lesson, what is the best response?",
+            "options": [
+              "That's correct; clarity must come before any content creation",
+              "They should focus on gaining followers first",
+              "They should start with a direction, create, learn, and improve as their brand becomes clearer",
+              "They should copy an established creator until they understand branding"
+            ],
+            "correct": 2,
+            "explanation": "The lesson's whole stance is that you learn by creating. Start with a direction and let clarity arrive through the process."
+          }
+        ]
+      }
+    }
+  ]
+}
