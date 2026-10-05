@@ -290,7 +290,7 @@ export function welcomeEmail(input: { email: string; link: string }) {
     heading: "Welcome to UCA Sandbox",
     paragraphs: [
       `You're on the list — your UCA Sandbox account is ready for ${input.email}.`,
-      "UCA Sandbox is the online campus for Unify Creator Academy. You'll take two compulsory foundations — Personal Branding and Social Media — plus the one elective pathway you chose. Your first month is free.",
+      "UCA Sandbox is the online campus for Unify Creator Academy. You'll take one compulsory foundation — Personal Branding & Social Media — plus the one elective pathway you chose. Your first month is free.",
       "To get started, set your password using the button below. You'll then choose a username and complete your profile.",
     ],
     cta: { label: "Set your password", url: input.link },
@@ -302,7 +302,7 @@ export function welcomeEmail(input: { email: string; link: string }) {
     "",
     `You're on the list — your UCA Sandbox account is ready for ${input.email}.`,
     "",
-    "UCA Sandbox is the online campus for Unify Creator Academy. You'll take two compulsory foundations — Personal Branding and Social Media — plus the one elective pathway you chose. Your first month is free.",
+    "UCA Sandbox is the online campus for Unify Creator Academy. You'll take one compulsory foundation — Personal Branding & Social Media — plus the one elective pathway you chose. Your first month is free.",
     "",
     `Set your password here: ${input.link}`,
     "",

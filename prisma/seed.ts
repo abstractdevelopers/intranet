@@ -5,18 +5,16 @@ const prisma = new PrismaClient();
 
 const COURSES = [
   {
-    name: "Personal Branding",
+    // Personal Branding and Social Media are one course. They were seeded as two
+    // compulsory foundations, but every student held both and neither had any
+    // content, so they were merged into a single course that keeps the
+    // personal-branding slug. Do not re-add social-media here: the seed upserts
+    // by slug and would resurrect the retired course, and submitApplication
+    // auto-enrols every new student into every active COMPULSORY course.
+    name: "Personal Branding & Social Media",
     slug: "personal-branding",
     description:
-      "Build a compelling personal brand that communicates your value, story, and expertise.",
-    type: "COMPULSORY",
-    isCompulsory: true,
-  },
-  {
-    name: "Social Media",
-    slug: "social-media",
-    description:
-      "Master social media strategy, growth, and audience engagement across platforms.",
+      "Build a compelling personal brand and master the social platforms that grow it — profile, content, audience and engagement.",
     type: "COMPULSORY",
     isCompulsory: true,
   },
@@ -51,7 +49,7 @@ const COURSES = [
   },
 ] as const;
 
-// Only the elective is billed; the two compulsory foundations are free. The
+// Only the elective is billed; the compulsory foundation is free. The
 // monthly total is therefore derived from the elective's price, never hardcoded.
 const ELECTIVE_MONTHLY_PRICE_NGN = 15_000;
 const COMPULSORY_MONTHLY_PRICE_NGN = 0;

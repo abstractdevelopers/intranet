@@ -1,0 +1,109 @@
+{
+  "courseSlug": "personal-branding",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "Building Your Personal Brand Foundation",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "personal-branding-m1-week1",
+        "title": "Module 1 — Building Your Personal Brand Foundation",
+        "description": "Monday's quiz covers setting up and optimising your Instagram profile — follower conversion, the PBC framework (Positioning, Branding, Clear Bio), username and name field choices, writing a bio that earns the follow, choosing a category, and continuing to learn from your data.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-05",
+        "questions": [
+          {
+            "prompt": "According to the video, what is the main purpose of setting up an Instagram account for a high follower conversion rate?",
+            "options": [
+              "To make your account look more professional",
+              "To increase the percentage of profile visitors who choose to follow you",
+              "To make Instagram recommend your account to everyone",
+              "To gain followers without posting content"
+            ],
+            "correct": 1,
+            "explanation": "Conversion is about the proportion of visitors who follow — not raw reach."
+          },
+          {
+            "prompt": "Which three elements does the video identify as PBC when setting up your Instagram profile?",
+            "options": [
+              "Profile, Bio, Content",
+              "Positioning, Branding, Clear Bio",
+              "Posting, Branding, Category",
+              "Positioning, Content, Category"
+            ],
+            "correct": 1,
+            "explanation": "PBC stands for Positioning, Branding and Clear Bio."
+          },
+          {
+            "prompt": "What does the video recommend regarding your Instagram username?",
+            "options": [
+              "It should always contain your niche",
+              "It should be as long as possible to explain what you do",
+              "It should be simple, easy to remember, and easy to spell",
+              "It should contain multiple keywords for search"
+            ],
+            "correct": 2,
+            "explanation": "A username people can remember and spell is easier to find and share."
+          },
+          {
+            "prompt": "Why does the video place particular importance on the name field/name plate of an Instagram profile?",
+            "options": [
+              "It determines how many posts you can publish",
+              "It is one of the most searchable parts of the profile",
+              "It automatically generates your bio",
+              "It prevents other users from copying your username"
+            ],
+            "correct": 1,
+            "explanation": "The name field is searchable, so it is prime space for what you do."
+          },
+          {
+            "prompt": "According to the video, what should an effective Instagram bio primarily communicate?",
+            "options": [
+              "Personal information such as where you live",
+              "Inspirational quotes that represent your personality",
+              "Why someone should follow you and what they can expect to gain",
+              "Every skill and achievement you have"
+            ],
+            "correct": 2,
+            "explanation": "A clear bio answers why someone should follow and what they will get."
+          },
+          {
+            "prompt": "What is the purpose of selecting an appropriate category for an Instagram account?",
+            "options": [
+              "It helps Instagram understand what the account is about and helps people find similar accounts",
+              "It guarantees that the account will appear on the Explore page",
+              "It automatically increases the account's follower count",
+              "It allows users to change their username more frequently"
+            ],
+            "correct": 0,
+            "explanation": "The category helps Instagram classify the account and surface it to people looking for similar accounts."
+          },
+          {
+            "prompt": "Imagine someone visits your profile after seeing one of your posts. Which approach would best apply the video's advice for converting that visitor into a follower?",
+            "options": [
+              "Use a vague bio and a personal quote",
+              "Make the profile difficult to understand so visitors become curious",
+              "Clearly communicate your positioning, use an identifiable profile picture, and explain what followers can expect from you",
+              "Focus entirely on increasing the number of posts on the account"
+            ],
+            "correct": 2,
+            "explanation": "Clear positioning, an identifiable picture and a stated payoff are what turn a visit into a follow."
+          },
+          {
+            "prompt": "After setting up your Instagram profile, what does the video recommend doing as you continue growing?",
+            "options": [
+              "Stop changing your strategy once you find one that works",
+              "Avoid experimenting because consistency means never changing anything",
+              "Learn from your data, continue learning, and experiment with different approaches",
+              "Focus only on gaining followers and ignore performance data"
+            ],
+            "correct": 2,
+            "explanation": "Growth comes from reading your data, learning, and testing — not from setting a profile once and stopping."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -68,7 +68,7 @@ export const DISCUSSION_FEED_ENABLED = false;
 export const CURRENCY = "NGN";
 
 /**
- * Pathways (#14). The two compulsory foundations plus exactly one elective.
+ * Pathways (#14). One compulsory foundation plus exactly one elective.
  * `pathway` on Course/Enrollment uses these values.
  */
 export const PATHWAYS = {

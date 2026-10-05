@@ -42,8 +42,8 @@ export default async function OnboardingPathwayPage() {
         <p className="eyebrow">Step 04</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight">Choose your pathway</h1>
         <p className="mt-2 text-sm text-text-muted">
-          Pick the specialism you want to build. Your two compulsory foundations (Personal
-          Branding and Social Media) come with it, and there&apos;s no waiting on approval while
+          Pick the specialism you want to build. Your compulsory foundation (Personal Branding
+          &amp; Social Media) comes with it, and there&apos;s no waiting on approval while
           the reclaim window is open.
         </p>
       </div>
