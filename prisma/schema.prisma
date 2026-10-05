@@ -55,6 +55,10 @@ model User {
   reclaimSundayEmailSentAt DateTime?
   // When the live opening-ceremony announcement went out (all active students).
   openingCeremonyEmailSentAt DateTime?
+  // When the "courses are live" announcement went out. Two audiences share the
+  // send — signed-up students and the waiting list — so each stamps its own
+  // column and the waves resume independently.
+  coursesLiveEmailSentAt DateTime?
   // When the Tuesday "six days out" countdown email was sent.
   reclaimTuesdayEmailSentAt DateTime?
   // Set once the student passes the Intranet 101 assessment. The academy-wide

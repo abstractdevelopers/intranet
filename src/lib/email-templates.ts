@@ -795,3 +795,118 @@ export function reclaimTuesdayEmail(input: { email: string; link: string }) {
 
   return { subject: "Six days out. Tuesday's for starting.", html, text };
 }
+
+/**
+ * "Courses are live" — signed-up students.
+ *
+ * These students already know the academy, so the news is that week one has
+ * opened, not that UCA exists. Leads with that.
+ *
+ * The merge note is load-bearing: Personal Branding and Social Media became one
+ * course, so students see one course where they previously saw two. Without a
+ * line explaining it, that reads as something being taken away.
+ */
+export function coursesLiveEmail(input: { link: string }) {
+  const html = layout({
+    eyebrow: "Courses live",
+    heading: "Week one is open.",
+    preheader: "Start with Intranet 101, then your courses are waiting.",
+    paragraphs: [
+      "Your UCA Sandbox courses went live today. Log in and week one is waiting for you.",
+      "Start with Intranet 101 — a short walkthrough of the intranet, then a quick assessment. It's compulsory and it comes first, so you're not hunting around later.",
+      "After that, each course opens with lessons and a quiz. Assignments follow midweek, and submissions close Friday at 11:59 PM.",
+    ],
+    highlightsLabel: "What's open now",
+    highlights: [
+      "Intranet 101 — your compulsory first step.",
+      "Personal Branding & Social Media — your compulsory foundation.",
+      "Your pathway course — Graphics Design, Video Editing, Communication & Influence, or Content Writing.",
+    ],
+    note: "One change worth knowing: Personal Branding and Social Media are now a single course. The foundations are the same — they simply live in one place, so you'll see one course where you previously saw two. Nothing you've done has been lost.",
+    cta: { label: "Continue learning", url: input.link },
+    signoff: "— The UCA Sandbox team",
+  });
+
+  const text = [
+    "Week one is open.",
+    "",
+    "Your UCA Sandbox courses went live today. Log in and week one is waiting for you.",
+    "",
+    "Start with Intranet 101 — a short walkthrough of the intranet, then a quick assessment. It's compulsory and it comes first, so you're not hunting around later.",
+    "",
+    "After that, each course opens with lessons and a quiz. Assignments follow midweek, and submissions close Friday at 11:59 PM.",
+    "",
+    "WHAT'S OPEN NOW",
+    "  • Intranet 101 — your compulsory first step.",
+    "  • Personal Branding & Social Media — your compulsory foundation.",
+    "  • Your pathway course — Graphics Design, Video Editing, Communication & Influence, or Content Writing.",
+    "",
+    "One change worth knowing: Personal Branding and Social Media are now a single course. The foundations are the same — they simply live in one place, so you'll see one course where you previously saw two. Nothing you've done has been lost.",
+    "",
+    `Continue learning: ${input.link}`,
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+
+  return { subject: "Week one is live — your UCA Sandbox courses are open", html, text };
+}
+
+/**
+ * "Courses are live" — waiting list.
+ *
+ * These accounts never signed up and have already received several reclaim
+ * emails, so this is framed as a closing window rather than a new campaign.
+ * "Your place is still held" is true and dignified; there is no manufactured
+ * countdown, and the only limit named (the link's 14 days) is real.
+ *
+ * The reclaim link is a single-use password token, so the CTA is the action the
+ * copy asks for rather than "continue learning".
+ */
+export function coursesLiveWaitingListEmail(input: { email: string; link: string }) {
+  const html = layout({
+    eyebrow: "Final call",
+    heading: "Courses are live. Your place is still held.",
+    preheader: "Classes opened today. Reclaim your account to take your place.",
+    paragraphs: [
+      `Classes at UCA Sandbox opened today, and your account is still on the list — ${input.email}.`,
+      "UCA Sandbox is the online campus for Unify Creator Academy. You choose one pathway — Graphics Design, Video Editing, Communication & Influence, or Content Writing — and build a real body of work around it.",
+      "When you come in, start with Intranet 101 — a short walkthrough and assessment that every new student takes first.",
+    ],
+    highlightsLabel: "What's waiting for you",
+    highlights: [
+      "Your first month is free — 30 days, on us.",
+      "Intranet 101 — your compulsory first step.",
+      "One compulsory foundation: Personal Branding & Social Media.",
+      "Your chosen pathway course.",
+      "Live lessons, weekly quizzes and practical assignments.",
+    ],
+    note: "This link is single-use and stays valid for 14 days. If it expires, use “Forgot password” on the sign-in page to get a new one.",
+    cta: { label: "Reclaim your account", url: input.link },
+    signoff: "— The UCA Sandbox team",
+  });
+
+  const text = [
+    "Courses are live. Your place is still held.",
+    "",
+    `Classes at UCA Sandbox opened today, and your account is still on the list — ${input.email}.`,
+    "",
+    "UCA Sandbox is the online campus for Unify Creator Academy. You choose one pathway — Graphics Design, Video Editing, Communication & Influence, or Content Writing — and build a real body of work around it.",
+    "",
+    "When you come in, start with Intranet 101 — a short walkthrough and assessment that every new student takes first.",
+    "",
+    "WHAT'S WAITING FOR YOU",
+    "  • Your first month is free — 30 days, on us.",
+    "  • Intranet 101 — your compulsory first step.",
+    "  • One compulsory foundation: Personal Branding & Social Media.",
+    "  • Your chosen pathway course.",
+    "  • Live lessons, weekly quizzes and practical assignments.",
+    "",
+    `Reclaim your account: ${input.link}`,
+    "",
+    "This link is single-use and stays valid for 14 days. If it expires, use \"Forgot password\" on the sign-in page to get a new one.",
+    "",
+    "— The UCA Sandbox team",
+  ].join("\n");
+
+  return { subject: "Courses are live — your place is still held", html, text };
+}
