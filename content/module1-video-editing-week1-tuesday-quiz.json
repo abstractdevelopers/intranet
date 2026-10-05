@@ -1,0 +1,111 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Video Editing",
+      "releaseDate": "2026-10-05",
+      "quizzes": [
+        {
+          "slug": "video-editing-m1-week1-tuesday",
+          "title": "Module 1 — Tuesday — Building Your First Edit",
+          "description": "Tuesday's quiz covers cutting and trimming, splitting clips, rearranging your timeline, using transitions, adding text, working with music, export settings, and changing aspect ratio from landscape to portrait.",
+          "passMark": 70,
+          "maxAttempts": 2,
+          "releaseDate": "2026-10-06",
+          "questions": [
+            {
+              "prompt": "What is the main purpose of cutting and trimming footage?",
+              "options": [
+                "To increase the video's resolution",
+                "To keep the useful parts of a clip and remove unnecessary sections",
+                "To automatically add music to the video",
+                "To change a landscape video into portrait"
+              ],
+              "correct": 1,
+              "explanation": "Cutting and trimming is about selection — keeping what serves the edit and removing what does not."
+            },
+            {
+              "prompt": "What does splitting a clip allow an editor to do?",
+              "options": [
+                "Turn a video clip into an audio file",
+                "Increase the frame rate of the clip",
+                "Divide one clip into separate sections that can be edited independently",
+                "Export multiple videos at once"
+              ],
+              "correct": 2,
+              "explanation": "Splitting breaks one clip into parts so each can be moved, trimmed or removed on its own."
+            },
+            {
+              "prompt": "Why is rearranging clips important when building a video?",
+              "options": [
+                "The order of clips can affect the flow, meaning, and story of the video",
+                "It automatically improves the quality of every clip",
+                "It removes the need to trim footage",
+                "It changes the video's aspect ratio"
+              ],
+              "correct": 0,
+              "explanation": "Order is meaning. The same shots in a different sequence can tell a different story or change how the viewer feels."
+            },
+            {
+              "prompt": "Which statement best describes the proper use of transitions?",
+              "options": [
+                "Every clip should have a different transition",
+                "Transitions should be used as frequently as possible",
+                "Transitions should replace good editing decisions",
+                "Transitions should serve the edit rather than distract from it"
+              ],
+              "correct": 3,
+              "explanation": "A transition should support what the edit is doing. If it draws attention to itself, it is working against the video."
+            },
+            {
+              "prompt": "Which of the following is a common use of text in video content?",
+              "options": [
+                "Increasing the video's frame rate",
+                "Creating subtitles, titles, labels, or announcements",
+                "Removing unwanted footage",
+                "Changing the video's file format"
+              ],
+              "correct": 1,
+              "explanation": "Text carries information the visuals cannot — subtitles, titles, labels and announcements."
+            },
+            {
+              "prompt": "How can music contribute to a video?",
+              "options": [
+                "It can support the pacing, mood, and overall viewing experience",
+                "It automatically fixes poorly edited footage",
+                "It changes the video's aspect ratio",
+                "It removes the need for visual content"
+              ],
+              "correct": 0,
+              "explanation": "Music shapes pace and feeling. It cannot rescue an edit that was not made well in the first place."
+            },
+            {
+              "prompt": "Why are export settings important?",
+              "options": [
+                "They determine which clips should be placed first",
+                "They are only needed when adding text",
+                "They help ensure the finished video is saved with appropriate settings for its intended use",
+                "They automatically remove unwanted footage"
+              ],
+              "correct": 2,
+              "explanation": "Export settings decide what the finished file actually is — resolution, frame rate and format — so the video works where you intend to publish it."
+            },
+            {
+              "prompt": "You created a video in landscape format, but you want to publish it as a portrait video for a platform that uses vertical content. What should you do?",
+              "options": [
+                "Split every clip in the timeline",
+                "Change the project's aspect ratio from landscape to portrait and adjust the framing as needed",
+                "Add a transition between every clip",
+                "Increase the video's frame rate"
+              ],
+              "correct": 1,
+              "explanation": "Change the project's aspect ratio and then reframe each shot, so the important parts of the image stay visible in the new shape."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

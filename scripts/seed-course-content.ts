@@ -60,25 +60,37 @@ type Seed = {
       latePolicy?: string;
       maxFileSizeMb?: number;
     };
-    quiz?: {
-      /** Stable id for the quiz; re-running updates this row in place. */
-      slug: string;
-      title: string;
-      description?: string;
-      passMark?: number;
-      maxAttempts?: number;
-      /** "YYYY-MM-DD" — opens at 10:00 WAT on this date. Omit to inherit the week's release. */
-      releaseDate?: string;
-      questions: {
-        prompt: string;
-        options: string[];
-        /** Index into `options` of the correct answer. */
-        correct: number;
-        explanation?: string;
-      }[];
-    };
+    quiz?: SeedQuiz;
+    /** Several quizzes on one week — Monday's and Tuesday's share a module. */
+    quizzes?: SeedQuiz[];
   }[];
 };
+
+type SeedQuiz = {
+  /** Stable id for the quiz; re-running updates this row in place. */
+  slug: string;
+  title: string;
+  description?: string;
+  passMark?: number;
+  maxAttempts?: number;
+  /** "YYYY-MM-DD" — opens at 10:00 WAT on this date. Omit to inherit the week's release. */
+  releaseDate?: string;
+  questions: {
+    prompt: string;
+    options: string[];
+    /** Index into `options` of the correct answer. */
+    correct: number;
+    explanation?: string;
+  }[];
+};
+
+/**
+ * Both quiz spellings, so a single `quiz` (the common case) and a `quizzes`
+ * list (a week whose days each have their own quiz) work from one code path.
+ */
+function weekQuizzes(w: Seed["weeks"][number]): SeedQuiz[] {
+  return [...(w.quiz ? [w.quiz] : []), ...(w.quizzes ?? [])];
+}
 
 async function main() {
   if (!FILE) throw new Error("Pass a seed file, e.g. content/week-1.json");
@@ -109,31 +121,29 @@ async function main() {
       console.log(`      accepts  : ${(w.assignment.allowedTypes ?? []).join(", ")}`);
       console.log(`      late     : ${w.assignment.latePolicy ?? "ALLOW"}`);
     }
-    if (w.quiz) {
-      const opens = w.quiz.releaseDate ? watLabel(atWat(w.quiz.releaseDate)) : "inherits the week";
-      console.log(`    quiz       : ${w.quiz.title}  (${w.quiz.slug})`);
+    for (const qz of weekQuizzes(w)) {
+      const opens = qz.releaseDate ? watLabel(atWat(qz.releaseDate)) : "inherits the week";
+      console.log(`    quiz       : ${qz.title}  (${qz.slug})`);
       console.log(`      opens    : ${opens}`);
-      console.log(`      questions: ${w.quiz.questions.length}`);
-      console.log(`      pass mark: ${w.quiz.passMark ?? 70}%`);
-      console.log(`      attempts : ${w.quiz.maxAttempts ?? 2}`);
+      console.log(`      questions: ${qz.questions.length}`);
+      console.log(`      pass mark: ${qz.passMark ?? 70}%`);
+      console.log(`      attempts : ${qz.maxAttempts ?? 2}`);
       // Catch a bad answer key before anything is written — an out-of-range
       // index would otherwise seed a question with no correct option.
-      const bad = w.quiz.questions
+      const bad = qz.questions
         .map((q, i) => ({ i, correct: q.correct }))
         .filter(({ i, correct }) => {
-          const n = w.quiz!.questions[i].options.length;
+          const n = qz.questions[i].options.length;
           return !Number.isInteger(correct) || correct < 0 || correct >= n;
         });
       if (bad.length) {
         throw new Error(
-          `Quiz "${w.quiz.slug}": correct index out of range for question(s) ${bad
+          `Quiz "${qz.slug}": correct index out of range for question(s) ${bad
             .map((b) => b.i + 1)
             .join(", ")}`
         );
       }
-      const answers = w.quiz.questions
-        .map((q, i) => `${i + 1}:${"ABCDEF"[q.correct]}`)
-        .join(" ");
+      const answers = qz.questions.map((q, i) => `${i + 1}:${"ABCDEF"[q.correct]}`).join(" ");
       console.log(`      answers  : ${answers}`);
     }
     console.log();
@@ -240,29 +250,29 @@ async function main() {
       else await db.assignment.create({ data: { ...aData, moduleId: mod.id } });
     }
 
-    if (w.quiz) {
+    for (const qz of weekQuizzes(w)) {
       const qzData = {
-        title: w.quiz.title,
-        description: w.quiz.description ?? null,
-        passMark: w.quiz.passMark ?? 70,
-        maxAttempts: w.quiz.maxAttempts ?? 2,
+        title: qz.title,
+        description: qz.description ?? null,
+        passMark: qz.passMark ?? 70,
+        maxAttempts: qz.maxAttempts ?? 2,
         status: "PUBLISHED",
         moduleId: mod.id,
-        releaseAt: w.quiz.releaseDate ? atWat(w.quiz.releaseDate) : null,
+        releaseAt: qz.releaseDate ? atWat(qz.releaseDate) : null,
       };
       // Keyed on the seed file's slug so re-running edits the same quiz instead
       // of creating a second one.
       const quiz = await db.quiz.upsert({
-        where: { slug: w.quiz.slug },
+        where: { slug: qz.slug },
         update: qzData,
-        create: { ...qzData, slug: w.quiz.slug },
+        create: { ...qzData, slug: qz.slug },
       });
 
       // Questions are replaced wholesale, matching the Intranet 101 seed: the
       // file is the single source of truth, and attempt history lives on
       // QuizAttempt (which stores chosen option ids) rather than here.
       await db.quizQuestion.deleteMany({ where: { quizId: quiz.id } });
-      for (const [i, q] of w.quiz.questions.entries()) {
+      for (const [i, q] of qz.questions.entries()) {
         await db.quizQuestion.create({
           data: {
             quizId: quiz.id,
