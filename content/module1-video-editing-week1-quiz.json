@@ -1,0 +1,109 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Video Editing",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "video-editing-m1-week1",
+        "title": "Module 1 — The Foundations of Video Editing",
+        "description": "Monday's quiz covers what video editing is, the role of the editor, understanding your footage, aspect ratio, frame rate and resolution, and finding your way around the CapCut Mobile workspace.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-05",
+        "questions": [
+          {
+            "prompt": "What is one of the main purposes of video editing?",
+            "options": [
+              "To increase the file size of a video",
+              "To transform raw footage into a coherent finished video",
+              "To record footage directly from a camera",
+              "To increase the frame rate of every video"
+            ],
+            "correct": 1,
+            "explanation": "Editing takes the raw footage you shot and shapes it into something coherent — a finished video with a clear structure and meaning."
+          },
+          {
+            "prompt": "Which of the following best describes the role of a video editor?",
+            "options": [
+              "Simply combining every piece of footage that was recorded",
+              "Only adding visual effects and transitions",
+              "Selecting, arranging, and manipulating footage to shape the viewer's experience",
+              "Recording all the footage used in a project"
+            ],
+            "correct": 2,
+            "explanation": "An editor is not a passive assembler. You select what matters, arrange it, and manipulate it so the viewer feels and understands what you intend."
+          },
+          {
+            "prompt": "Why is it important for an editor to understand their footage before beginning an edit?",
+            "options": [
+              "It allows the editor to identify useful material and understand what they are working with",
+              "It automatically improves the resolution of the footage",
+              "It eliminates the need to arrange clips",
+              "It prevents the video from needing audio"
+            ],
+            "correct": 0,
+            "explanation": "Watching and reviewing your footage first tells you what you actually have, so you can decide what is worth using and what the material needs."
+          },
+          {
+            "prompt": "What does the aspect ratio of a video describe?",
+            "options": [
+              "How loud the video's audio is",
+              "The number of frames displayed every second",
+              "The relationship between the width and height of the video frame",
+              "The amount of storage space required by the video"
+            ],
+            "correct": 2,
+            "explanation": "Aspect ratio is the width-to-height relationship of the frame — for example 16:9 landscape or 9:16 portrait."
+          },
+          {
+            "prompt": "Which statement correctly distinguishes frame rate from resolution?",
+            "options": [
+              "Frame rate describes image dimensions, while resolution describes audio quality",
+              "Frame rate describes how many frames are displayed per second, while resolution describes the image's dimensions/detail",
+              "Frame rate and resolution are two different names for the same thing",
+              "Resolution determines how many frames are displayed per second"
+            ],
+            "correct": 1,
+            "explanation": "Frame rate is about motion — how many frames pass each second. Resolution is about detail — the dimensions of the image."
+          },
+          {
+            "prompt": "What is the main purpose of becoming familiar with the CapCut Mobile interface before beginning actual editing?",
+            "options": [
+              "To memorize every effect in the application",
+              "To make the editing environment and its major tools easier to navigate",
+              "To increase the storage capacity of the phone",
+              "To automatically complete future editing projects"
+            ],
+            "correct": 1,
+            "explanation": "Knowing where the major tools live means you spend your time editing rather than hunting for buttons."
+          },
+          {
+            "prompt": "Which of the following can be imported into a CapCut project as an asset?",
+            "options": [
+              "Only video clips",
+              "Only photographs",
+              "Only music files",
+              "Video clips, images, audio, music, and other media"
+            ],
+            "correct": 3,
+            "explanation": "A project can hold many kinds of media — video, images, audio, music and more — not just one type."
+          },
+          {
+            "prompt": "A beginner opens CapCut and immediately starts adding transitions and effects without first understanding the footage or the editing workspace. What is the biggest problem with this approach?",
+            "options": [
+              "Transitions cannot be used in CapCut Mobile",
+              "Effects automatically reduce every video's resolution",
+              "The editor may be manipulating footage without understanding what the material requires or how the editing environment works",
+              "CapCut only allows effects to be added after exporting the video"
+            ],
+            "correct": 2,
+            "explanation": "Effects are not a substitute for understanding. Without knowing your footage or your workspace, you are adding decoration rather than making editing decisions."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -6,8 +6,13 @@ import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty";
 import { CourseMark } from "@/components/course-mark";
 import { formatDate } from "@/lib/format";
-import { IconAssignments, IconCheckCircle, IconLock, IconPlay } from "@/components/icons";
-import { canAccessModule, isAssignmentReleased, isLessonReleased } from "@/lib/module-access";
+import { IconAssignments, IconCheckCircle, IconLock, IconPlay, IconTarget } from "@/components/icons";
+import {
+  canAccessModule,
+  isAssignmentReleased,
+  isLessonReleased,
+  isQuizReleased,
+} from "@/lib/module-access";
 
 export default async function ModulePage({
   params,
@@ -41,11 +46,27 @@ export default async function ModulePage({
         include: { progress: { where: { userId: user.id } } },
       },
       assignments: { orderBy: { createdAt: "asc" } },
+      quizzes: {
+        where: { status: "PUBLISHED" },
+        orderBy: { createdAt: "asc" },
+        include: { _count: { select: { questions: true } } },
+      },
     },
   });
   if (!mod) notFound();
 
   const doneLessons = mod.lessons.filter((l) => l.progress[0]?.completedAt).length;
+
+  // Pass state per quiz, so the week page can show a tick rather than the same
+  // "take the quiz" row for a quiz already passed.
+  const passedQuizzes = new Set(
+    (
+      await db.quizAttempt.findMany({
+        where: { userId: user.id, passed: true, quizId: { in: mod.quizzes.map((q) => q.id) } },
+        select: { quizId: true },
+      })
+    ).map((a) => a.quizId)
+  );
 
   // Day-within-the-week release: a lesson whose own releaseAt is still ahead
   // shows its title but cannot be opened.
@@ -203,6 +224,73 @@ export default async function ModulePage({
                     </span>
                     <span className="flex-1 text-sm font-semibold">{a.title}</span>
                     <span className="text-xs text-text-muted">{a.maxScore} pts</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : null}
+      {mod.quizzes.length > 0 ? (
+        <section>
+          <p className="eyebrow">Quiz</p>
+          <ul className="mt-3 space-y-2">
+            {mod.quizzes.map((q) => {
+              const open = isQuizReleased({
+                quizReleaseAt: q.releaseAt,
+                moduleReleaseAt: mod.releaseAt,
+                now,
+                preview: user.previewUnreleasedContent,
+              });
+              const passed = passedQuizzes.has(q.id);
+              if (!open) {
+                return (
+                  <li
+                    key={q.id}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 opacity-70"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-2 text-text-muted">
+                      <IconLock className="h-4 w-4" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block text-sm font-semibold">{q.title}</span>
+                      <span className="text-xs text-text-muted">
+                        Opens {formatDate(q.releaseAt ?? mod.releaseAt)}
+                      </span>
+                    </span>
+                  </li>
+                );
+              }
+              return (
+                <li key={q.id}>
+                  <Link
+                    href={`/student/courses/${courseId}/modules/${mod.id}/quizzes/${q.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5 transition-colors hover:border-brand-1/40"
+                  >
+                    <span
+                      className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                        passed
+                          ? "bg-brand-1 text-white"
+                          : "bg-brand-3/25 text-brand-1 dark:text-brand-3"
+                      }`}
+                    >
+                      {passed ? (
+                        <IconCheckCircle className="h-5 w-5" />
+                      ) : (
+                        <IconTarget className="h-5 w-5" />
+                      )}
+                    </span>
+                    <span className="flex-1">
+                      <span className="block text-sm font-semibold">{q.title}</span>
+                      <span className="text-xs text-text-muted">
+                        {q._count.questions} questions · {q.passMark}% to pass
+                      </span>
+                    </span>
+                    {passed ? (
+                      <span className="text-xs font-semibold text-brand-1 dark:text-brand-3">
+                        Passed
+                      </span>
+                    ) : null}
                   </Link>
                 </li>
               );

@@ -136,11 +136,20 @@ model Quiz {
   maxAttempts Int      @default(2)
   isRequired  Boolean  @default(false)
   status      String   @default("PUBLISHED") // DRAFT | PUBLISHED | ARCHIVED
+  // A week quiz belongs to one module; Intranet 101 is academy-wide and has
+  // none. Null means the quiz is not tied to a week.
+  moduleId    String?
+  module      Module?  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  // When the quiz opens. Null inherits the module's releaseAt, so a quiz that
+  // shares a week's release needs no separate date.
+  releaseAt   DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   questions QuizQuestion[]
   attempts  QuizAttempt[]
+
+  @@index([moduleId])
 }
 
 model QuizQuestion {
@@ -351,6 +360,7 @@ model Module {
 
   lessons     Lesson[]
   assignments Assignment[]
+  quizzes     Quiz[]
 
   @@index([courseId, order])
 }

@@ -103,6 +103,25 @@ export function isAssignmentReleased(input: {
 }
 
 /**
+ * Whether a week quiz has opened.
+ *
+ * A quiz can open later than its week (a Monday week whose quiz is taken
+ * Friday), so the quiz's own releaseAt wins; null inherits the module's.
+ * `preview` skips the check for reviewer accounts.
+ */
+export function isQuizReleased(input: {
+  quizReleaseAt: Date | null;
+  moduleReleaseAt: Date | null;
+  now?: Date;
+  preview?: boolean;
+}) {
+  if (input.preview) return true;
+  const now = input.now ?? new Date();
+  const effective = input.quizReleaseAt ?? input.moduleReleaseAt;
+  return !effective || effective <= now;
+}
+
+/**
  * Whether a specific module is currently accessible. Used by the module and
  * lesson pages so a direct URL can never bypass the timeline.
  */

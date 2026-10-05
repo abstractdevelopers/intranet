@@ -2,7 +2,12 @@ import { db } from "./db";
 import { INTRANET_101_SLUG } from "./intranet-101";
 
 /**
- * Intranet 101 — the compulsory academy-wide intro assessment.
+ * Quizzes.
+ *
+ * Intranet 101 is the academy-wide compulsory assessment; a week quiz hangs off
+ * a Module and is scoped to that course. Both share the same runner, grading and
+ * attempt rules — the only difference is how the quiz is found and whether it
+ * unlocks with the week.
  *
  * Grading happens here, on the server. `QuizOption.isCorrect` is never included
  * in anything sent to the client, so the answers cannot be read from the page
@@ -17,7 +22,7 @@ export type QuizQuestionView = {
   options: { id: string; label: string; order: number }[];
 };
 
-export type Intranet101View = {
+export type QuizView = {
   id: string;
   title: string;
   description: string | null;
@@ -32,10 +37,22 @@ export type Intranet101View = {
   lastAttempt: { score: number; passed: boolean; submittedAt: Date } | null;
 };
 
-/** The quiz, with correct answers stripped, plus this student's attempt state. */
-export async function getIntranet101(userId: string): Promise<Intranet101View | null> {
+export type SubmitResult =
+  | { ok: true; score: number; passed: boolean; correct: Record<string, boolean>; attemptsLeft: number }
+  | { ok: false; error: string; status: number };
+
+/** Kept for the Intranet 101 page, which predates the generic name. */
+export type Intranet101View = QuizView;
+
+/**
+ * The quiz, with correct answers stripped, plus this student's attempt state.
+ *
+ * Shared by every quiz so answer-hiding and the attempt rules are only written
+ * once.
+ */
+async function buildQuizView(quizId: string, userId: string): Promise<QuizView | null> {
   const quiz = await db.quiz.findUnique({
-    where: { slug: INTRANET_101_SLUG },
+    where: { id: quizId },
     include: {
       questions: {
         orderBy: { order: "asc" },
@@ -79,9 +96,20 @@ export async function getIntranet101(userId: string): Promise<Intranet101View | 
   };
 }
 
-export type SubmitResult =
-  | { ok: true; score: number; passed: boolean; correct: Record<string, boolean>; attemptsLeft: number }
-  | { ok: false; error: string; status: number };
+/** Intranet 101 — the compulsory academy-wide intro assessment. */
+export async function getIntranet101(userId: string): Promise<QuizView | null> {
+  const quiz = await db.quiz.findUnique({
+    where: { slug: INTRANET_101_SLUG },
+    select: { id: true },
+  });
+  if (!quiz) return null;
+  return buildQuizView(quiz.id, userId);
+}
+
+/** A quiz belonging to one week. */
+export async function getModuleQuiz(quizId: string, userId: string): Promise<QuizView | null> {
+  return buildQuizView(quizId, userId);
+}
 
 /**
  * Grade a submission and record it.
@@ -90,12 +118,14 @@ export type SubmitResult =
  * wrong rather than being skipped, so a partial submission cannot inflate the
  * score.
  */
-export async function submitIntranet101(
+async function gradeQuiz(
+  quizId: string,
   userId: string,
-  answers: Record<string, string>
+  answers: Record<string, string>,
+  onPass?: (tx: PrismaTransaction) => Promise<void>
 ): Promise<SubmitResult> {
   const quiz = await db.quiz.findUnique({
-    where: { slug: INTRANET_101_SLUG },
+    where: { id: quizId },
     include: { questions: { include: { options: true } } },
   });
   if (!quiz || quiz.status !== "PUBLISHED") {
@@ -132,13 +162,7 @@ export async function submitIntranet101(
     await tx.quizAttempt.create({
       data: { userId, quizId: quiz.id, score, passed, answers },
     });
-    // Stamp the student so the rest of the portal can gate on it.
-    if (passed) {
-      await tx.user.update({
-        where: { id: userId },
-        data: { intranet101PassedAt: new Date() },
-      });
-    }
+    if (passed && onPass) await onPass(tx);
   });
 
   return {
@@ -148,6 +172,35 @@ export async function submitIntranet101(
     correct,
     attemptsLeft: Math.max(0, quiz.maxAttempts - attemptsUsed - 1),
   };
+}
+
+type PrismaTransaction = Parameters<Parameters<typeof db.$transaction>[0]>[0];
+
+export async function submitIntranet101(
+  userId: string,
+  answers: Record<string, string>
+): Promise<SubmitResult> {
+  const quiz = await db.quiz.findUnique({
+    where: { slug: INTRANET_101_SLUG },
+    select: { id: true },
+  });
+  if (!quiz) return { ok: false, error: "Assessment not available.", status: 404 };
+
+  return gradeQuiz(quiz.id, userId, answers, async (tx) => {
+    // Stamp the student so the rest of the portal can gate on it.
+    await tx.user.update({
+      where: { id: userId },
+      data: { intranet101PassedAt: new Date() },
+    });
+  });
+}
+
+export async function submitModuleQuiz(
+  quizId: string,
+  userId: string,
+  answers: Record<string, string>
+): Promise<SubmitResult> {
+  return gradeQuiz(quizId, userId, answers);
 }
 
 /** Whether this student still owes the intro assessment. */
