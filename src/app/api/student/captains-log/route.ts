@@ -4,6 +4,7 @@ import { requireOnboardedStudentApi } from "@/lib/rbac";
 import { auditLog, notify } from "@/lib/audit";
 import { getCurrentWeek, parseResponses, validateResponses } from "@/lib/captains-log";
 import { getModuleAccess } from "@/lib/module-access";
+import { captainLogOpensAt, watLabel } from "@/lib/schedule";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,16 @@ export async function POST(request: Request) {
   if (weekNumber > currentWeek) {
     return NextResponse.json(
       { error: "That week hasn't been released yet." },
+      { status: 409 }
+    );
+  }
+
+  // The log opens on the Friday of its week. Enforced here as well as in the UI
+  // so the endpoint can't be used to file a reflection early.
+  const opensAt = captainLogOpensAt(weekNumber);
+  if (opensAt > new Date()) {
+    return NextResponse.json(
+      { error: `This week's Captain's Log opens ${watLabel(opensAt)}.` },
       { status: 409 }
     );
   }

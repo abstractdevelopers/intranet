@@ -57,6 +57,27 @@ const API_KEY = process.env.SENDBYTE_API_KEY;
 const FROM = process.env.EMAIL_FROM ?? "Unify Creator Academy <uca@launchverse.site>";
 const API = "https://api.sendbyte.africa/v1/emails";
 
+/**
+ * Provider ceiling: SendByte allows 120 requests per 60s per API key, counted
+ * across every caller. Stay under it — a throttled send would fail recipients
+ * who have already been stamped as sent.
+ */
+const RATE_LIMIT_PER_MIN = 100;
+const RATE_WINDOW_MS = 60_000;
+const recentSends: number[] = [];
+
+async function pace() {
+  for (;;) {
+    const now = Date.now();
+    while (recentSends.length && now - recentSends[0] > RATE_WINDOW_MS) recentSends.shift();
+    if (recentSends.length < RATE_LIMIT_PER_MIN) {
+      recentSends.push(now);
+      return;
+    }
+    await new Promise((r) => setTimeout(r, RATE_WINDOW_MS - (now - recentSends[0]) + 50));
+  }
+}
+
 async function sendOne(to: string, subject: string, html: string, text: string) {
   const res = await fetch(API, {
     method: "POST",
@@ -104,7 +125,9 @@ async function main() {
 
   const recipients = await db.user.findMany({
     where: {
-      ...base,
+      // A test send targets one address and skips the audience rules, so
+      // delivery can be checked without a matching student.
+      ...(TEST && ONLY ? {} : base),
       emailOptOutAt: null,
       coursesLiveEmailSentAt: null,
       ...(ONLY ? { email: ONLY } : {}),
@@ -114,7 +137,7 @@ async function main() {
     take: ONLY ? 1 : LIMIT,
   });
 
-  const remaining = await db.user.count({
+  const remaining = TEST && ONLY ? 1 : await db.user.count({
     where: { ...base, emailOptOutAt: null, coursesLiveEmailSentAt: null },
   });
 
@@ -149,6 +172,7 @@ async function main() {
     }
 
     if (TEST) {
+      await pace();
       await sendOne(r.email, subject, html, text);
       console.log(`  [test] ${r.email}`);
       sent++;
@@ -161,6 +185,7 @@ async function main() {
       continue;
     }
 
+    await pace();
     // Stamped BEFORE the send: a crash can skip someone, but never double-send.
     await db.user.update({
       where: { id: r.id },
@@ -170,6 +195,14 @@ async function main() {
       await sendOne(r.email, subject, html, text);
       sent++;
     } catch (err) {
+      // A non-2xx response means the provider rejected it, so nothing was
+      // delivered. Clearing the stamp lets a rerun retry this person instead of
+      // losing them. A hard crash still can't double-send, because the stamp
+      // was already written above.
+      await db.user.update({
+        where: { id: r.id },
+        data: { coursesLiveEmailSentAt: null },
+      });
       failed++;
       console.error(`  [failed] ${r.email}: ${err instanceof Error ? err.message : err}`);
     }

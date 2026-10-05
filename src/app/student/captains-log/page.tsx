@@ -9,6 +9,7 @@ import { IconCheckCircle, IconAnnouncement, IconLock } from "@/components/icons"
 import { CaptainLogAnswers } from "@/components/captains-log/captain-log-answers";
 import { CAPTAIN_LOG_QUESTIONS } from "@/lib/constants";
 import { getCaptainLogState } from "@/lib/captains-log";
+import { watLabel } from "@/lib/schedule";
 import { formatDateTime } from "@/lib/format";
 
 export const metadata = { title: "Captain's Log" };
@@ -42,7 +43,23 @@ export default async function CaptainLogPage() {
         />
       ) : (
         <>
-          {state.blocking ? (
+          {!state.open && !state.log ? (
+            <Card className="border-brand-1/40 bg-brand-3/15">
+              <div className="flex items-start gap-3">
+                <IconAnnouncement className="mt-0.5 h-5 w-5 shrink-0 text-brand-1 dark:text-brand-3" />
+                <div>
+                  <p className="text-sm font-semibold">
+                    Your Week {state.currentWeek} log opens{" "}
+                    {state.opensAt ? watLabel(state.opensAt) : "on Friday"}
+                  </p>
+                  <p className="mt-1 text-sm text-text-muted">
+                    The Captain&rsquo;s Log is a weekly reflection, so it opens on Friday
+                    once the week is behind you. Come back then and write it up.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          ) : state.blocking ? (
             <Card className="border-amber-300/60 bg-amber-50/60 dark:border-amber-900/50 dark:bg-amber-950/20">
               <div className="flex items-start gap-3">
                 <IconLock className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
@@ -88,6 +105,7 @@ export default async function CaptainLogPage() {
                 questions={CAPTAIN_LOG_QUESTIONS.map((q) => ({ ...q }))}
                 initial={state.log?.responses ?? {}}
                 alreadySubmitted={Boolean(state.log)}
+                locked={!state.open && !state.log}
               />
             </Card>
           </section>

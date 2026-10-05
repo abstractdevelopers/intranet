@@ -6,8 +6,9 @@
  * stored in UTC, which is what the unlock checks compare against.
  *
  * The academy week has a fixed rhythm: lessons early in the week, assignments
- * midweek, submissions on Friday, Saturday free with the Captain's Log.
+ * midweek, submissions and the Captain's Log on Friday, then a free weekend.
  */
+import { CLASSES_START } from "./constants";
 
 /** WAT is UTC+1 all year — no DST to account for. */
 export const WAT_OFFSET_HOURS = 1;
@@ -47,10 +48,40 @@ export const WEEKLY_RHYTHM = [
   { day: "TUESDAY", focus: "Courses, modules and lessons", releaseContent: true },
   { day: "WEDNESDAY", focus: "Assignments", releaseContent: true },
   { day: "THURSDAY", focus: "Assignments", releaseContent: true },
-  { day: "FRIDAY", focus: "Assignment submissions", releaseContent: true },
-  { day: "SATURDAY", focus: "Free day and Captain's Log", releaseContent: false },
+  { day: "FRIDAY", focus: "Assignment submissions and Captain's Log", releaseContent: true },
+  { day: "SATURDAY", focus: "Free day", releaseContent: false },
   { day: "SUNDAY", focus: "Rest and catch-up", releaseContent: false },
 ] as const;
+
+/**
+ * Captain's Log opens every Friday.
+ *
+ * Week 1 starts with the academy's first Monday (CLASSES_START), and each week's
+ * log opens on the Friday of that same week at the standard release hour. The
+ * window deliberately opens later than the week's content: a student who starts
+ * lessons on Monday cannot meaningfully reflect on the week until it is over.
+ *
+ * Note the log still BLOCKS the following week until it is submitted, so the
+ * Friday opening is the earliest a student can clear that block.
+ */
+export const CAPTAIN_LOG_OPENS_DAY_OFFSET = 4; // Monday + 4 days = Friday
+
+/** When the Captain's Log for `weekNumber` opens (10:00 WAT on that Friday). */
+export function captainLogOpensAt(weekNumber: number): Date {
+  const weekStart = new Date(CLASSES_START);
+  weekStart.setUTCDate(weekStart.getUTCDate() + (weekNumber - 1) * 7);
+  const friday = new Date(weekStart);
+  friday.setUTCDate(friday.getUTCDate() + CAPTAIN_LOG_OPENS_DAY_OFFSET);
+  const y = friday.getUTCFullYear();
+  const m = String(friday.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(friday.getUTCDate()).padStart(2, "0");
+  return atWat(`${y}-${m}-${d}`);
+}
+
+/** Whether the Captain's Log for `weekNumber` has opened yet. */
+export function isCaptainLogOpen(weekNumber: number, now: Date = new Date()): boolean {
+  return captainLogOpensAt(weekNumber) <= now;
+}
 
 /**
  * A module covers two weeks of content, and each week carries its own Captain's

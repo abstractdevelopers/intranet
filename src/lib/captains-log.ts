@@ -1,5 +1,6 @@
 import { db } from "./db";
 import { CAPTAIN_LOG_QUESTIONS } from "./constants";
+import { captainLogOpensAt } from "./schedule";
 
 export type CaptainLogResponses = Record<string, string>;
 
@@ -132,25 +133,42 @@ export type CaptainLogState = {
   } | null;
   /** Whether next week's content is being held back by a missing log. */
   blocking: boolean;
+  /** When the current week's log opens (10:00 WAT on that Friday). */
+  opensAt: Date | null;
+  /** False until that Friday — the form is shown but cannot be submitted. */
+  open: boolean;
 };
 
 /**
  * Captain's Log state for a student. The log for week N must be submitted
  * before week N+1 content unlocks — that is the `blocking` flag.
+ *
+ * The log opens every Friday (see captainLogOpensAt). Before that it is visible
+ * but not submittable, and `blocking` stays false so the dashboard does not
+ * chase a student for a reflection they cannot write yet.
  */
 export async function getCaptainLogState(userId: string): Promise<CaptainLogState> {
   const currentWeek = await getCurrentWeek(userId);
   if (currentWeek === null) {
-    return { currentWeek: null, required: false, log: null, blocking: false };
+    return {
+      currentWeek: null,
+      required: false,
+      log: null,
+      blocking: false,
+      opensAt: null,
+      open: false,
+    };
   }
 
   const log = await db.captainLog.findUnique({
     where: { userId_weekNumber: { userId, weekNumber: currentWeek } },
   });
+  const opensAt = captainLogOpensAt(currentWeek);
+  const open = opensAt <= new Date();
 
   return {
     currentWeek,
-    required: !log,
+    required: !log && open,
     log: log
       ? {
           id: log.id,
@@ -160,7 +178,9 @@ export async function getCaptainLogState(userId: string): Promise<CaptainLogStat
           responses: parseResponses(log.responses),
         }
       : null,
-    blocking: !log,
+    blocking: !log && open,
+    opensAt,
+    open,
   };
 }
 

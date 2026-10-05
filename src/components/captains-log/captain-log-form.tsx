@@ -12,11 +12,14 @@ export function CaptainLogForm({
   questions,
   initial,
   alreadySubmitted,
+  locked = false,
 }: {
   weekNumber: number;
   questions: Question[];
   initial: Record<string, string>;
   alreadySubmitted: boolean;
+  /** Before Friday the log is visible but cannot be filled in or submitted. */
+  locked?: boolean;
 }) {
   const router = useRouter();
   const [responses, setResponses] = useState<Record<string, string>>(() => {
@@ -34,6 +37,7 @@ export function CaptainLogForm({
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (locked) return;
     setBusy(true);
     setError(null);
     const res = await fetch("/api/student/captains-log", {
@@ -69,6 +73,7 @@ export function CaptainLogForm({
               value={responses[q.id] ?? ""}
               onChange={(e) => set(q.id, e.target.value)}
               required
+              disabled={locked}
               className={inputClass}
             />
           ) : (
@@ -77,6 +82,7 @@ export function CaptainLogForm({
               value={responses[q.id] ?? ""}
               onChange={(e) => set(q.id, e.target.value)}
               required
+              disabled={locked}
               className={inputClass}
             />
           )}
@@ -92,11 +98,11 @@ export function CaptainLogForm({
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="submit"
-          disabled={busy}
+          disabled={busy || locked}
           className="inline-flex items-center gap-2 rounded-lg bg-brand-1 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-2 disabled:opacity-50"
         >
           <IconCheck className="h-4 w-4" />
-          {busy ? "Submitting…" : done ? "Update my log" : "Submit Captain's Log"}
+          {locked ? "Opens Friday" : busy ? "Submitting…" : done ? "Update my log" : "Submit Captain's Log"}
         </button>
         {done ? (
           <span className="text-sm text-text-muted">
