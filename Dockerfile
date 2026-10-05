@@ -27,6 +27,14 @@ COPY . .
 # Prisma Client must be generated before `next build` traces it. It reads the
 # schema only, so no database connection is required here.
 RUN npx prisma generate
+# NEXT_PUBLIC_* values are inlined into the client bundle at build time, so the
+# VAPID public key must be present here, not only at runtime — otherwise push
+# subscription silently gets an empty key. Defaults keep the build runnable
+# without secrets; Coolify passes the real value as a build arg.
+ARG NEXT_PUBLIC_VAPID_PUBLIC_KEY=""
+ARG NEXT_PUBLIC_APP_URL=""
+ENV NEXT_PUBLIC_VAPID_PUBLIC_KEY=$NEXT_PUBLIC_VAPID_PUBLIC_KEY
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
