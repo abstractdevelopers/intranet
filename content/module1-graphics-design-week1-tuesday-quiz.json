@@ -1,0 +1,101 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Graphic Design",
+      "releaseDate": "2026-10-05",
+      "quizzes": [
+        {
+          "slug": "graphics-design-m1-week1-tuesday",
+          "title": "Module 1 — Tuesday — Introduction to Design Software",
+          "description": "Tuesday's quiz covers the design software for both tracks: PixelLab and Lightroom Mobile for Smartphone Graphic Design, and Adobe Photoshop for PC Graphic Design — and why familiarity with your tools matters.",
+          "passMark": 70,
+          "maxAttempts": 2,
+          "releaseDate": "2026-10-06",
+          "questions": [
+            {
+              "prompt": "What is the main purpose of becoming familiar with design software at this stage of the course?",
+              "options": [
+                "To master every available design tool immediately",
+                "To become comfortable with the software's interface and working environment",
+                "To begin creating professional client projects",
+                "To learn how to use every feature before learning design principles"
+              ],
+              "correct": 1,
+              "explanation": "This stage is about getting comfortable with the tools, not mastering them. Understanding the environment comes before producing finished work."
+            },
+            {
+              "prompt": "Which software is the primary tool for the Smartphone Graphic Design track?",
+              "options": ["Adobe Photoshop", "Canva", "PixelLab", "Adobe Illustrator"],
+              "correct": 2,
+              "explanation": "PixelLab is the primary design application for the Smartphone track, supported by Lightroom Mobile for image work."
+            },
+            {
+              "prompt": "What is Lightroom Mobile primarily introduced for in the Smartphone Graphic Design track?",
+              "options": [
+                "Creating vector logos",
+                "Editing and enhancing images",
+                "Creating website layouts",
+                "Creating animated graphics"
+              ],
+              "correct": 1,
+              "explanation": "Lightroom Mobile is for working with and enhancing images, which becomes useful as the course progresses."
+            },
+            {
+              "prompt": "When beginning with PixelLab, what should a learner focus on first?",
+              "options": [
+                "Memorising every available effect",
+                "Learning advanced typography techniques",
+                "Becoming familiar with the application's basic working environment",
+                "Creating a complete professional brand identity"
+              ],
+              "correct": 2,
+              "explanation": "Start with the basic working environment. Knowing where the controls live is what makes the later design work easier."
+            },
+            {
+              "prompt": "What is the primary purpose of learning the Lightroom Mobile interface?",
+              "options": [
+                "To understand where its major controls and features are located",
+                "To replace PixelLab completely",
+                "To learn professional video editing",
+                "To create vector illustrations"
+              ],
+              "correct": 0,
+              "explanation": "The goal is to know where its major controls and features are, so you can find what you need when you need it."
+            },
+            {
+              "prompt": "Which software is used as the primary design application for the PC Graphic Design track?",
+              "options": ["Adobe Lightroom", "PixelLab", "Adobe Photoshop", "Adobe Premiere Pro"],
+              "correct": 2,
+              "explanation": "Adobe Photoshop is the primary design application for the PC Graphic Design track."
+            },
+            {
+              "prompt": "When first learning Adobe Photoshop in this course, what should a beginner prioritise?",
+              "options": [
+                "Mastering every Photoshop tool immediately",
+                "Understanding the workspace and becoming familiar with where major tools and controls are located",
+                "Creating advanced photo manipulations",
+                "Learning professional printing techniques"
+              ],
+              "correct": 1,
+              "explanation": "Focus on the workspace first — where the major tools and panels are. Mastery of individual tools comes with use."
+            },
+            {
+              "prompt": "Why is familiarity with design software important for a graphic designer?",
+              "options": [
+                "It allows the designer to focus more easily on the actual design process rather than struggling with the working environment",
+                "It eliminates the need to understand design principles",
+                "It means the designer no longer needs to develop creative ideas",
+                "It guarantees that every design created will be effective"
+              ],
+              "correct": 0,
+              "explanation": "When the tools are familiar, your attention goes to the design decisions instead of the software — which is where the real work is."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
