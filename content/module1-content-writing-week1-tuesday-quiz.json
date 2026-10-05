@@ -1,0 +1,109 @@
+{
+  "courseSlug": "content-writing",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "Understanding Content Writing",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "content-writing-m1-week1-tuesday",
+        "title": "Module 1 — Tuesday — Understanding Audience & Purpose",
+        "description": "Tuesday's quiz covers knowing your audience and knowing your purpose — why audience shapes how you communicate, why purpose shapes what you are trying to achieve, and what happens when either is missing.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-06",
+        "questions": [
+          {
+            "prompt": "Why is it important for a writer to understand their audience before creating content?",
+            "options": [
+              "It allows the writer to use more complicated vocabulary",
+              "It helps determine what information, language, and approach will be relevant",
+              "It guarantees that everyone will agree with the content",
+              "It allows the writer to avoid having a clear purpose"
+            ],
+            "correct": 1,
+            "explanation": "Knowing the audience tells you what to include, what to explain, what language to use, and which angle will land."
+          },
+          {
+            "prompt": "Which question helps a writer determine the audience's existing level of knowledge?",
+            "options": [
+              "What platform should I publish on?",
+              "How long should my article be?",
+              "What does my audience already know?",
+              "What font should I use?"
+            ],
+            "correct": 2,
+            "explanation": "Establishing what the audience already knows is how you find the right starting point."
+          },
+          {
+            "prompt": "Why might the same idea need to be communicated differently to a beginner and an expert?",
+            "options": [
+              "Experts prefer longer sentences",
+              "Beginners and experts have different levels of knowledge and therefore may require different approaches",
+              "Experts cannot understand simple explanations",
+              "Beginners should never be given detailed information"
+            ],
+            "correct": 1,
+            "explanation": "Different levels of knowledge call for different approaches — the same idea, pitched differently."
+          },
+          {
+            "prompt": "Which of the following is an example of a content purpose?",
+            "options": [
+              "Increasing the number of words in an article",
+              "Making the writer sound intelligent",
+              "Educating the audience about a subject",
+              "Using as many writing techniques as possible"
+            ],
+            "correct": 2,
+            "explanation": "Educating the audience is a purpose. Word count and technique are means, not ends."
+          },
+          {
+            "prompt": "What can happen when content does not have a clear purpose?",
+            "options": [
+              "The content may contain many words without actually accomplishing anything",
+              "The audience will automatically understand the message",
+              "The content becomes more persuasive",
+              "The writer becomes more creative"
+            ],
+            "correct": 0,
+            "explanation": "Without a purpose you get plenty of words and no outcome — which is the trap the purpose questions are designed to prevent."
+          },
+          {
+            "prompt": "Which set of questions best helps a writer clarify what they want their audience to experience or do?",
+            "options": [
+              "What font should I use? What colour should I choose? What platform should I post on?",
+              "What do I want them to feel? What do I want them to think? What do I want them to do?",
+              "How many paragraphs should I write? How many words should I use? How quickly can I finish?",
+              "Who else is writing about this? How popular are they? How many followers do they have?"
+            ],
+            "correct": 1,
+            "explanation": "Feel, think, do — the three questions that turn a purpose into something you can actually write toward."
+          },
+          {
+            "prompt": "What is the relationship between audience and purpose?",
+            "options": [
+              "Audience determines what you want to achieve, while purpose determines who reads the content",
+              "Audience determines how you communicate, while purpose determines what you are trying to achieve",
+              "Audience and purpose are unrelated to the writing process",
+              "Purpose only matters after the content has been written"
+            ],
+            "correct": 1,
+            "explanation": "Audience shapes how you say it; purpose shapes what the writing is for. Both decisions come before drafting."
+          },
+          {
+            "prompt": "According to the lesson, what should happen before a writer begins typing?",
+            "options": [
+              "The writer should immediately start drafting",
+              "The writer should research competitors first",
+              "The writer should think about who they are writing for and why they are writing",
+              "The writer should choose a headline and publish it"
+            ],
+            "correct": 2,
+            "explanation": "Good writing does not begin with typing — it begins with thinking about audience and purpose."
+          }
+        ]
+      }
+    }
+  ]
+}
