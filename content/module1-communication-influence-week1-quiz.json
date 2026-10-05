@@ -1,0 +1,99 @@
+{
+  "courseSlug": "communication-influence",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Communication",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "communication-influence-m1-week1",
+        "title": "Module 1 — The Foundations of Communication",
+        "description": "Monday's quiz covers the articulation video — surface and deep lexicon — and the foundations of communication: the process, feedback, noise, and the forms communication takes.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-05",
+        "questions": [
+          {
+            "prompt": "In the video on becoming more articulate, what is the difference between a surface lexicon and a deep lexicon?",
+            "options": [
+              "The surface lexicon contains technical words, while the deep lexicon contains simple words.",
+              "The surface lexicon contains words we recognize but rarely use, while the deep lexicon contains words we use daily.",
+              "The surface lexicon contains words we naturally default to in everyday speech, while the deep lexicon contains words we recognize but rarely use.",
+              "The surface lexicon is written vocabulary, while the deep lexicon is spoken vocabulary."
+            ],
+            "correct": 2,
+            "explanation": "Your surface lexicon is what you reach for automatically in everyday speech. Your deep lexicon holds words you know and recognise but do not yet use naturally — which is exactly the gap the Surface Lexicon Exercise works on."
+          },
+          {
+            "prompt": "According to the video, what is one way to help a word move higher in your lexicon and become more natural in your speech?",
+            "options": [
+              "Avoid using the word until you fully understand every possible definition.",
+              "Repeat and use the word regularly.",
+              "Replace the word with a simpler word whenever possible.",
+              "Memorize the word without using it in conversation."
+            ],
+            "correct": 1,
+            "explanation": "A word becomes natural through use, not memorisation. Repeating and using it is what moves it from recognition into your everyday speech."
+          },
+          {
+            "prompt": "What does the video recommend doing before speaking when you want to find a more precise word?",
+            "options": [
+              "Speak immediately so you do not lose your thought.",
+              "Use filler words while searching for an answer.",
+              "Give yourself a little more time to search your vocabulary.",
+              "Repeat the first word that comes to mind."
+            ],
+            "correct": 2,
+            "explanation": "Precision takes a moment. Allowing yourself a brief pause to search your vocabulary is how you find the right word instead of settling for the first one."
+          },
+          {
+            "prompt": "In the communication process, which sequence best represents the basic flow described in the lesson?",
+            "options": [
+              "Receiver → Message → Sender → Feedback → Medium",
+              "Sender → Message → Medium → Receiver → Feedback",
+              "Message → Sender → Receiver → Medium → Feedback",
+              "Sender → Receiver → Message → Medium → Context"
+            ],
+            "correct": 1,
+            "explanation": "The sender creates a message, sends it through a medium, the receiver interprets it, and feedback returns to the sender — all of it shaped by context."
+          },
+          {
+            "prompt": "Why is feedback important in the communication process?",
+            "options": [
+              "It allows the sender to know how the receiver responded to or understood the message.",
+              "It prevents the sender from choosing a communication medium.",
+              "It guarantees that communication will never be misunderstood.",
+              "It replaces the need for a message."
+            ],
+            "correct": 0,
+            "explanation": "Feedback is how the sender finds out whether the meaning they intended is the meaning that arrived. Without it, you are guessing."
+          },
+          {
+            "prompt": "Which of the following is an example of communication noise?",
+            "options": [
+              "Choosing a clear communication channel",
+              "Giving someone feedback",
+              "A distracted listener misunderstanding an important message",
+              "Organizing a message before sending it"
+            ],
+            "correct": 2,
+            "explanation": "Noise is anything that interferes with the message before it is understood — including a distracted listener, not just physical sound."
+          },
+          {
+            "prompt": "According to the video on types of communication, which form of communication primarily uses facial expressions, gestures, eye contact, posture, and body movement?",
+            "options": ["Written communication", "Visual communication", "Verbal communication", "Non-verbal communication"],
+            "correct": 3,
+            "explanation": "Non-verbal communication is everything sent without relying primarily on spoken words — expressions, gestures, posture, eye contact and body movement."
+          },
+          {
+            "prompt": "A company creates an infographic containing charts, images, colours, and symbols to explain complicated information to its audience. Which type of communication is being used most directly?",
+            "options": ["Visual communication", "Verbal communication", "Written communication", "Non-verbal communication"],
+            "correct": 0,
+            "explanation": "Charts, images, colours and symbols communicate meaning through visual elements, which is visual communication."
+          }
+        ]
+      }
+    }
+  ]
+}
