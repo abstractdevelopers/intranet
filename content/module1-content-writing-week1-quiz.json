@@ -1,0 +1,104 @@
+{
+  "courseSlug": "content-writing",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "Understanding Content Writing",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "content-writing-m1-week1",
+        "title": "Module 1 — Understanding Content Writing",
+        "description": "Monday's quiz covers what content writing is and what it is for, what a content writer must understand, how content writing differs from copywriting, and how a content writer differs from bloggers, scriptwriters and social media managers.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-05",
+        "questions": [
+          {
+            "prompt": "What is one of the fundamental purposes of content writing?",
+            "options": [
+              "To make every piece of writing humorous",
+              "To inform, educate, entertain, engage, or communicate with an audience",
+              "To persuade readers to purchase something immediately",
+              "To replace all forms of visual communication"
+            ],
+            "correct": 1,
+            "explanation": "Content writing exists to inform, educate, entertain, engage or communicate with an audience — a much wider brief than selling."
+          },
+          {
+            "prompt": "What should a content writer understand before deciding how to communicate an idea?",
+            "options": [
+              "Only the number of words required",
+              "The writer's personal preferences",
+              "What to say, who it is for, why it matters, and how to communicate it effectively",
+              "Only the platform where the content will be published"
+            ],
+            "correct": 2,
+            "explanation": "What to say, who it is for, why it matters and how to say it well — the four questions behind every deliberate piece of writing."
+          },
+          {
+            "prompt": "Which of the following best describes the primary purpose of copywriting?",
+            "options": [
+              "To persuade an audience to take an action",
+              "To document personal experiences",
+              "To manage a company's social media community",
+              "To write scripts exclusively for films"
+            ],
+            "correct": 0,
+            "explanation": "Copywriting is written to move someone to act — that is the line between it and content writing."
+          },
+          {
+            "prompt": "What is an important distinction between a content writer and a social media manager?",
+            "options": [
+              "Content writers cannot work on social media",
+              "Social media managers only write captions",
+              "Social media managers can handle planning, publishing, community management, strategy, and analytics in addition to writing",
+              "Content writers are responsible for managing an entire social media presence"
+            ],
+            "correct": 2,
+            "explanation": "A social media manager's role reaches well past writing into planning, publishing, community management, strategy and analytics."
+          },
+          {
+            "prompt": "Which role primarily creates written material intended to be performed or spoken?",
+            "options": ["Blogger", "Scriptwriter", "Copy editor", "Social media manager"],
+            "correct": 1,
+            "explanation": "A scriptwriter writes for performance — video, film, podcasts and advertisements."
+          },
+          {
+            "prompt": "Why is content writing considered broader than simply writing blog posts?",
+            "options": [
+              "Because content writing involves only advertising",
+              "Because content writing can appear across formats such as articles, newsletters, social media, educational materials, and brand communication",
+              "Because bloggers do not actually write content",
+              "Because content writers only work with video"
+            ],
+            "correct": 1,
+            "explanation": "Content writing shows up in articles, newsletters, social media, educational materials and brand communication — blogs are just one format."
+          },
+          {
+            "prompt": "Which of the following questions would help a content writer think more strategically about a piece of content?",
+            "options": [
+              "How can I make this as long as possible?",
+              "Who wrote this, who is it for, why was it written, and what is it trying to achieve?",
+              "How many complicated words can I include?",
+              "How quickly can I finish writing it?"
+            ],
+            "correct": 1,
+            "explanation": "Author, audience, purpose and intent — reading content that way is how you start thinking like a writer."
+          },
+          {
+            "prompt": "Which statement best describes the relationship between content writing and other writing roles?",
+            "options": [
+              "Each role is completely separate and cannot overlap",
+              "A person can only specialize in one writing-related role",
+              "There can be overlap between roles, and one person may perform several of them",
+              "Content writing is always more important than the other roles"
+            ],
+            "correct": 2,
+            "explanation": "The roles overlap, and one person often does several — knowing what each is primarily responsible for is the point."
+          }
+        ]
+      }
+    }
+  ]
+}
