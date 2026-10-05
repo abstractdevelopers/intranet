@@ -167,8 +167,11 @@ async function main() {
     const data = {
       title: w.title,
       weekNumber: w.weekNumber,
-      overview: w.overview ?? null,
-      objectives: w.objectives ?? null,
+      // Omitted rather than nulled. A quiz-only seed file carries no overview,
+      // and writing null there would silently wipe the text a lessons file had
+      // already set.
+      ...(w.overview !== undefined ? { overview: w.overview } : {}),
+      ...(w.objectives !== undefined ? { objectives: w.objectives } : {}),
       order: w.weekNumber,
       status: "PUBLISHED",
       releaseAt,

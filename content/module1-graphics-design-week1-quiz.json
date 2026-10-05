@@ -1,0 +1,104 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "moduleNumber": 1,
+      "title": "The Foundations of Graphic Design",
+      "releaseDate": "2026-10-05",
+      "quiz": {
+        "slug": "graphics-design-m1-week1",
+        "title": "Module 1 — The Foundations of Graphic Design",
+        "description": "Monday's quiz covers what graphic design is, developing an idea before designing, the principles of design, and how contrast, repetition, movement and white space affect a composition.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-05",
+        "questions": [
+          {
+            "prompt": "According to the lesson, what is graphic design fundamentally concerned with?",
+            "options": [
+              "Making artwork as visually attractive as possible",
+              "Creating decoration for physical and digital spaces",
+              "Organising visual elements to communicate a message or idea",
+              "Reproducing existing artwork using digital tools"
+            ],
+            "correct": 2,
+            "explanation": "Graphic design is visual communication — arranging visual elements so they carry a message or idea to an audience, not simply decorating a space."
+          },
+          {
+            "prompt": "What should a designer do before using skills such as layout, colour, and typography to create a design?",
+            "options": [
+              "Choose the most attractive colours available",
+              "Develop a solid idea through the design process",
+              "Start experimenting with different software tools",
+              "Add as many visual elements as possible"
+            ],
+            "correct": 1,
+            "explanation": "The idea comes before the technique. Layout, colour and typography are the means of expressing an idea, so the idea has to exist first."
+          },
+          {
+            "prompt": "What is the primary purpose of the principles of design discussed in the lesson?",
+            "options": [
+              "To provide a framework for understanding how effective designs are created",
+              "To ensure that every designer follows exactly the same design style",
+              "To teach designers how to use graphic design software",
+              "To make every element in a design equally noticeable"
+            ],
+            "correct": 0,
+            "explanation": "The principles are a framework for thinking about why a design works. They guide decisions rather than dictating one style."
+          },
+          {
+            "prompt": "Which principle helps create a clear difference between elements, making them stand out and improving communication?",
+            "options": ["Repetition", "Proportion", "Contrast", "Movement"],
+            "correct": 2,
+            "explanation": "Contrast is difference — light against dark, large against small. It separates elements so the viewer can tell them apart."
+          },
+          {
+            "prompt": "What is the purpose of repetition in graphic design, according to the lesson?",
+            "options": [
+              "To make every element visually different",
+              "To create consistency and contribute to brand identity",
+              "To eliminate the need for hierarchy",
+              "To make the design appear more complicated"
+            ],
+            "correct": 1,
+            "explanation": "Repetition of colours, shapes, type or spacing ties a design together and is what makes a brand recognisable across pieces."
+          },
+          {
+            "prompt": "In the lesson, what does “movement” in design primarily describe?",
+            "options": [
+              "Physical animation within a design",
+              "The movement of objects when a design is printed",
+              "How the viewer's eyes travel through a design",
+              "How quickly a viewer can read the text"
+            ],
+            "correct": 2,
+            "explanation": "Movement is about directing the eye — the path a viewer follows through the composition as they take it in."
+          },
+          {
+            "prompt": "What does white space refer to in a design?",
+            "options": [
+              "Areas of a design that must always be coloured white",
+              "The empty areas surrounding and between design elements",
+              "The background colour of a printed design",
+              "The space reserved exclusively for typography"
+            ],
+            "correct": 1,
+            "explanation": "White space is empty space, not necessarily white — it is the breathing room around and between elements."
+          },
+          {
+            "prompt": "Why is controlling white space important in a design?",
+            "options": [
+              "It ensures that every available area is filled with content",
+              "It helps fine-tune balance and emphasis within the composition",
+              "It makes the design contain more information",
+              "It removes the need to use contrast and repetition"
+            ],
+            "correct": 1,
+            "explanation": "White space is an active design decision. Used well it balances a composition and gives emphasis to what matters."
+          }
+        ]
+      }
+    }
+  ]
+}
