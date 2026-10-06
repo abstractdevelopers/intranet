@@ -52,17 +52,25 @@ export function PdfReader({
   const renderTaskRef = useRef<PdfJs.RenderTask | null>(null);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchRef = useRef<{ x: number; y: number } | null>(null);
+  /** Mirrors `controlsVisible` so handlers can read it without re-creating. */
+  const controlsVisibleRef = useRef(true);
 
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(0);
   const [zoom, setZoom] = useState(1);
+  /** Fit the whole page, or fill the width so the text is readable on a phone. */
+  const [fitMode, setFitMode] = useState<"page" | "width">("page");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBusy, setSearchBusy] = useState(false);
-  /** Whether the content box should fill the screen. */
-  const [immersive, setImmersive] = useState(false);
-  /** Controls float over the content when immersive; they fade out when idle. */
+  /**
+   * Whether the content box should fill the screen. Reading a document is the
+   * whole point of this page, so it starts edge-to-edge and the controls stay
+   * out of the way until asked for.
+   */
+  const [immersive, setImmersive] = useState(true);
+  /** Controls are hidden while reading; tapping or moving the mouse brings them back. */
   const [controlsVisible, setControlsVisible] = useState(true);
   /** Bumped to re-fit the page when the reader's box changes size. */
   const [fitTick, setFitTick] = useState(0);
@@ -98,10 +106,27 @@ export function PdfReader({
   }, []);
 
   const showControls = useCallback(() => {
+    controlsVisibleRef.current = true;
     setControlsVisible(true);
     if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-    hideTimerRef.current = setTimeout(() => setControlsVisible(false), CONTROLS_IDLE_MS);
+    hideTimerRef.current = setTimeout(() => {
+      controlsVisibleRef.current = false;
+      setControlsVisible(false);
+    }, CONTROLS_IDLE_MS);
   }, []);
+
+  // A tap on the page toggles the controls. Deliberately not tied to mousemove:
+  // that would keep the toolbar up on desktop and hide the pager buttons, which
+  // are meant to stay reachable.
+  const toggleControls = useCallback(() => {
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    if (controlsVisibleRef.current) {
+      controlsVisibleRef.current = false;
+      setControlsVisible(false);
+    } else {
+      showControls();
+    }
+  }, [showControls]);
 
   // Clear the idle timer if the reader unmounts mid-fade.
   useEffect(
@@ -111,16 +136,29 @@ export function PdfReader({
     [],
   );
 
+  // The reader opens edge-to-edge with the controls showing, so the exit button
+  // and the page count are discoverable, then they clear themselves out of the
+  // way. Any tap or mouse move brings them back.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      controlsVisibleRef.current = false;
+      setControlsVisible(false);
+    }, CONTROLS_IDLE_MS);
+    return () => clearTimeout(t);
+  }, []);
+
   async function toggleImmersive() {
     if (immersive) {
-      setImmersive(false);
+      controlsVisibleRef.current = true;
+      setControlsVisible(true);
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      setImmersive(false);
       if (document.fullscreenElement) await document.exitFullscreen().catch(() => {});
       return;
     }
     setImmersive(true);
-    // Start the fade timer here rather than in an effect, so the controls are
-    // visible on entry and then get out of the way.
+    // Show the controls on entry so the exit button is obvious, then let them
+    // clear out of the way.
     showControls();
     // The layout fills the viewport on its own, so a browser refusing fullscreen
     // (no user gesture, iOS Safari on some versions) is not fatal.
@@ -160,6 +198,10 @@ export function PdfReader({
         docRef.current = doc;
         setNumPages(doc.numPages);
         setPage(1);
+        // On a phone a whole A4 page fitted to the screen is unreadably small, so
+        // start in width-fit there; on a desktop the whole sheet is useful. Done
+        // here rather than in a lazy initializer to avoid a hydration mismatch.
+        setFitMode(window.innerWidth < 768 ? "width" : "page");
         setLoading(false);
       } catch {
         if (!cancelled) {
@@ -186,20 +228,28 @@ export function PdfReader({
         const p = await doc.getPage(page);
         const base = p.getViewport({ scale: 1 });
         const box = containerRef.current;
-        // Immersive uses a tighter inset so the page fills more of the screen.
-        const inset = immersive ? 16 : 32;
-        // Fit the WHOLE page, not just its width: a portrait page scaled to the
-        // reader's width is far taller than the reader, so only the top of it was
-        // ever visible. Fitting both axes shows the full page, and zoom then
-        // enlarges from there.
+        // Full screen must actually fill the screen, so it uses no inset at all —
+        // any padding here is viewport the reader loses. In the boxed layout a
+        // small inset keeps the page off the border.
+        const inset = immersive ? 0 : 32;
         const availW = Math.max(120, (box?.clientWidth ?? 800) - inset);
         const availH = Math.max(120, (box?.clientHeight ?? 600) - inset);
-        const fit = Math.min(availW / base.width, availH / base.height);
-        const viewport = p.getViewport({ scale: fit * zoom });
+        // "page" shows the whole sheet at once; "width" fills the width and lets
+        // the sheet scroll, which is the only way body text is legible on a phone.
+        const fit =
+          fitMode === "width" ? availW / base.width : Math.min(availW / base.width, availH / base.height);
+        // Layout size in CSS pixels, and the backing store at device pixel ratio so
+        // text is sharp on a phone instead of upscaled and soft. Capped at 2× to
+        // bound the memory a large page needs.
+        const cssViewport = p.getViewport({ scale: fit * zoom });
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const viewport = p.getViewport({ scale: fit * zoom * dpr });
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
         canvas.width = viewport.width;
         canvas.height = viewport.height;
+        canvas.style.width = `${cssViewport.width}px`;
+        canvas.style.height = `${cssViewport.height}px`;
         const task = p.render({ canvas, canvasContext: ctx, viewport });
         renderTaskRef.current = task;
         await task.promise;
@@ -207,7 +257,7 @@ export function PdfReader({
         if ((err as { name?: string })?.name !== "RenderingCancelledException") throw err;
       }
     })();
-  }, [page, zoom, loading, numPages, immersive, fitTick]);
+  }, [page, zoom, loading, numPages, immersive, fitTick, fitMode]);
 
   // Arrow keys page through the document; Escape leaves the immersive layout.
   useEffect(() => {
@@ -284,13 +334,15 @@ export function PdfReader({
 
   const toolbar = (
     <div
-      className={`flex flex-wrap items-center gap-2 border-b border-border bg-surface px-3 py-2.5 ${
+      className={`flex items-center gap-2 overflow-x-auto border-b border-border bg-surface px-3 py-2 ${
         immersive ? "shadow-lg" : ""
       }`}
     >
-      <span className="mr-auto truncate text-sm font-semibold">{title}</span>
+      <span className="mr-auto max-w-[8rem] shrink-0 truncate text-sm font-semibold sm:max-w-none">
+        {title}
+      </span>
 
-      <div className="flex items-center gap-1.5">
+      <div className="flex shrink-0 items-center gap-1.5">
         <button
           className={iconBtn}
           onClick={() => advance(-1)}
@@ -300,7 +352,7 @@ export function PdfReader({
         >
           <IconChevronLeft className="h-4 w-4" />
         </button>
-        <span className="px-1 text-xs font-medium text-text-muted">
+        <span className="px-1 text-xs font-medium tabular-nums text-text-muted">
           {loading ? "…" : `${page} / ${numPages}`}
         </span>
         <button
@@ -314,7 +366,7 @@ export function PdfReader({
         </button>
       </div>
 
-      <div className="flex items-center gap-1.5">
+      <div className="flex shrink-0 items-center gap-1.5">
         <button
           className={iconBtn}
           onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
@@ -326,10 +378,10 @@ export function PdfReader({
         <button
           type="button"
           onClick={() => setZoom(1)}
-          title="Fit the page to the reader"
-          className="w-12 text-center text-xs font-medium text-text-muted hover:text-brand-1 dark:hover:text-brand-3"
+          title="Reset zoom"
+          className="w-10 shrink-0 text-center text-xs font-medium tabular-nums text-text-muted hover:text-brand-1 dark:hover:text-brand-3"
         >
-          {zoom === 1 ? "Fit" : `${Math.round(zoom * 100)}%`}
+          {zoom === 1 ? "1×" : `${Math.round(zoom * 100)}%`}
         </button>
         <button
           className={iconBtn}
@@ -341,7 +393,19 @@ export function PdfReader({
         </button>
       </div>
 
-      <div className="flex items-center gap-1.5">
+      {/* Whole page or full width — the latter is what makes body text legible on
+          a phone, since a portrait sheet fitted to the screen is unreadably small. */}
+      <button
+        type="button"
+        onClick={() => setFitMode((m) => (m === "page" ? "width" : "page"))}
+        aria-pressed={fitMode === "width"}
+        title={fitMode === "page" ? "Fill the width instead" : "Show the whole page"}
+        className={`${btn} shrink-0`}
+      >
+        {fitMode === "page" ? "Whole page" : "Full width"}
+      </button>
+
+      <div className="flex shrink-0 items-center gap-1.5">
         <div className="relative">
           <IconSearch className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
           <input
@@ -359,7 +423,7 @@ export function PdfReader({
       </div>
 
       <button
-        className={iconBtn}
+        className={`${iconBtn} shrink-0`}
         onClick={toggleImmersive}
         aria-pressed={immersive}
         aria-label={immersive ? "Exit full screen" : "Read the page full screen"}
@@ -379,9 +443,8 @@ export function PdfReader({
         ref={containerRef}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
-        onMouseMove={immersive ? showControls : undefined}
-        onClick={immersive ? showControls : undefined}
-        className={`flex-1 overflow-auto bg-surface-2 ${immersive ? "p-2" : "p-4"}`}
+        onClick={immersive ? toggleControls : undefined}
+        className={`flex-1 overflow-auto bg-surface-2 ${immersive ? "p-0" : "p-4"}`}
       >
         {error ? (
           <p className="py-16 text-center text-sm text-text-muted">{error}</p>
@@ -390,14 +453,59 @@ export function PdfReader({
             {loading ? (
               <p className="py-16 text-center text-sm text-text-muted">Opening document…</p>
             ) : null}
-            <canvas ref={canvasRef} className="mx-auto block max-w-full shadow-sm" />
+            <canvas ref={canvasRef} className="mx-auto block shadow-sm" />
+
+            {/* One-time hint that the document turns by swipe. Fades out with the
+                controls so it never lingers over the page. */}
+            {immersive && page === 1 && !loading && controlsVisible ? (
+              <p className="absolute inset-x-0 bottom-20 text-center text-[11px] font-medium text-text-muted transition-opacity duration-300">
+                Swipe, or use the arrows, to turn the page
+              </p>
+            ) : null}
           </>
         )}
       </div>
 
-      {/* At the end of a document, offer the next one instead of a dead end. A
-          floating pill keeps it reachable even though a full page fills the
-          reader, without adding height to the page. */}
+      {/* Floating pager. Swiping is the quick gesture, but on a desktop or for a
+          reader who would rather tap, these turn the page — and at either end they
+          move to the neighbouring document, so the whole set reads in sequence.
+          They stay visible while the controls are hidden so navigation never
+          depends on finding the toolbar first. stopPropagation keeps a tap here
+          from also toggling the toolbar underneath. */}
+      {immersive && !error ? (
+        <>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              advance(-1);
+            }}
+            disabled={atFirst && !prev}
+            aria-label={atFirst && prev ? `Previous document: ${prev.title}` : "Previous page"}
+            title={atFirst && prev ? `Previous: ${prev.title}` : "Previous page"}
+            className={`absolute bottom-4 left-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/95 text-text-muted shadow-lg backdrop-blur transition-opacity hover:text-brand-1 disabled:opacity-30 dark:hover:text-brand-3 ${
+              controlsVisible ? "pointer-events-none opacity-0" : "opacity-100"
+            }`}
+          >
+            <IconChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              advance(1);
+            }}
+            disabled={atLast && !next}
+            aria-label={atLast && next ? `Next document: ${next.title}` : "Next page"}
+            title={atLast && next ? `Next: ${next.title}` : "Next page"}
+            className={`absolute bottom-4 right-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/95 text-text-muted shadow-lg backdrop-blur transition-opacity hover:text-brand-1 disabled:opacity-30 dark:hover:text-brand-3 ${
+              controlsVisible ? "pointer-events-none opacity-0" : "opacity-100"
+            }`}
+          >
+            <IconChevronRight className="h-5 w-5" />
+          </button>
+        </>
+      ) : null}
+
+      {/* At the end of a document, offer the next one instead of a dead end. */}
       {immersive && atLast && next ? (
         <button
           onClick={() => router.push(next.href)}
@@ -410,9 +518,10 @@ export function PdfReader({
         </button>
       ) : null}
 
-      {/* Immersive: the controls float over the page and fade out when idle, so
-          the content — not the control panel — is what fills the screen. They sit
-          outside the scroll container so scrolling never moves them. */}
+      {/* Immersive: the controls float over the page and are hidden entirely until
+          the reader asks for them, so the content — not the control panel — is what
+          fills the screen. They sit outside the scroll container so scrolling
+          never moves them. */}
       {immersive ? (
         <div
           className={`absolute inset-x-0 top-0 z-10 transition-opacity duration-300 ${
