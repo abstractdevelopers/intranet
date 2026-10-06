@@ -203,7 +203,11 @@ export function PdfReader({
     let cancelled = false;
     (async () => {
       try {
-        const pdfjs = pdfjsRef.current ?? (await import("pdfjs-dist"));
+        // The legacy build, not the default one. PDF.js 6 calls Promise.withResolvers
+        // and other very recent APIs bare; on a phone whose browser predates them
+        // that throws and the document never appears. The legacy build ships the
+        // same reader with those APIs polyfilled.
+        const pdfjs = pdfjsRef.current ?? (await import("pdfjs-dist/legacy/build/pdf.mjs"));
         pdfjsRef.current = pdfjs;
         pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
         const task = pdfjs.getDocument({ url: `/api/documents/${documentId}` });
@@ -218,9 +222,12 @@ export function PdfReader({
         // here rather than in a lazy initializer to avoid a hydration mismatch.
         setFitMode(window.innerWidth < 768 ? "width" : "page");
         setLoading(false);
-      } catch {
+      } catch (err) {
         if (!cancelled) {
-          setError("We couldn't open this document. Please try again.");
+          // Surface the real reason in the console — a silent failure here is
+          // indistinguishable from a slow load when someone reports "it won't open".
+          console.error("PDF reader failed to open document", err);
+          setError("We couldn't open this document on this device. Please try again, or open it in a newer browser.");
           setLoading(false);
         }
       }
