@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type * as PdfJs from "pdfjs-dist";
+// Installs the shims PDF.js 6 needs before it is imported. Must come first.
+import "@/lib/pdfjs-polyfill";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -276,6 +278,14 @@ export function PdfReader({
         canvas.height = viewport.height;
         canvas.style.width = `${cssViewport.width}px`;
         canvas.style.height = `${cssViewport.height}px`;
+        // A PDF page is a white sheet with dark text, and PDF.js draws it without
+        // a background of its own. Left transparent, the reader's dark surface
+        // showed through and dark text on a dark page was invisible — which is why
+        // this looked broken on dark and OLED screens and fine in light mode.
+        ctx.save();
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
         const task = p.render({ canvas, canvasContext: ctx, viewport });
         renderTaskRef.current = task;
         await task.promise;
@@ -351,9 +361,12 @@ export function PdfReader({
   // toolbars don't clip the bottom.
   //
   // Immersive pins the whole reader over the viewport, so the content box — not
-  // the surrounding page — is what fills the screen.
+  // the surrounding page — is what fills the screen. It sits above the installed
+  // app's chrome (the status bar and tab bar are z-60), otherwise the tab bar and
+  // the phone's status bar drew straight over the reader's controls. The More
+  // sheet (z-90) and the launch splash (z-100) still cover it, which is correct.
   const shellClass = immersive
-    ? "fixed inset-0 z-50 flex flex-col overflow-hidden bg-surface-2"
+    ? "fixed inset-0 z-[70] flex flex-col overflow-hidden bg-surface-2"
     : "relative flex h-[calc(100dvh-15rem)] min-h-[28rem] flex-col overflow-hidden rounded-xl border border-border bg-surface-2 md:h-[calc(100dvh-10rem)]";
 
   const atFirst = page <= 1;
@@ -364,6 +377,15 @@ export function PdfReader({
       className={`flex items-center gap-2 overflow-x-auto border-b border-border bg-surface px-3 py-2 ${
         immersive ? "shadow-lg" : ""
       }`}
+      style={
+        immersive
+          ? {
+              paddingTop: "calc(0.5rem + env(safe-area-inset-top))",
+              paddingLeft: "calc(0.75rem + env(safe-area-inset-left))",
+              paddingRight: "calc(0.75rem + env(safe-area-inset-right))",
+            }
+          : undefined
+      }
     >
       <span className="mr-auto max-w-[8rem] shrink-0 truncate text-sm font-semibold sm:max-w-none">
         {title}
@@ -500,7 +522,8 @@ export function PdfReader({
           move to the neighbouring document, so the whole set reads in sequence.
           They stay visible while the controls are hidden so navigation never
           depends on finding the toolbar first. stopPropagation keeps a tap here
-          from also toggling the toolbar underneath. */}
+          from also toggling the toolbar underneath. The insets keep them clear of
+          the home indicator and rounded corners. */}
       {immersive && !error ? (
         <>
           <button
@@ -511,7 +534,11 @@ export function PdfReader({
             disabled={atFirst && !prev}
             aria-label={atFirst && prev ? `Previous document: ${prev.title}` : "Previous page"}
             title={atFirst && prev ? `Previous: ${prev.title}` : "Previous page"}
-            className={`absolute bottom-4 left-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/95 text-text-muted shadow-lg backdrop-blur transition-opacity hover:text-brand-1 disabled:opacity-30 dark:hover:text-brand-3 ${
+            style={{
+              bottom: "calc(1rem + env(safe-area-inset-bottom))",
+              left: "calc(1rem + env(safe-area-inset-left))",
+            }}
+            className={`absolute z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/95 text-text-muted shadow-lg backdrop-blur transition-opacity hover:text-brand-1 disabled:opacity-30 dark:hover:text-brand-3 ${
               controlsVisible ? "pointer-events-none opacity-0" : "opacity-100"
             }`}
           >
@@ -525,7 +552,11 @@ export function PdfReader({
             disabled={atLast && !next}
             aria-label={atLast && next ? `Next document: ${next.title}` : "Next page"}
             title={atLast && next ? `Next: ${next.title}` : "Next page"}
-            className={`absolute bottom-4 right-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/95 text-text-muted shadow-lg backdrop-blur transition-opacity hover:text-brand-1 disabled:opacity-30 dark:hover:text-brand-3 ${
+            style={{
+              bottom: "calc(1rem + env(safe-area-inset-bottom))",
+              right: "calc(1rem + env(safe-area-inset-right))",
+            }}
+            className={`absolute z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/95 text-text-muted shadow-lg backdrop-blur transition-opacity hover:text-brand-1 disabled:opacity-30 dark:hover:text-brand-3 ${
               controlsVisible ? "pointer-events-none opacity-0" : "opacity-100"
             }`}
           >
