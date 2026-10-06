@@ -20,6 +20,21 @@ const CONTROLS_IDLE_MS = 2600;
 /** A swipe must travel this far horizontally, and stay mostly horizontal. */
 const SWIPE_MIN_PX = 56;
 
+/**
+ * How the sheet is scaled to the reader:
+ *   page   — the whole sheet visible at once
+ *   width  — fills the width and scrolls down (best for body text on a phone)
+ *   length — fills the height and scrolls across (best for a wide slide deck)
+ */
+type FitMode = "page" | "width" | "length";
+
+const FIT_ORDER: FitMode[] = ["page", "width", "length"];
+const FIT_LABEL: Record<FitMode, string> = {
+  page: "Whole page",
+  width: "Full width",
+  length: "Full length",
+};
+
 export type ReaderNeighbour = { href: string; title: string };
 
 /**
@@ -58,8 +73,8 @@ export function PdfReader({
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(0);
   const [zoom, setZoom] = useState(1);
-  /** Fit the whole page, or fill the width so the text is readable on a phone. */
-  const [fitMode, setFitMode] = useState<"page" | "width">("page");
+  /** Fit the whole page, or fill one axis so the text is readable on a phone. */
+  const [fitMode, setFitMode] = useState<FitMode>("page");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -235,9 +250,13 @@ export function PdfReader({
         const availW = Math.max(120, (box?.clientWidth ?? 800) - inset);
         const availH = Math.max(120, (box?.clientHeight ?? 600) - inset);
         // "page" shows the whole sheet at once; "width" fills the width and lets
-        // the sheet scroll, which is the only way body text is legible on a phone.
+        // the sheet scroll down, which is how body text stays legible on a phone;
+        // "length" fills the height and lets it scroll across, which is what a
+        // wide slide deck wants. The fit is the ratio for the chosen axis.
+        const fitW = availW / base.width;
+        const fitH = availH / base.height;
         const fit =
-          fitMode === "width" ? availW / base.width : Math.min(availW / base.width, availH / base.height);
+          fitMode === "width" ? fitW : fitMode === "length" ? fitH : Math.min(fitW, fitH);
         // Layout size in CSS pixels, and the backing store at device pixel ratio so
         // text is sharp on a phone instead of upscaled and soft. Capped at 2× to
         // bound the memory a large page needs.
@@ -287,8 +306,9 @@ export function PdfReader({
     // Only a deliberate, mostly-horizontal swipe turns the page — otherwise
     // vertical scrolling and pinch-zoom would fight the reader.
     if (Math.abs(dx) < SWIPE_MIN_PX || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    // Zoomed in, a horizontal drag is panning, not a page turn.
-    if (zoom !== 1) return;
+    // When the sheet is wider than the reader — zoomed in, or fitted to the
+    // length — a horizontal drag is panning across it, not a page turn.
+    if (zoom !== 1 || fitMode === "length") return;
     advance(dx < 0 ? 1 : -1);
   }
 
@@ -393,16 +413,18 @@ export function PdfReader({
         </button>
       </div>
 
-      {/* Whole page or full width — the latter is what makes body text legible on
-          a phone, since a portrait sheet fitted to the screen is unreadably small. */}
+      {/* Whole page, full width, or full length — the latter two make the text
+          legible on a phone, where a portrait sheet fitted to the screen is too
+          small to read. Tapping cycles through them. */}
       <button
         type="button"
-        onClick={() => setFitMode((m) => (m === "page" ? "width" : "page"))}
-        aria-pressed={fitMode === "width"}
-        title={fitMode === "page" ? "Fill the width instead" : "Show the whole page"}
+        onClick={() =>
+          setFitMode((m) => FIT_ORDER[(FIT_ORDER.indexOf(m) + 1) % FIT_ORDER.length])
+        }
+        title="Cycle: whole page, full width, full length"
         className={`${btn} shrink-0`}
       >
-        {fitMode === "page" ? "Whole page" : "Full width"}
+        {FIT_LABEL[fitMode]}
       </button>
 
       <div className="flex shrink-0 items-center gap-1.5">
