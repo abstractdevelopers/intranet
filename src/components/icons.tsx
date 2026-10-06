@@ -180,6 +180,29 @@ export const IconEyeOff = (p: IconProps) => (
   <Svg {...p}><path d="M9.9 5.8A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.6 3.5" /><path d="M6.2 7.7A17 17 0 0 0 2.5 12S6 18.5 12 18.5c1.2 0 2.3-.2 3.3-.6" /><path d="M10 10a2.8 2.8 0 0 0 3.9 3.9" /><path d="m4 4 16 16" /></Svg>
 );
 
+// --- Reader ---
+export const IconChevronLeft = (p: IconProps) => (
+  <Svg {...p}><path d="m14.5 6-6 6 6 6" /></Svg>
+);
+export const IconChevronRight = (p: IconProps) => (
+  <Svg {...p}><path d="m9.5 6 6 6-6 6" /></Svg>
+);
+export const IconExpand = (p: IconProps) => (
+  <Svg {...p}><path d="M14 4h6v6" /><path d="m20 4-6.5 6.5" /><path d="M10 20H4v-6" /><path d="M4 20l6.5-6.5" /></Svg>
+);
+export const IconCollapse = (p: IconProps) => (
+  <Svg {...p}><path d="M20 10h-6V4" /><path d="m14 10 6-6" /><path d="M4 14h6v6" /><path d="m10 14-6 6" /></Svg>
+);
+export const IconSearch = (p: IconProps) => (
+  <Svg {...p}><circle cx="11" cy="11" r="6.5" /><path d="m15.8 15.8 4.2 4.2" /></Svg>
+);
+export const IconZoomIn = (p: IconProps) => (
+  <Svg {...p}><circle cx="11" cy="11" r="6.5" /><path d="m15.8 15.8 4.2 4.2" /><path d="M11 8.5v5M8.5 11h5" /></Svg>
+);
+export const IconZoomOut = (p: IconProps) => (
+  <Svg {...p}><circle cx="11" cy="11" r="6.5" /><path d="m15.8 15.8 4.2 4.2" /><path d="M8.5 11h5" /></Svg>
+);
+
 /**
  * Named registry. Navigation config travels from server layouts into the client
  * nav as a string key; React cannot serialize component functions across that
