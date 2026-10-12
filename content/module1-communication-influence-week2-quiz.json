@@ -1,0 +1,109 @@
+{
+  "courseSlug": "communication-influence",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "The Art of Listening",
+      "releaseDate": "2026-10-12",
+      "quiz": {
+        "slug": "communication-influence-m1-week2",
+        "title": "Module 1 — The Art of Listening",
+        "description": "Monday's quiz covers reflective listening — listening to understand before responding, making reflective statements, holding back from advice, responding to correction, and building a vocabulary of emotions.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-12",
+        "questions": [
+          {
+            "prompt": "What is the primary purpose of reflective listening?",
+            "options": [
+              "To provide immediate solutions to another person's problems.",
+              "To listen carefully and reflect your understanding of what the speaker is communicating.",
+              "To convince the speaker to adopt a different perspective.",
+              "To ask questions until the speaker explains every detail."
+            ],
+            "correct": 1,
+            "explanation": "Reflective listening is about understanding, not solving. You listen carefully and reflect back what you understood, so the speaker can confirm it or correct it."
+          },
+          {
+            "prompt": "You notice that a friend is upset about a difficult situation. According to the reflective listening process, what should you do first?",
+            "options": [
+              "Identify the person responsible for the problem.",
+              "Suggest practical solutions to resolve the situation.",
+              "Listen carefully to understand the bigger picture and the person's struggle.",
+              "Explain how you handled a similar situation in the past."
+            ],
+            "correct": 2,
+            "explanation": "Understanding comes first. Jumping to solutions or comparisons before you understand the situation means you may be solving the wrong problem."
+          },
+          {
+            "prompt": "A colleague says, \"I've been working on this project for months, and I still don't know if I'm making the right decision.\" Which response best demonstrates reflective listening?",
+            "options": [
+              "\"You should stop worrying and trust your instincts.\"",
+              "\"Why didn't you make the decision earlier?\"",
+              "\"I think you're overcomplicating the situation.\"",
+              "\"It sounds like you're uncertain about which direction to take.\""
+            ],
+            "correct": 3,
+            "explanation": "The reflective response names the uncertainty the colleague expressed without judging it or pushing a solution. The other options advise, question, or dismiss."
+          },
+          {
+            "prompt": "What makes a reflective statement effective when listening to someone who is struggling emotionally?",
+            "options": [
+              "It accurately reflects the person's feelings or thoughts at an appropriate level of detail.",
+              "It explains why the person's feelings are unreasonable.",
+              "It introduces a new perspective that changes how the person sees the situation.",
+              "It provides a detailed analysis of the person's behaviour."
+            ],
+            "correct": 0,
+            "explanation": "A good reflection is accurate and proportionate. It mirrors what the person actually expressed, without overreaching or analysing them."
+          },
+          {
+            "prompt": "After making a reflective statement, what should you do next?",
+            "options": [
+              "Immediately offer advice based on your interpretation.",
+              "Ask several questions to direct the conversation.",
+              "Return to listening and give the speaker space to respond.",
+              "Explain why you interpreted their feelings that way."
+            ],
+            "correct": 2,
+            "explanation": "A reflection is an invitation, not a conclusion. Once you have offered it, go quiet and let the speaker confirm, correct, or continue."
+          },
+          {
+            "prompt": "A friend tells you they are excited about a new job in another city but worried about leaving their family and friends behind. Which response best reflects their experience?",
+            "options": [
+              "\"You should focus on your career and stop worrying about the distance.\"",
+              "\"It sounds like you're feeling both excited about the opportunity and nervous about leaving your support system.\"",
+              "\"Moving away is always difficult, but you'll eventually get used to it.\"",
+              "\"Why don't you make a list of the advantages and disadvantages?\""
+            ],
+            "correct": 1,
+            "explanation": "This reflection holds both feelings at once, which is what the friend actually described. The others minimise, generalise, or redirect to a task."
+          },
+          {
+            "prompt": "Why should you develop a broader vocabulary of emotions when practising reflective listening?",
+            "options": [
+              "To make your responses sound more sophisticated, even when they are inaccurate.",
+              "To diagnose the psychological problems behind another person's behaviour.",
+              "To avoid asking the speaker for clarification.",
+              "To identify and reflect people's feelings with greater precision and nuance."
+            ],
+            "correct": 3,
+            "explanation": "More precise emotional language lets you reflect what someone is feeling more accurately — the difference between naming annoyance and naming frustration."
+          },
+          {
+            "prompt": "During a reflective listening conversation, you describe a friend's feelings as frustration. Your friend responds, \"I'm not frustrated; I'm just annoyed that it's taking so long.\" What should you do?",
+            "options": [
+              "Accept the clarification and continue listening to understand their experience more accurately.",
+              "Insist that frustration is the more appropriate description.",
+              "Explain why frustration and annoyance mean essentially the same thing.",
+              "Stop reflecting their feelings and begin offering solutions."
+            ],
+            "correct": 0,
+            "explanation": "The speaker is the authority on their own experience. A correction is useful information — accept it and keep listening, rather than defending your wording."
+          }
+        ]
+      }
+    }
+  ]
+}
