@@ -1,0 +1,109 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "The Principles of Good Design",
+      "releaseDate": "2026-10-12",
+      "quiz": {
+        "slug": "graphics-design-m1-week2",
+        "title": "Module 1 — The Principles of Good Design",
+        "description": "Monday's quiz covers the principles of good design — balance, unity, contrast, leading lines, repetition and pattern, rhythm, proportion and variety — and how each one is applied in a composition.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-12",
+        "questions": [
+          {
+            "prompt": "What is the primary purpose of balance in graphic design?",
+            "options": [
+              "To make every element in a design the same size",
+              "To create stability by distributing visual weight throughout a composition",
+              "To ensure that every element uses the same colour",
+              "To make the design as colourful as possible"
+            ],
+            "correct": 1,
+            "explanation": "Balance is about visual weight, not sameness. Distributing that weight across the composition is what gives a design stability."
+          },
+          {
+            "prompt": "A designer uses a consistent colour palette and illustrations that share the same visual style throughout a flyer. Which principle of design does this demonstrate?",
+            "options": [
+              "Variety",
+              "Movement",
+              "Unity",
+              "Emphasis"
+            ],
+            "correct": 2,
+            "explanation": "A consistent palette and a shared illustration style make separate elements read as one piece. That sense of everything belonging together is unity."
+          },
+          {
+            "prompt": "A magazine cover uses a large, bold headline and smaller supporting text to help readers identify what they should read first. Which principle is being applied?",
+            "options": [
+              "Contrast",
+              "Pattern",
+              "Harmony",
+              "Repetition"
+            ],
+            "correct": 0,
+            "explanation": "The size and weight difference between the headline and the supporting text is contrast, and here it is doing the work of telling the reader where to start."
+          },
+          {
+            "prompt": "A designer uses several lines that point towards the main image on a poster, directing the viewer's attention to it. What is this technique called?",
+            "options": [
+              "Symmetrical balance",
+              "Leading lines",
+              "Visual rhythm",
+              "Proportion"
+            ],
+            "correct": 1,
+            "explanation": "Lines that guide the eye towards a focal point are leading lines — a deliberate way of directing attention rather than hoping the viewer finds it."
+          },
+          {
+            "prompt": "What is the key difference between repetition and pattern in graphic design?",
+            "options": [
+              "Repetition is used only in branding, while pattern is used only in posters.",
+              "Repetition creates contrast, while pattern creates balance.",
+              "Repetition involves repeating a single element, while pattern involves repeating multiple design elements.",
+              "Repetition creates movement, while pattern eliminates movement."
+            ],
+            "correct": 2,
+            "explanation": "Repetition is one element used again; pattern is several elements repeated in a recurring arrangement. Both create consistency, but at different levels of complexity."
+          },
+          {
+            "prompt": "A designer repeats triangular shapes in different sizes and colours to give a concert flyer an energetic, flowing appearance. Which principle is primarily responsible for this organised visual tempo?",
+            "options": [
+              "Harmony",
+              "Rhythm",
+              "Proportion",
+              "Unity"
+            ],
+            "correct": 1,
+            "explanation": "Repeated shapes that carry the eye through a composition at a particular pace create rhythm — the visual equivalent of a beat."
+          },
+          {
+            "prompt": "A poster features a large title, a medium-sized quotation, and smaller body text. Why is this arrangement an example of good proportion?",
+            "options": [
+              "It makes all the information equally important.",
+              "It ensures that the design contains only three text elements.",
+              "It creates a relationship between elements by using sizes that reflect their relative importance.",
+              "It eliminates the need for contrast."
+            ],
+            "correct": 2,
+            "explanation": "Proportion is the relationship between sizes. Scaling text to match how important it is tells the viewer what matters most without them having to read a word."
+          },
+          {
+            "prompt": "A designer combines geometric shapes, organic imagery, and different typefaces in a composition while ensuring the elements still work together. Which principle encourages this kind of interesting variation?",
+            "options": [
+              "Variety",
+              "Symmetry",
+              "Repetition",
+              "White space"
+            ],
+            "correct": 0,
+            "explanation": "Variety is what keeps a composition interesting — different shapes, imagery and typefaces give the eye something to move between, provided they still hold together."
+          }
+        ]
+      }
+    }
+  ]
+}
