@@ -1,0 +1,111 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "Editing with Rhythm",
+      "releaseDate": "2026-10-12",
+      "quizzes": [
+        {
+          "slug": "video-editing-m1-week2-tuesday",
+          "title": "Module 1 — Tuesday — Editing to Beats",
+          "description": "Tuesday's quiz covers the beat feature in CapCut, generating beat markers automatically and manually, splitting clips at beat points, beat-detection intensity, and keeping visual changes aligned with the music.",
+          "passMark": 70,
+          "maxAttempts": 2,
+          "releaseDate": "2026-10-13",
+          "questions": [
+            {
+              "prompt": "What is the primary purpose of the beat feature in CapCut Mobile?",
+              "options": [
+                "To increase the resolution of a video",
+                "To remove background noise from music",
+                "To synchronize video cuts and editing changes with the rhythm of music",
+                "To automatically add subtitles to a video"
+              ],
+              "correct": 2,
+              "explanation": "The beat feature exists to align your edits with the music. It finds the rhythm so your cuts and visual changes land where the track does."
+            },
+            {
+              "prompt": "After selecting a music track in CapCut, where can you find the option to generate beat markers, as demonstrated in the lesson?",
+              "options": [
+                "In the music track's editing options",
+                "In the export settings",
+                "In the text editing menu",
+                "In the device's general settings"
+              ],
+              "correct": 0,
+              "explanation": "Beat detection belongs to the audio, so the option lives in the music track's own editing options rather than anywhere in the video or export settings."
+            },
+            {
+              "prompt": "What is the difference between automatically generating beats and generating them manually?",
+              "options": [
+                "Automatic generation adds transitions, while manual generation adds text.",
+                "Automatic generation detects beat points for you, while manual generation lets you identify and mark them yourself.",
+                "Automatic generation works only with videos, while manual generation works only with images.",
+                "Automatic generation changes the aspect ratio, while manual generation changes the resolution."
+              ],
+              "correct": 1,
+              "explanation": "Automatic detection does the finding for you. Manual generation leaves the marking to your own ear, which is useful when the track is unusual or you want a specific feel."
+            },
+            {
+              "prompt": "In the lesson, what happens when the editor splits a video clip at a beat marker?",
+              "options": [
+                "The entire video is automatically exported.",
+                "The music track is permanently deleted.",
+                "The video changes from landscape to portrait.",
+                "The clip is divided at that point, allowing the editor to make changes or arrange footage around the beat."
+              ],
+              "correct": 3,
+              "explanation": "Splitting at a beat marker cuts the clip at that exact moment, which gives you a new edge to work from — you can rearrange footage, trim it, or apply changes there."
+            },
+            {
+              "prompt": "Why might an editor choose a more intense beat-detection setting?",
+              "options": [
+                "To identify more beat points in the music",
+                "To remove every silent moment from the video",
+                "To make the music louder automatically",
+                "To prevent the editor from splitting clips"
+              ],
+              "correct": 0,
+              "explanation": "A more intense setting picks up more beat points, giving you a denser set of markers. That suits fast, busy edits where you want cuts to land more often."
+            },
+            {
+              "prompt": "An editor is creating a dance video and wants visual changes to happen in time with the music. How can beat markers help?",
+              "options": [
+                "They automatically guarantee that every effect will look professional.",
+                "They remove the need to arrange clips.",
+                "They provide reference points for timing cuts and visual changes to the music.",
+                "They automatically replace the original footage with new clips."
+              ],
+              "correct": 2,
+              "explanation": "Beat markers are reference points, not decisions. They show you where the music lands so you can place cuts and visual changes on those moments."
+            },
+            {
+              "prompt": "According to the lesson, what can an editor do after splitting footage at selected beat points?",
+              "options": [
+                "Only change the video's file name",
+                "Add or arrange other clips, trim footage, or apply changes such as transformations and effects",
+                "Change the music into a video file",
+                "Export the project without choosing any settings"
+              ],
+              "correct": 1,
+              "explanation": "The split is the beginning, not the end. Once a clip is divided at a beat you can arrange, trim, transform or add effects to the sections you have created."
+            },
+            {
+              "prompt": "While editing to a song, you notice that a visual change happens slightly before the beat you intended to match. What is the best approach?",
+              "options": [
+                "Increase the video's resolution until the timing improves.",
+                "Add more music tracks to hide the timing problem.",
+                "Leave it unchanged because visual changes should never match musical beats.",
+                "Adjust the cut or visual change so it aligns more closely with the intended beat marker."
+              ],
+              "correct": 3,
+              "explanation": "Timing problems are solved by adjusting timing. Nudge the cut or the visual change onto the beat marker — resolution and extra tracks have nothing to do with it."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
