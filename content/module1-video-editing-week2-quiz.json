@@ -1,0 +1,109 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "Editing with Rhythm",
+      "releaseDate": "2026-10-12",
+      "quiz": {
+        "slug": "video-editing-m1-week2",
+        "title": "Module 1 — Editing with Rhythm",
+        "description": "Monday's quiz covers pacing, timing and visual rhythm, shot selection and continuity, camera angles, and cutting on movement and action.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-12",
+        "questions": [
+          {
+            "prompt": "What is the potential problem with cutting scenes too quickly?",
+            "options": [
+              "It automatically lowers the video's resolution.",
+              "It makes every scene feel emotional.",
+              "It can confuse viewers and make it difficult for them to follow what is happening.",
+              "It prevents the editor from adding music."
+            ],
+            "correct": 2,
+            "explanation": "Pace has to serve understanding. Cut too quickly and the viewer loses the thread of what is happening, however energetic the edit feels."
+          },
+          {
+            "prompt": "According to the first transcript, what is an important consideration when deciding how long a shot should remain on screen?",
+            "options": [
+              "Whether the shot contributes to the story, emotion, or understanding of the scene.",
+              "Whether every shot lasts exactly 2.5 seconds.",
+              "Whether the video contains at least five transitions.",
+              "Whether the editor can avoid using close-up shots."
+            ],
+            "correct": 0,
+            "explanation": "Shot duration is a judgement about purpose, not a fixed number. A shot earns its time on screen by contributing to the story, the emotion, or the viewer's understanding."
+          },
+          {
+            "prompt": "Which type of shot is primarily used to establish where a scene takes place?",
+            "options": [
+              "Extreme close-up",
+              "Cowboy shot",
+              "Medium close-up",
+              "Establishing shot"
+            ],
+            "correct": 3,
+            "explanation": "An establishing shot sets the scene — it shows the audience where they are before narrowing in on the action."
+          },
+          {
+            "prompt": "A filmmaker wants to make a character appear powerful and dominant in a scene. Which camera angle would best support this intention?",
+            "options": [
+              "High-angle shot",
+              "Low-angle shot",
+              "Extreme close-up",
+              "Over-the-shoulder shot"
+            ],
+            "correct": 1,
+            "explanation": "A low-angle shot looks up at the subject, which makes them appear larger and more dominant. A high angle does the opposite."
+          },
+          {
+            "prompt": "What is the difference between a close-up and an extreme close-up?",
+            "options": [
+              "A close-up shows multiple people, while an extreme close-up shows only one person.",
+              "A close-up establishes a location, while an extreme close-up shows the full body.",
+              "A close-up can show a character's face from the chin upward, while an extreme close-up focuses on a much smaller detail, such as the eyes.",
+              "A close-up is always filmed from above, while an extreme close-up is filmed from below."
+            ],
+            "correct": 2,
+            "explanation": "Both are tight, but the extreme close-up goes closer still — from the face to a single detail such as the eyes."
+          },
+          {
+            "prompt": "An editor is creating a 30-second promotional video and needs to communicate information quickly. Which approach would be most appropriate?",
+            "options": [
+              "Leave long periods of dead space between clips.",
+              "Avoid cutting footage until the video reaches its final seconds.",
+              "Use the same shot duration throughout the entire video, regardless of the content.",
+              "Remove unnecessary dead space and use concise cuts while keeping the information clear."
+            ],
+            "correct": 3,
+            "explanation": "In a short piece, every second has to work. Trim the dead space and cut concisely — but keep the information clear, because speed that loses the message is not useful."
+          },
+          {
+            "prompt": "What does OTS mean in filmmaking, and why is this shot commonly used?",
+            "options": [
+              "Over the shoulder; it helps present conversations with added depth and visual interest.",
+              "On the screen; it helps increase the video's resolution.",
+              "Outside the scene; it establishes the location of a film.",
+              "Object tracking shot; it automatically follows moving objects during editing."
+            ],
+            "correct": 0,
+            "explanation": "OTS stands for over the shoulder. Framing past one person's shoulder towards another gives a conversation depth and puts the viewer in the space."
+          },
+          {
+            "prompt": "A director wants the audience to feel that a character is disoriented and that something is wrong in the scene. Which shot could help create this feeling?",
+            "options": [
+              "Full shot",
+              "Dutch angle",
+              "Establishing shot",
+              "Group shot"
+            ],
+            "correct": 1,
+            "explanation": "A Dutch angle tilts the horizon, and that imbalance unsettles the viewer — a natural choice when something is meant to feel wrong."
+          }
+        ]
+      }
+    }
+  ]
+}
