@@ -22,6 +22,11 @@ const db = new PrismaClient();
 function enc(v: unknown): unknown {
   if (v === null || v === undefined) return v;
   if (v instanceof Date) return v.toISOString();
+  // Prisma returns `Bytes` columns as Uint8Array, not Buffer. Without this the
+  // value falls through to the object branch below and serialises as one array
+  // entry per byte — Document.data alone is ~58MB, which blows the JSON string
+  // length limit. Checked before the generic object case so it never gets there.
+  if (v instanceof Uint8Array) return { __base64: Buffer.from(v).toString("base64") };
   if (Buffer.isBuffer(v)) return { __base64: v.toString("base64") };
   if (typeof v === "bigint") return v.toString();
   if (Array.isArray(v)) return v.map(enc);
