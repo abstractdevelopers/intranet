@@ -1,0 +1,109 @@
+{
+  "courseSlug": "content-writing",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "The Fundamentals of Good Writing",
+      "releaseDate": "2026-10-12",
+      "quiz": {
+        "slug": "content-writing-m1-week2-tuesday",
+        "title": "Module 1 — Tuesday — Finding Your Writing Voice",
+        "description": "Tuesday's quiz covers what a writer's voice is, how voice differs from tone, adjusting tone to suit the situation, the mistakes to avoid when developing a voice, freewriting, and letting your voice evolve over time.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-13",
+        "questions": [
+          {
+            "prompt": "What is a writer's voice?",
+            "options": [
+              "The ability to write using complicated vocabulary and long sentences.",
+              "The personality and distinctive style that make a writer's work recognisable.",
+              "The emotional response a reader experiences after reading a story.",
+              "The ability to write in different genres without changing one's style."
+            ],
+            "correct": 1,
+            "explanation": "Voice is the personality behind the words — the distinctive character that makes a piece recognisable as yours, regardless of the subject."
+          },
+          {
+            "prompt": "What is the primary difference between voice and tone?",
+            "options": [
+              "Voice is used in fiction, while tone is used in nonfiction.",
+              "Voice describes sentence structure, while tone describes word choice.",
+              "Voice refers to the writer's personality in their writing, while tone refers to the attitude expressed in a particular situation.",
+              "Voice and tone mean the same thing and can always be used interchangeably."
+            ],
+            "correct": 2,
+            "explanation": "Voice is who you sound like; tone is how you sound in a particular moment. The voice stays recognisable while the tone shifts to suit the situation."
+          },
+          {
+            "prompt": "A writer naturally uses a conversational, humorous style. However, they write a condolence message in a serious and compassionate manner. What does this demonstrate?",
+            "options": [
+              "The writer has abandoned their original voice completely.",
+              "The writer must choose between humour and seriousness as a permanent writing style.",
+              "The writer's voice is unsuitable for professional communication.",
+              "The writer can adjust their tone to suit the situation while retaining their recognisable voice."
+            ],
+            "correct": 3,
+            "explanation": "This is exactly the voice-versus-tone distinction in practice. The writer's personality has not disappeared — they have adjusted how they express themselves to suit the moment."
+          },
+          {
+            "prompt": "Which of the following is a common mistake writers should avoid when developing their unique voice?",
+            "options": [
+              "Copying a favourite author's style so closely that their own individuality disappears.",
+              "Experimenting with different writing styles to discover what feels natural.",
+              "Asking trusted people for feedback on their writing.",
+              "Using freewriting to explore their natural expressions and rhythm."
+            ],
+            "correct": 0,
+            "explanation": "Studying writers you admire is useful, but imitating them so closely that nothing of you remains defeats the purpose. Learn the techniques without becoming a copy."
+          },
+          {
+            "prompt": "Which exercise is specifically recommended for helping writers discover their natural voice by removing the pressure to edit every sentence?",
+            "options": [
+              "Replacing simple words with more sophisticated synonyms.",
+              "Writing only in the style of a famous author.",
+              "Setting a timer for ten minutes and writing continuously without stopping to edit.",
+              "Rewriting every sentence until it sounds formal and professional."
+            ],
+            "correct": 2,
+            "explanation": "Freewriting removes the editing instinct. Writing continuously for a set time lets your natural rhythm and expression surface without being polished away."
+          },
+          {
+            "prompt": "Which factor should influence the tone a writer uses in a particular piece of writing?",
+            "options": [
+              "The writer's desire to use the same emotional style in every situation.",
+              "The audience, purpose, subject, platform, and reader's emotional state.",
+              "The number of words the writer intends to use.",
+              "The need to eliminate the writer's personality from the content."
+            ],
+            "correct": 1,
+            "explanation": "Tone responds to context. Who you are addressing, why, what the subject calls for, where it is published, and how the reader is feeling all shape the attitude you take."
+          },
+          {
+            "prompt": "Why should writers avoid using fancy words simply to sound intelligent?",
+            "options": [
+              "Fancy words are never appropriate in professional writing.",
+              "Readers only enjoy writing that uses very simple vocabulary.",
+              "Using advanced vocabulary automatically makes a writer's voice inconsistent.",
+              "Unnatural word choices can make writing feel forced and prevent the writer's authentic voice from coming through."
+            ],
+            "correct": 3,
+            "explanation": "Language that does not come naturally reads as forced, and it buries the writer's real voice under borrowed vocabulary. Choose words that serve the idea."
+          },
+          {
+            "prompt": "According to the lesson, what is the best approach to developing a writing voice over time?",
+            "options": [
+              "Allow your voice to evolve with experience while maintaining a recognisable sense of individuality.",
+              "Keep your writing exactly the same throughout your life, regardless of new experiences.",
+              "Change your entire writing personality whenever you switch platforms.",
+              "Adopt whichever writing style is most popular, even when it feels unnatural."
+            ],
+            "correct": 0,
+            "explanation": "Voice develops through practice, reading and experience. Growth and a recognisable identity are not in conflict — you can become more versatile without becoming someone else."
+          }
+        ]
+      }
+    }
+  ]
+}
