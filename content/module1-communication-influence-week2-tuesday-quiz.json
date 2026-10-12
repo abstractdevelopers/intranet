@@ -1,0 +1,109 @@
+{
+  "courseSlug": "communication-influence",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "The Art of Listening",
+      "releaseDate": "2026-10-12",
+      "quiz": {
+        "slug": "communication-influence-m1-week2-tuesday",
+        "title": "Module 1 — Tuesday — Conversational Intelligence",
+        "description": "Tuesday's quiz covers reading social cues and disengagement, moving beyond small talk with open-ended questions, back-channeling, psychological safety, and shared reality in meaningful conversations.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-13",
+        "questions": [
+          {
+            "prompt": "During a conversation, someone starts giving shorter answers, looking around the room, and fidgeting with their phone. What is the best response?",
+            "options": [
+              "Continue talking until they explicitly ask to leave.",
+              "Speak louder and more enthusiastically to regain their attention.",
+              "Recognize these as possible signs of disengagement and consider changing the topic or ending the conversation gracefully.",
+              "Immediately ask why they are being rude."
+            ],
+            "correct": 2,
+            "explanation": "Those cues usually signal disengagement. Noticing them and responding — by changing direction or closing the conversation well — respects the other person more than pressing on."
+          },
+          {
+            "prompt": "According to the lesson on meaningful conversations, what is the most effective way to move beyond small talk?",
+            "options": [
+              "Ask open-ended questions that explore people's motivations, experiences, and feelings.",
+              "Ask as many factual questions as possible about the other person's background.",
+              "Immediately ask deeply personal questions before establishing any rapport.",
+              "Focus on talking about your own experiences to encourage the other person to open up."
+            ],
+            "correct": 0,
+            "explanation": "Open-ended questions invite the other person to say something of their own, which is what moves a conversation past surface level. Factual questions keep it there."
+          },
+          {
+            "prompt": "What does it mean to practise back-channeling during a conversation?",
+            "options": [
+              "Waiting until the speaker finishes before showing any reaction.",
+              "Repeating every sentence the speaker says to prove you understand.",
+              "Changing the subject whenever the speaker pauses.",
+              "Using brief verbal responses and appropriate non-verbal reactions to show that you are engaged."
+            ],
+            "correct": 3,
+            "explanation": "Back-channeling is the small signals — a nod, \"mm-hmm\", a brief acknowledgement — that tell the speaker you are still with them while they continue."
+          },
+          {
+            "prompt": "Someone tells you they enjoy travelling. Which question best follows the approach of moving from surface-level conversation to a more meaningful one?",
+            "options": [
+              "\"How many countries have you visited? Please list them.\"",
+              "\"What's your favourite place you've visited, and what was that experience like?\"",
+              "\"Do you know how much international flights cost?\"",
+              "\"Why do people waste so much money travelling?\""
+            ],
+            "correct": 1,
+            "explanation": "This question invites a story and a feeling rather than a fact or an argument, which gives the conversation somewhere to go."
+          },
+          {
+            "prompt": "Which of the following best describes psychological safety in a conversation?",
+            "options": [
+              "Both people avoid discussing anything they disagree about.",
+              "One person controls the conversation to prevent misunderstandings.",
+              "People feel sufficiently accepted and safe from judgment to express themselves more openly.",
+              "Both people agree with everything the other person says."
+            ],
+            "correct": 2,
+            "explanation": "Psychological safety is about feeling accepted enough to speak honestly. It does not require agreement, and it is not achieved by avoiding difficult subjects."
+          },
+          {
+            "prompt": "According to the lesson on social cues, what can a change in someone's tone of voice help you identify?",
+            "options": [
+              "Possible changes in their interest, emotional state, or level of engagement.",
+              "Their exact thoughts, regardless of the context.",
+              "Whether their statements are always truthful.",
+              "Their personality type with complete certainty."
+            ],
+            "correct": 0,
+            "explanation": "Tone is a cue, not a verdict. A shift in it suggests something has changed in how they are feeling or engaging — worth noticing, but not proof of what they are thinking."
+          },
+          {
+            "prompt": "What is the concept of \"shared reality\" in meaningful conversations?",
+            "options": [
+              "Both people must have identical opinions on every subject.",
+              "Both people should avoid sharing personal experiences to remain objective.",
+              "One person successfully convinces the other to adopt their worldview.",
+              "Both people recognize areas of overlap in their experiences, feelings, or perspectives."
+            ],
+            "correct": 3,
+            "explanation": "Shared reality is the recognition of common ground — where your experiences or feelings meet. It is connection, not agreement on everything."
+          },
+          {
+            "prompt": "During a conversation, your friend tells you about a difficult experience. Which response best demonstrates engaged listening?",
+            "options": [
+              "Interrupting to explain how your own experience was much worse.",
+              "Reacting appropriately, asking relevant follow-up questions, and helping your friend feel understood.",
+              "Remaining completely expressionless so you do not influence their emotions.",
+              "Immediately explaining what they should have done differently."
+            ],
+            "correct": 1,
+            "explanation": "Engaged listening responds to what your friend is saying and helps them feel understood. Comparing, advising, or going blank all put distance between you."
+          }
+        ]
+      }
+    }
+  ]
+}
