@@ -1,0 +1,109 @@
+{
+  "courseSlug": "content-writing",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "The Fundamentals of Good Writing",
+      "releaseDate": "2026-10-12",
+      "quiz": {
+        "slug": "content-writing-m1-week2",
+        "title": "Module 1 — The Fundamentals of Good Writing",
+        "description": "Monday's quiz covers clarity and concise writing, sentence construction, active and passive voice, filtering, sentence variety, and keeping a paragraph focused on one idea.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-12",
+        "questions": [
+          {
+            "prompt": "Why should writers avoid using overly complicated sentences too frequently?",
+            "options": [
+              "Complicated sentences are always grammatically incorrect.",
+              "They prevent writers from including descriptive details.",
+              "They can slow down reading, obscure the main point, and distance readers from the action.",
+              "They make every piece of writing sound informal."
+            ],
+            "correct": 2,
+            "explanation": "Complexity has a cost. A reader working to untangle a sentence is a reader not following the point, and the distance it creates works against you."
+          },
+          {
+            "prompt": "What is the primary difference between active voice and passive voice?",
+            "options": [
+              "Active voice uses shorter words, while passive voice uses longer words.",
+              "In active voice, the subject performs the action; in passive voice, the subject receives the action.",
+              "Active voice is only used in fiction, while passive voice is used in nonfiction.",
+              "Active voice describes emotions, while passive voice describes physical actions."
+            ],
+            "correct": 1,
+            "explanation": "It comes down to who does what. In active voice the subject acts; in passive voice the subject is acted upon, which is why passive constructions can feel indirect."
+          },
+          {
+            "prompt": "How can sentence length influence the pace and mood of a piece of writing?",
+            "options": [
+              "Short sentences generally convey urgency and tension, while longer sentences can create a more reflective, thoughtful mood.",
+              "Longer sentences always make writing more exciting, while shorter sentences make it boring.",
+              "Sentence length has no effect on how readers experience a story.",
+              "Short sentences are appropriate only for dialogue, while longer sentences are appropriate only for descriptions."
+            ],
+            "correct": 0,
+            "explanation": "Length sets pace. Short sentences move quickly and tighten the tension; longer ones slow the reader down and invite reflection."
+          },
+          {
+            "prompt": "What is the problem with unnecessarily replacing repeated words with unusual synonyms?",
+            "options": [
+              "It makes every paragraph shorter than intended.",
+              "It prevents writers from expressing emotions.",
+              "It automatically creates passive voice.",
+              "It can make the writing sound unnatural, introduce unintended meanings, or confuse readers."
+            ],
+            "correct": 3,
+            "explanation": "Variety for its own sake backfires. A forced synonym can shift the meaning or simply sound wrong, when repeating the plain word would have been clearer."
+          },
+          {
+            "prompt": "What does filtering mean in writing?",
+            "options": [
+              "Removing unnecessary adjectives from a paragraph.",
+              "Presenting a character's experience through expressions such as \"saw,\" \"thought,\" or \"felt,\" which can create distance between the reader and the experience.",
+              "Removing every reference to a character's thoughts and feelings.",
+              "Replacing descriptive words with simpler alternatives."
+            ],
+            "correct": 1,
+            "explanation": "Filtering puts a layer between the reader and the moment — we are told the character saw or felt something rather than being shown it directly."
+          },
+          {
+            "prompt": "Consider the sentence: \"He was running down the street.\"\n\nWhich revision follows the recommendation to reduce unnecessary \"was + verb-ing\" constructions?",
+            "options": [
+              "He had been running down the street.",
+              "He was quickly running down the street.",
+              "He ran down the street.",
+              "He continued to be running down the street."
+            ],
+            "correct": 2,
+            "explanation": "\"He ran down the street\" drops the was-plus-verb-ing construction for a direct past tense verb. The other options keep or add to the same construction."
+          },
+          {
+            "prompt": "According to the lessons, what is one effective way to reduce monotonous sentence patterns when describing a sequence of actions?",
+            "options": [
+              "Add the character's thoughts, feelings, perspective, and emotionally meaningful details.",
+              "Begin every sentence with a different synonym for the character's name.",
+              "Make every sentence passive.",
+              "Combine all the actions into one extremely long sentence."
+            ],
+            "correct": 0,
+            "explanation": "Monotony comes from a run of identical action sentences. Bringing in thought, feeling and perspective breaks the pattern and gives the sequence meaning."
+          },
+          {
+            "prompt": "Why should writers be careful not to split a paragraph's focus across too many unrelated points?",
+            "options": [
+              "Every paragraph must contain exactly three sentences.",
+              "Paragraphs should never include a character's thoughts or feelings.",
+              "A paragraph must always describe only physical actions.",
+              "Mixing too many different points can muddy the paragraph's central idea and make its purpose unclear."
+            ],
+            "correct": 3,
+            "explanation": "A paragraph carries one idea. Load it with unrelated points and the central idea blurs, leaving the reader unsure what the paragraph was actually for."
+          }
+        ]
+      }
+    }
+  ]
+}
