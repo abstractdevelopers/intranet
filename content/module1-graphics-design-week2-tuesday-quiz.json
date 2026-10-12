@@ -1,0 +1,111 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 2,
+      "moduleNumber": 1,
+      "title": "The Principles of Good Design",
+      "releaseDate": "2026-10-12",
+      "quizzes": [
+        {
+          "slug": "graphics-design-m1-week2-tuesday",
+          "title": "Module 1 — Tuesday — Layout & Composition",
+          "description": "Tuesday's quiz covers layout and composition — proximity, white space, alignment, contrast, visual hierarchy and repetition — and how each one shapes the way a design is read.",
+          "passMark": 70,
+          "maxAttempts": 2,
+          "releaseDate": "2026-10-13",
+          "questions": [
+            {
+              "prompt": "What is the primary purpose of proximity in layout and composition?",
+              "options": [
+                "To make every element the same size",
+                "To show relationships by grouping related items together",
+                "To make the design more colourful",
+                "To ensure all elements are placed at the centre"
+              ],
+              "correct": 1,
+              "explanation": "Proximity is about grouping. Items placed close together read as related, so the spacing between elements tells the viewer what belongs with what."
+            },
+            {
+              "prompt": "A designer notices that a poster looks cluttered and uncomfortable to read. Which adjustment would most likely improve the composition?",
+              "options": [
+                "Adding more decorative elements",
+                "Making every text element bold",
+                "Increasing the white space between content elements",
+                "Removing all margins from the design"
+              ],
+              "correct": 2,
+              "explanation": "Clutter is usually a spacing problem. More white space between content elements gives each part room to be read, rather than adding more to an already crowded page."
+            },
+            {
+              "prompt": "Why is consistent alignment important in a design?",
+              "options": [
+                "It makes every object identical in appearance.",
+                "It helps the composition look organised and easier to navigate.",
+                "It ensures that all text is centre-aligned.",
+                "It eliminates the need for white space."
+              ],
+              "correct": 1,
+              "explanation": "Alignment creates invisible structure. When elements share edges and positions, the composition reads as organised and the viewer's eye moves through it more easily."
+            },
+            {
+              "prompt": "A designer wants an important announcement to catch the viewer's attention immediately. Which technique would best help achieve this?",
+              "options": [
+                "Making every element the same size and colour",
+                "Placing all elements close together",
+                "Using contrast to make the announcement stand out",
+                "Removing the visual hierarchy from the design"
+              ],
+              "correct": 2,
+              "explanation": "Contrast is what makes one element stand apart from its surroundings. If everything is treated the same, nothing can demand attention first."
+            },
+            {
+              "prompt": "What is the primary function of visual hierarchy in a design?",
+              "options": [
+                "To arrange elements alphabetically",
+                "To guide viewers on what to notice first and where to look next",
+                "To ensure that every element receives equal attention",
+                "To make all sections of a design visually identical"
+              ],
+              "correct": 1,
+              "explanation": "Hierarchy sets the order of reading. It decides what the viewer sees first, then second, so the message arrives in the sequence you intended."
+            },
+            {
+              "prompt": "Which of the following best demonstrates the principle of repetition?",
+              "options": [
+                "Using a different font style for every heading",
+                "Placing unrelated elements next to each other",
+                "Using the same colour palette and header style throughout a project",
+                "Making the main headline smaller than the supporting text"
+              ],
+              "correct": 2,
+              "explanation": "Repetition means reusing the same element deliberately. A consistent palette and header style repeated across a project is what ties the pieces together."
+            },
+            {
+              "prompt": "What does white space refer to in layout and composition?",
+              "options": [
+                "Only the areas of a design that are coloured white",
+                "The empty spaces between content, lines, and margins",
+                "The space reserved exclusively for images",
+                "The background of a design when no colour is used"
+              ],
+              "correct": 1,
+              "explanation": "White space is empty space, not white-coloured space. The gaps between content, lines and margins are what give a design room to breathe."
+            },
+            {
+              "prompt": "A designer creates a poster with several text boxes and images. However, the elements are inconsistently positioned, and the margins differ noticeably across the page. Which principle should the designer focus on improving first?",
+              "options": [
+                "Alignment",
+                "Repetition",
+                "Contrast",
+                "Proximity"
+              ],
+              "correct": 0,
+              "explanation": "Inconsistent positioning and uneven margins are alignment problems. Bringing the elements onto shared edges and consistent margins is what fixes the untidy structure."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
