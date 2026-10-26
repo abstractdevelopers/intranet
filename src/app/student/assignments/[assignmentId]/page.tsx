@@ -24,6 +24,7 @@ const STATUS_TONE: Record<string, "warning" | "danger" | "success"> = {
   RESUBMITTED: "warning",
   NEEDS_REVISION: "danger",
   GRADED: "success",
+  SUPERSEDED: "danger",
 };
 
 /** Plain-language status so students know whether anything more is expected. */
@@ -32,6 +33,9 @@ const STATUS_LABEL: Record<string, string> = {
   RESUBMITTED: "Resubmitted / Awaiting Grading",
   NEEDS_REVISION: "Needs revision",
   GRADED: "Graded",
+  // An earlier attempt replaced by a later one before it was graded. Kept so
+  // the history is honest, and muted so it is not mistaken for live work.
+  SUPERSEDED: "Superseded by a later attempt",
 };
 
 export default async function AssignmentPage({
@@ -74,8 +78,21 @@ export default async function AssignmentPage({
   });
 
   const allowed = parseAllowed(assignment.allowedTypes);
-  const attemptsLeft = assignment.maxAttempts - submissions.length;
   const late = assignment.deadline ? new Date() > assignment.deadline : false;
+
+  // Work is locked from submission until it is graded. Only a reviewer asking
+  // for a revision reopens it. The whole history is considered, because an
+  // older pending row can sit alongside a newer graded one.
+  const reopened = submissions.some((s) => s.status === "NEEDS_REVISION");
+  const pending = submissions.some((s) => s.status === "SUBMITTED" || s.status === "RESUBMITTED");
+  const graded = submissions.some((s) => s.status === "GRADED");
+  const lockReason = reopened
+    ? null
+    : pending
+      ? "Your submission is in. It's locked until your reviewer grades it, and you'll be notified when there's a result."
+      : graded
+        ? "This assignment has been graded and is closed. Your reviewer can reopen it if changes are needed."
+        : null;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -99,7 +116,7 @@ export default async function AssignmentPage({
           ) : (
             <span>No deadline</span>
           )}
-          <span>{assignment.maxAttempts} attempt{assignment.maxAttempts === 1 ? "" : "s"} allowed</span>
+          {lockReason ? <span className="font-semibold">Locked</span> : null}
         </div>
       </section>
 
@@ -132,7 +149,7 @@ export default async function AssignmentPage({
             assignmentId={assignment.id}
             allowedTypes={allowed}
             maxFileSizeMb={Math.floor(effectiveMaxBytes(assignment.maxFileSizeMb) / 1024 / 1024)}
-            attemptsLeft={attemptsLeft}
+            lockReason={lockReason}
           />
         </div>
       </Card>

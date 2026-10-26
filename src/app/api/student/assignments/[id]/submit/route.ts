@@ -75,15 +75,49 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     );
   }
 
-  // Attempt limit (submissions are never overwritten — history is preserved)
-  const attempts = await db.assignmentSubmission.count({
+  // One live submission at a time. Work stays locked from the moment it is
+  // submitted until a reviewer grades it; a reviewer asking for a revision
+  // moves a row to NEEDS_REVISION and reopens the form.
+  //
+  // This replaces the old maxAttempts check on assignments. Attempts used to
+  // be consumed by double taps and re-uploads while nothing had been marked,
+  // which could leave a student locked out even after a reviewer asked for
+  // changes. The reviewer's request is now the only gate, so maxAttempts is
+  // left in place for quizzes but no longer applies here.
+  //
+  // The whole history is read, not just the newest row: an older SUBMITTED row
+  // can sit alongside a later GRADED one, and looking only at the latest would
+  // let a graded assignment be resubmitted.
+  const history = await db.assignmentSubmission.findMany({
     where: { assignmentId: id, userId: user.id },
+    select: { status: true, attempt: true },
+    orderBy: { attempt: "desc" },
   });
-  if (attempts >= assignment.maxAttempts) {
-    return NextResponse.json(
-      { error: `You've used all ${assignment.maxAttempts} attempts.` },
-      { status: 400 }
-    );
+
+  if (history.length > 0) {
+    // A reviewer's request is the strongest signal, wherever it sits.
+    const reopened = history.some((h) => h.status === "NEEDS_REVISION");
+    const pending = history.some((h) => h.status === "SUBMITTED" || h.status === "RESUBMITTED");
+    const graded = history.some((h) => h.status === "GRADED");
+
+    if (!reopened && pending) {
+      return NextResponse.json(
+        {
+          error:
+            "You've already submitted this assignment. It's locked until your reviewer grades it.",
+        },
+        { status: 409 },
+      );
+    }
+    if (!reopened && graded) {
+      return NextResponse.json(
+        {
+          error:
+            "This assignment has been graded and can't be resubmitted unless your reviewer asks for changes.",
+        },
+        { status: 409 },
+      );
+    }
   }
 
   const form = await request.formData().catch(() => null);
@@ -149,21 +183,44 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     fileName = file.name;
   }
 
-  const status =
-    attempts > 0 ? "RESUBMITTED" : "SUBMITTED";
-  const submission = await db.assignmentSubmission.create({
-    data: {
-      assignmentId: id,
-      userId: user.id,
-      attempt: attempts + 1,
-      status,
-      late,
-      textContent,
-      repoUrl: url && /github|gitlab/i.test(url) ? url : null,
-      externalUrl: url && !/github|gitlab/i.test(url) ? url : null,
-      files: documentId && fileName ? { create: { documentId, fileName } } : undefined,
-    },
+  // Attempt numbering counts every row, including graded and superseded ones,
+  // so the history stays in order.
+  const highest = await db.assignmentSubmission.aggregate({
+    where: { assignmentId: id, userId: user.id },
+    _max: { attempt: true },
   });
+  const attempts = highest._max.attempt ?? 0;
+
+  const status = attempts > 0 ? "RESUBMITTED" : "SUBMITTED";
+  const submission = await db.assignmentSubmission
+    .create({
+      data: {
+        assignmentId: id,
+        userId: user.id,
+        attempt: attempts + 1,
+        status,
+        late,
+        textContent,
+        repoUrl: url && /github|gitlab/i.test(url) ? url : null,
+        externalUrl: url && !/github|gitlab/i.test(url) ? url : null,
+        files: documentId && fileName ? { create: { documentId, fileName } } : undefined,
+      },
+    })
+    // The partial unique index rejects a second live row. Two requests racing
+    // past the check above therefore surface here rather than as a duplicate.
+    .catch(async (err) => {
+      if (typeof err === "object" && err && "code" in err && err.code === "P2002") {
+        return null;
+      }
+      throw err;
+    });
+
+  if (!submission) {
+    return NextResponse.json(
+      { error: "You've already submitted this assignment. It's locked until your reviewer grades it." },
+      { status: 409 }
+    );
+  }
 
   // Every submission becomes a portfolio piece straight away, as a private
   // draft. A student's work is then never invisible while marking is pending,

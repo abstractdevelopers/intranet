@@ -49,6 +49,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
   if (requestRevision) {
     await db.$transaction([
+      // Retire any other live row first. A student may have re-uploaded before
+      // the lock existed, and leaving an older SUBMITTED row live would make
+      // the reopened form impossible to submit (one live row per assignment).
+      db.assignmentSubmission.updateMany({
+        where: {
+          assignmentId: submission.assignmentId,
+          userId: submission.userId,
+          id: { not: id },
+          status: { in: ["SUBMITTED", "RESUBMITTED"] },
+        },
+        data: { status: "SUPERSEDED" },
+      }),
       db.assignmentSubmission.update({ where: { id }, data: { status: "NEEDS_REVISION" } }),
       ...(feedback
         ? [db.feedback.create({ data: { submissionId: id, authorId: staff.id, body: feedback } })]

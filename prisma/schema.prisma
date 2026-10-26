@@ -457,7 +457,7 @@ model AssignmentSubmission {
   userId       String
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   attempt      Int        @default(1)
-  status       String     @default("SUBMITTED") // SUBMITTED | NEEDS_REVISION | RESUBMITTED | GRADED
+  status       String     @default("SUBMITTED") // SUBMITTED | NEEDS_REVISION | RESUBMITTED | GRADED | SUPERSEDED
   textContent  String?
   repoUrl      String?
   externalUrl  String?

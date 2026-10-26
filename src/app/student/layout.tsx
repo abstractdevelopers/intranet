@@ -13,6 +13,7 @@ const SECTIONS: NavSection[] = [
       { href: "/student/intranet-101", label: "Intranet 101", icon: "Compass" },
       { href: "/student/courses", label: "My Courses", icon: "Courses" },
       { href: "/student/assignments", label: "Assignments", icon: "Assignments" },
+      { href: "/student/scores", label: "Scores", icon: "Trophy" },
       { href: "/student/captains-log", label: "Captain's Log", icon: "Announcement" },
       { href: "/student/warm-up", label: "Studio Wall", icon: "Spark" },
       { href: "/student/peer-body", label: "Peer Body", icon: "Users" },

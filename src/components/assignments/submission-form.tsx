@@ -18,12 +18,18 @@ export function SubmissionForm({
   assignmentId,
   allowedTypes,
   maxFileSizeMb,
-  attemptsLeft,
+  lockReason,
 }: {
   assignmentId: string;
   allowedTypes: string[];
   maxFileSizeMb: number;
-  attemptsLeft: number;
+  /**
+   * Why the form is closed, or null when the student may submit.
+   *
+   * Work is locked from submission until it is graded. A reviewer asking for a
+   * revision reopens it, which is the only way back in.
+   */
+  lockReason: string | null;
 }) {
   const router = useRouter();
   const [mode, setMode] = useState<"file" | "url" | "text">(
@@ -67,10 +73,10 @@ export function SubmissionForm({
     router.refresh();
   }
 
-  if (attemptsLeft <= 0) {
+  if (lockReason) {
     return (
       <p className="rounded-lg border border-border bg-surface-2 px-4 py-3 text-sm text-text-muted">
-        You&rsquo;ve used all your attempts for this assignment.
+        {lockReason}
       </p>
     );
   }
@@ -186,7 +192,7 @@ export function SubmissionForm({
         disabled={busy}
         className="rounded-lg bg-brand-1 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-2 disabled:opacity-50"
       >
-        {busy ? "Submitting…" : `Submit work · ${attemptsLeft} attempt${attemptsLeft === 1 ? "" : "s"} left`}
+        {busy ? "Submitting…" : "Submit work"}
       </button>
     </form>
   );

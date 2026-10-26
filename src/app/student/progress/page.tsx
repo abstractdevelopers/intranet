@@ -94,16 +94,17 @@ export default async function ProgressPage() {
                   {scores.overall.percent}%
                 </p>
                 <p className="mt-1 text-sm text-text-muted">
-                  {scores.overall.earned} of {scores.overall.possible} points across{" "}
+                  {scores.overall.earned} of {scores.overall.possible} assignment points across{" "}
                   {releasedWeeks} released week{releasedWeeks === 1 ? "" : "s"}
                 </p>
               </div>
               <ProgressRing value={scores.overall.percent} size={88} stroke={7} />
             </Card>
             <p className="mt-2 text-xs text-text-muted">
-              Calculated over every week released to you — including weeks you haven&rsquo;t
-              submitted, which count as zero. This is what stops a high score being held by
-              simply skipping available work.
+              Each week is 70% assignments and 30% quizzes, and your overall score is the average of
+              your weeks. Every week released to you counts, including weeks you haven&rsquo;t
+              submitted, which score zero — that stops a high score being held by skipping available
+              work.
             </p>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
