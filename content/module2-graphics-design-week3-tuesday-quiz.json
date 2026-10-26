@@ -1,0 +1,99 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "Understanding Typography",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "graphics-design-m2-week3-tuesday",
+        "title": "Module 2 — Tuesday — Creating Powerful Typography",
+        "description": "Tuesday's quiz covers the first video's techniques — size contrast, the heading-to-body ratio, skipping a font weight, aligning to a grid, using lines and shapes to group text, and justified alignment — and the second video's outlined text and gradient overlay in Photoshop.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-20",
+        "questions": [
+          {
+            "prompt": "According to the first video, what is the main purpose of creating a clear difference between text sizes in a design?",
+            "options": [
+              "To make every line of text look identical",
+              "To ensure the design contains as much text as possible",
+              "To establish visual hierarchy and make the text easier to organize",
+              "To eliminate the need for font-weight variations"
+            ],
+            "correct": 2,
+            "explanation": "Size is the plainest signal of importance. A clear jump between sizes tells the viewer what to read first and how the content is ordered."
+          },
+          {
+            "prompt": "In the first video, a designer uses a heading size of 75 points and divides it by 5 to determine the body text size. What is the resulting body text size?",
+            "options": ["10 points", "15 points", "25 points", "35 points"],
+            "correct": 1,
+            "explanation": "75 ÷ 5 = 15. Dividing the heading size gives the body text a fixed, deliberate proportion rather than an arbitrary one."
+          },
+          {
+            "prompt": "Why does the first video recommend skipping a font weight when creating contrast between text?",
+            "options": [
+              "It creates a more noticeable visual difference between text elements",
+              "It makes every text element appear the same thickness",
+              "It removes the need to consider text size",
+              "It ensures that all text is displayed in italics"
+            ],
+            "correct": 0,
+            "explanation": "Neighbouring weights such as regular and medium are too close to read as a deliberate contrast. Skipping one makes the difference obvious at a glance."
+          },
+          {
+            "prompt": "According to the first video, what is a major benefit of aligning text consistently with a grid line?",
+            "options": [
+              "It allows designers to use unlimited fonts",
+              "It makes every paragraph perfectly justified",
+              "It removes the need for spacing between text elements",
+              "It creates a cleaner, more organized design that is easier to read"
+            ],
+            "correct": 3,
+            "explanation": "A shared grid line holds the elements in a fixed relationship, so the layout reads as organised rather than loosely scattered."
+          },
+          {
+            "prompt": "How can lines and shapes help improve the organization of typography in a design?",
+            "options": [
+              "By making every text element the same size",
+              "By visually separating and grouping related text elements",
+              "By replacing all headings with decorative symbols",
+              "By forcing every paragraph into the center of the layout"
+            ],
+            "correct": 1,
+            "explanation": "A rule or shape draws a boundary. It tells the viewer which pieces of text belong together and where one group ends and the next begins."
+          },
+          {
+            "prompt": "According to the first video, why should designers avoid forcing paragraphs into justified alignment when it creates unwanted gaps?",
+            "options": [
+              "Justified text cannot be used in graphic design",
+              "It makes the font weight too heavy",
+              "Large or awkward spaces can disrupt the natural reading flow",
+              "It prevents designers from using a grid"
+            ],
+            "correct": 2,
+            "explanation": "Justification stretches the spaces between words to fill the line. When the gap grows large, the eye catches on the holes and the reading rhythm breaks."
+          },
+          {
+            "prompt": "In the second video, what is the purpose of duplicating a text layer, setting its fill opacity to zero, and adding a white stroke?",
+            "options": [
+              "To create an outlined version of the text that can be positioned behind the main text",
+              "To permanently remove the text from the design",
+              "To convert the text into a background image",
+              "To automatically correct the spacing between paragraphs"
+            ],
+            "correct": 0,
+            "explanation": "Zero fill hides the letter bodies while the stroke keeps the outline. Placed behind the original, it makes an outlined double that reads as a deliberate framing device."
+          },
+          {
+            "prompt": "After combining the text groups in Photoshop, which effect does the second video apply to give the typography design a colored appearance?",
+            "options": ["Gaussian Blur", "Drop Shadow", "Motion Blur", "Gradient Overlay"],
+            "correct": 3,
+            "explanation": "A Gradient Overlay maps a colour blend across everything in the layer, so the combined text takes on a single coloured treatment at once."
+          }
+        ]
+      }
+    }
+  ]
+}
