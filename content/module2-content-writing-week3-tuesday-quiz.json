@@ -1,0 +1,109 @@
+{
+  "courseSlug": "content-writing",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "The Art of the Hook",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "content-writing-m2-week3-tuesday",
+        "title": "Module 2 — Tuesday — Writing Social Media Posts and Captions",
+        "description": "Tuesday's quiz covers writing concisely for people who skim, encouraging conversation on Facebook, using capitalisation and emojis well, and the hashtag and hook advice for Instagram, LinkedIn, X and TikTok.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-20",
+        "questions": [
+          {
+            "prompt": "According to the first video, why should social media writers aim to communicate their message in as few words as possible?",
+            "options": [
+              "Longer posts are not allowed on social media platforms.",
+              "People often scroll or skim quickly, so concise writing helps capture their attention.",
+              "Short posts do not require correct grammar or spelling.",
+              "Short posts automatically receive more likes and comments."
+            ],
+            "correct": 1,
+            "explanation": "The feed is read at speed. Tight writing gives a skimming reader the point before they move on; length is not what makes a post land."
+          },
+          {
+            "prompt": "When writing a Facebook caption, which approach can help encourage engagement and conversation?",
+            "options": [
+              "Using as many hashtags as possible.",
+              "Writing only about the products or services being sold.",
+              "Opening with an interesting question or story and inviting the audience to respond.",
+              "Avoiding replies to comments so the post can reach more people."
+            ],
+            "correct": 2,
+            "explanation": "Facebook rewards discussion. A question or story gives people something to answer, and a direct invitation tells them that responding is welcome."
+          },
+          {
+            "prompt": "According to the first video, what is the recommended way to use capitalization to make important words stand out in social media posts?",
+            "options": [
+              "Write every important word entirely in capital letters.",
+              "Capitalize the first letter of selected important words.",
+              "Capitalize every word in the post.",
+              "Avoid capitalization because it makes posts difficult to read."
+            ],
+            "correct": 1,
+            "explanation": "Capitalising the first letter of a chosen word gives it weight without shouting. A whole post in capitals reads as aggressive and slows the reader down."
+          },
+          {
+            "prompt": "Which hashtag strategy does the second video recommend for Instagram captions?",
+            "options": [
+              "Use all 30 hashtags Instagram allows on every post.",
+              "Avoid hashtags completely because they never help content get discovered.",
+              "Use long, general hashtags to attract the widest possible audience.",
+              "Use one or two relevant hashtags to target a specific audience."
+            ],
+            "correct": 3,
+            "explanation": "A small number of precise hashtags puts the post in front of the people it is actually for, rather than burying it in a crowded general feed."
+          },
+          {
+            "prompt": "Why does the second video recommend beginning LinkedIn captions with an intriguing hook?",
+            "options": [
+              "It encourages readers to click \"see more\" and continue reading.",
+              "It allows users to publish without writing a complete message.",
+              "It guarantees that every reader will follow the account.",
+              "It removes the need to include a call to action."
+            ],
+            "correct": 0,
+            "explanation": "LinkedIn truncates longer posts behind \"see more\". The opening line has to earn that click, or the rest of the post is never read."
+          },
+          {
+            "prompt": "According to the first video, what is the best way to use emojis in social media posts?",
+            "options": [
+              "Avoid them on every platform because they look unprofessional.",
+              "Use as many as possible to make every post entertaining.",
+              "Use them appropriately to add color, fun, and emotion without overusing them.",
+              "Replace written words with emojis whenever possible."
+            ],
+            "correct": 2,
+            "explanation": "Emojis work as seasoning — a little adds warmth and tone. Piled on, they compete with the words and make the post harder to read."
+          },
+          {
+            "prompt": "A business is posting a new product announcement on Twitter (X). According to the second video, which approach would make the caption more effective?",
+            "options": [
+              "Copy the product title exactly and use several long hashtags.",
+              "Keep the caption short and simple, and tease the announcement with an interesting detail.",
+              "Write a long article explaining every feature of the product.",
+              "Avoid including links or calls to action."
+            ],
+            "correct": 1,
+            "explanation": "X moves fast. A short caption with one intriguing detail gives people a reason to look, where a full feature list or a wall of hashtags gets scrolled past."
+          },
+          {
+            "prompt": "A house-cleaning business wants to attract TikTok users who are specifically interested in its services. Which hashtag approach best follows the second video's advice?",
+            "options": [
+              "Use only broad hashtags such as #business and #popular.",
+              "Use as many unrelated trending hashtags as possible.",
+              "Use the same broad hashtags for every type of business.",
+              "Use specific, niche hashtags such as #housecleaning to connect with a relevant audience."
+            ],
+            "correct": 3,
+            "explanation": "Niche tags describe what the viewer is actually looking for. Broad or unrelated trending tags reach more people who care less about the service."
+          }
+        ]
+      }
+    }
+  ]
+}
