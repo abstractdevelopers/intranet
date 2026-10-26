@@ -1,0 +1,99 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "Professional Talking-Head Editing",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "video-editing-m2-week3",
+        "title": "Module 2 — Professional Talking-Head Editing",
+        "description": "Monday's quiz covers the talking-head editing tutorial: the app used, building the composition with masks and text, text duplication and animation, keyframes, background removal, and creating visual emphasis.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-19",
+        "questions": [
+          {
+            "prompt": "In the tutorial, which editing application is used to create the professional talking-head video?",
+            "options": ["Adobe Photoshop", "CapCut Mobile", "PixelLab", "Lightroom Mobile"],
+            "correct": 1,
+            "explanation": "The whole course works on CapCut Mobile. Photoshop and PixelLab belong to the graphics design track, and Lightroom is for photo editing."
+          },
+          {
+            "prompt": "What is the purpose of adding a black background overlay and a horizontal mask during the editing process?",
+            "options": [
+              "To remove all the text from the video",
+              "To increase the video's playback speed",
+              "To create a structured visual area for the text and composition",
+              "To convert the video into an audio file"
+            ],
+            "correct": 2,
+            "explanation": "The mask carves out a defined area of the frame, so the text and visuals sit inside a deliberate composition instead of being scattered over the whole picture."
+          },
+          {
+            "prompt": "Which text colour is used for the initial text elements in the tutorial?",
+            "options": ["White", "Red", "Green", "Blue"],
+            "correct": 0,
+            "explanation": "The editor starts with white text, because it reads clearly against the darkened background and gives the cleanest base to recolour later."
+          },
+          {
+            "prompt": "Why does the editor duplicate text elements during the editing process?",
+            "options": [
+              "To remove the original video footage",
+              "To create additional text elements with different words and styling",
+              "To reduce the video resolution",
+              "To replace all animations with static images"
+            ],
+            "correct": 1,
+            "explanation": "Duplicating keeps the existing formatting and position, so the editor can spin out new words and styling from a working base instead of rebuilding each element from scratch."
+          },
+          {
+            "prompt": "Which of the following animation combinations is used for different text elements in the tutorial?",
+            "options": [
+              "Fade in and rotate only",
+              "Zoom in and spin only",
+              "Bounce and flash only",
+              "Slide right, slide left, slide up, and slide down"
+            ],
+            "correct": 3,
+            "explanation": "The editor uses the slide presets, moving different text elements in from different directions so the composition builds rather than all arriving at once."
+          },
+          {
+            "prompt": "What is the purpose of using keyframes when working with images and other visual elements?",
+            "options": [
+              "To automatically correct spelling mistakes",
+              "To control changes in an element's position, scale, or rotation over time",
+              "To permanently remove the background from every clip",
+              "To change the video's audio volume"
+            ],
+            "correct": 1,
+            "explanation": "A keyframe marks a value at a point in time. Set two and the editor animates between them, which is how an element moves, grows or rotates across the timeline."
+          },
+          {
+            "prompt": "Which technique does the editor use to remove the background from an image or visual element?",
+            "options": [
+              "Chroma key or the remove-background feature",
+              "Text duplication",
+              "Horizontal alignment",
+              "Playback speed adjustment"
+            ],
+            "correct": 0,
+            "explanation": "Chroma key or the remove-background tool strips the backdrop so the subject can sit directly on the composition, without a hard rectangle around it."
+          },
+          {
+            "prompt": "Why does the editor apply different colours, font styles, glow effects, and animations to selected text elements?",
+            "options": [
+              "To make every word appear identical",
+              "To reduce the number of elements in the timeline",
+              "To create visual emphasis and make the text composition more engaging",
+              "To eliminate the need for image overlays"
+            ],
+            "correct": 2,
+            "explanation": "Variation directs the eye. Colour, weight, glow and animation separate what matters from what supports it, so the viewer knows where to look."
+          }
+        ]
+      }
+    }
+  ]
+}
