@@ -1,0 +1,109 @@
+{
+  "courseSlug": "communication-influence",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "Developing a Strong Speaking Voice",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "communication-influence-m2-week3-tuesday",
+        "title": "Module 2 — Tuesday — Speaking With Impact",
+        "description": "Tuesday's quiz covers the flat delivery of a rookie communicator against the full vocal range of a natural one, recording yourself to build self-awareness, moving with purpose, frameworks such as PREP and STAR under pressure, matching face to voice, what keeps people stuck at pretty good, and the reading analogy.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-20",
+        "questions": [
+          {
+            "prompt": "According to the video, what is one major characteristic of a rookie communicator's vocal delivery?",
+            "options": [
+              "Using varied pitch and volume to emphasize important points.",
+              "Speaking with expressive emotions throughout a presentation.",
+              "Using pauses strategically to create impact.",
+              "Speaking with a flat delivery, using nearly the same speed, pitch, volume, and emotion throughout."
+            ],
+            "correct": 3,
+            "explanation": "The rookie delivery holds one setting: same speed, same pitch, same volume, same emotion. Nothing in the voice signals what matters."
+          },
+          {
+            "prompt": "What is the main purpose of recording yourself answering an unexpected question and reviewing the transcript?",
+            "options": [
+              "To memorize responses to common questions.",
+              "To develop self-awareness by identifying unclear explanations, repetition, rambling, and filler words.",
+              "To increase your speaking speed regardless of clarity.",
+              "To compare your vocabulary with that of professional speakers."
+            ],
+            "correct": 1,
+            "explanation": "The transcript shows what you actually said rather than what you meant to say. Repetition, rambling and filler are far easier to spot written down."
+          },
+          {
+            "prompt": "What distinguishes a natural communicator from a pretty good communicator when it comes to using their voice?",
+            "options": [
+              "A natural communicator uses only a low pitch to sound authoritative.",
+              "A natural communicator avoids emotional expression to maintain professionalism.",
+              "A natural communicator uses their full vocal range intentionally, adjusting different vocal elements to suit the message.",
+              "A natural communicator speaks loudly and quickly in every situation."
+            ],
+            "correct": 2,
+            "explanation": "The difference is range used on purpose. A pretty good speaker has a reliable delivery; a natural one reshapes it to fit the moment."
+          },
+          {
+            "prompt": "According to the video, what is the main rule for using body movement effectively while communicating?",
+            "options": [
+              "Move with purpose so your gestures support the message rather than distract from it.",
+              "Keep your hands completely still throughout every conversation.",
+              "Use the same gestures repeatedly to establish consistency.",
+              "Move continuously to prevent the audience from losing interest."
+            ],
+            "correct": 0,
+            "explanation": "Movement should carry meaning. Stillness and constant motion both cost something — what matters is whether the gesture backs up the words."
+          },
+          {
+            "prompt": "Why are communication frameworks such as PREP, STAR, and the 3-2-1 method useful?",
+            "options": [
+              "They eliminate the need to understand the topic being discussed.",
+              "They help speakers use more technical vocabulary in their responses.",
+              "They encourage speakers to explain every thought that comes to mind.",
+              "They help speakers organize their thoughts into clear, concise, and coherent responses, especially under pressure."
+            ],
+            "correct": 3,
+            "explanation": "A framework gives the answer a shape before you start speaking. That matters most when you are put on the spot and have no time to plan."
+          },
+          {
+            "prompt": "According to the video, why is it important to synchronize facial expressions with vocal emotion?",
+            "options": [
+              "Facial expressions are more important than the actual message in every situation.",
+              "When facial expressions and vocal delivery communicate matching emotions, the audience can better feel the intended meaning.",
+              "Matching facial expressions and vocal emotion prevents all communication misunderstandings.",
+              "Facial expressions should always be exaggerated to make a speaker memorable."
+            ],
+            "correct": 1,
+            "explanation": "Face and voice are read together. When they agree, the emotion lands; when the voice says one thing and the face another, the listener senses the conflict."
+          },
+          {
+            "prompt": "What does the video identify as a major reason why people remain stuck at the level of pretty good communicators?",
+            "options": [
+              "They lack the vocabulary required to discuss complex subjects.",
+              "They use too many communication frameworks in everyday conversations.",
+              "They fear being judged, which prevents them from exploring the full range of their vocal and expressive abilities.",
+              "They use too much body language when speaking."
+            ],
+            "correct": 2,
+            "explanation": "Playing it safe protects you from looking foolish, but it also caps your range. Getting past pretty good means risking a delivery you cannot fully control yet."
+          },
+          {
+            "prompt": "In the video, the speaker explains the value of reading books using an analogy about building an army of soldiers. What does this analogy mean?",
+            "options": [
+              "Each book provides knowledge and experience that can help you face challenges and make better decisions.",
+              "Reading books is useful only when preparing for competitive situations.",
+              "Successful people should read only books written by entrepreneurs.",
+              "Reading more books guarantees that you will never make mistakes."
+            ],
+            "correct": 0,
+            "explanation": "Each book adds a soldier to the ranks. You are not guaranteed to win, but the more you have read, the more you have to draw on when a problem arrives."
+          }
+        ]
+      }
+    }
+  ]
+}
