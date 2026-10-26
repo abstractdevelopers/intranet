@@ -1,0 +1,104 @@
+{
+  "courseSlug": "content-writing",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "The Art of the Hook",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "content-writing-m2-week3",
+        "title": "Module 2 — The Art of the Hook",
+        "description": "Monday's quiz covers the purpose of a hook, how it differs from clickbait, and the specific hook types this lesson adds — threat and pain, education, confirm beliefs, fear of missing out, and relevancy — plus where hooks matter most.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-19",
+        "questions": [
+          {
+            "prompt": "What is the primary purpose of a hook in copywriting?",
+            "options": [
+              "To provide all the details about a product before the reader continues.",
+              "To make the copy as long and descriptive as possible.",
+              "To capture a prospect's attention and encourage them to take the next step.",
+              "To guarantee that every reader purchases the product."
+            ],
+            "correct": 2,
+            "explanation": "A hook earns the next moment of attention. It is not a summary of the whole offer, and no opening can guarantee a sale."
+          },
+          {
+            "prompt": "What distinguishes a great hook from clickbait?",
+            "options": [
+              "A great hook attracts attention while remaining relevant and delivering value without misleading the audience.",
+              "A great hook always uses shocking statistics, while clickbait uses questions.",
+              "A great hook focuses exclusively on selling products, while clickbait focuses on education.",
+              "A great hook is always longer than a clickbait headline."
+            ],
+            "correct": 0,
+            "explanation": "Both grab attention; the difference is what happens next. Clickbait promises something it does not deliver, while a great hook stays relevant and pays off."
+          },
+          {
+            "prompt": "A company advertises travel insurance by warning customers about potentially high medical expenses if they become ill or injured while travelling without adequate coverage. Which type of hook is being used?",
+            "options": ["Confirm Beliefs", "Relevancy", "Fear of Missing Out (FOMO)", "Threat, Warning and Pain"],
+            "correct": 3,
+            "explanation": "The opening leans on a risk the reader wants to avoid, which is the threat, warning and pain approach. FOMO is about missing a benefit others get, and relevancy ties the offer to current events."
+          },
+          {
+            "prompt": "What is the main purpose of an Education or FYI Hook?",
+            "options": [
+              "To make readers feel excluded from a social group.",
+              "To provide useful or surprising information that sparks curiosity and encourages the audience to learn more.",
+              "To challenge every belief the audience already holds.",
+              "To create urgency by threatening the audience with negative consequences."
+            ],
+            "correct": 1,
+            "explanation": "An education hook gives something worth knowing. The curiosity comes from information the reader did not have, not from pressure or exclusion."
+          },
+          {
+            "prompt": "How does a Confirm Beliefs Hook work most effectively?",
+            "options": [
+              "It introduces an unrelated topic to confuse the reader.",
+              "It makes a promise without providing any supporting information.",
+              "It validates an existing belief and then introduces connected new information that encourages further interest.",
+              "It focuses entirely on the number of people already using a product."
+            ],
+            "correct": 2,
+            "explanation": "Agreeing with the reader earns trust, and the new information attached to that agreement gives them a reason to keep reading."
+          },
+          {
+            "prompt": "What does Fear of Missing Out (FOMO) accomplish in marketing?",
+            "options": [
+              "It combines scarcity and social proof to make prospects feel they may be missing out on benefits others are experiencing.",
+              "It encourages prospects to ignore what other customers are doing.",
+              "It relies exclusively on warnings about physical danger.",
+              "It persuades customers by providing technical information about a product."
+            ],
+            "correct": 0,
+            "explanation": "FOMO works by showing that other people already have something the reader could miss — limited supply plus visible demand."
+          },
+          {
+            "prompt": "Which approach best demonstrates the use of a Relevancy Hook?",
+            "options": [
+              "Using complicated vocabulary to make an advertisement sound professional.",
+              "Repeating a product's features without considering the audience.",
+              "Making an exaggerated claim that has no connection to the audience's needs.",
+              "Connecting a product or offer to a current event, cultural issue, or trending topic that matters to the target audience."
+            ],
+            "correct": 3,
+            "explanation": "Relevancy ties the offer to something already on the reader's mind, so the product earns attention through context rather than volume."
+          },
+          {
+            "prompt": "Why are hooks particularly important in headlines, email subject lines, and the beginnings of sales or landing pages?",
+            "options": [
+              "They eliminate the need to explain the value of a product.",
+              "They influence whether people pay attention, open an email, continue reading, or click an advertisement.",
+              "They ensure that every prospect becomes a paying customer.",
+              "They allow writers to avoid understanding their target audience."
+            ],
+            "correct": 1,
+            "explanation": "These are the places where a reader decides whether to continue at all. The hook is the decision point, not a substitute for the value behind it."
+          }
+        ]
+      }
+    }
+  ]
+}
