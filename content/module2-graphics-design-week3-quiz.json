@@ -1,0 +1,99 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "Understanding Typography",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "graphics-design-m2-week3",
+        "title": "Module 2 — Understanding Typography",
+        "description": "Monday's quiz covers the purpose of typography, typeface against font, typeface categories, kerning and tracking, legibility, choosing fonts by personality, combining fonts, and common typesetting problems.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-19",
+        "questions": [
+          {
+            "prompt": "What is the primary purpose of typography in graphic design?",
+            "options": [
+              "To decorate a design without considering its message",
+              "To use text as a visual element to communicate a message",
+              "To ensure every design uses the same typeface",
+              "To replace images in all forms of graphic design"
+            ],
+            "correct": 1,
+            "explanation": "Typography is communication, not decoration. The words are a visual element chosen and arranged to carry a message to a reader."
+          },
+          {
+            "prompt": "What is the difference between a typeface and a font?",
+            "options": [
+              "A typeface describes a family of characters with shared design features, while a font refers to a particular style, weight, and size within that typeface.",
+              "A typeface is used only for printed materials, while a font is used only for digital designs.",
+              "A typeface refers to the size of letters, while a font refers to their colour.",
+              "A typeface contains only uppercase letters, while a font contains only lowercase letters."
+            ],
+            "correct": 0,
+            "explanation": "The typeface is the design — the family. A font is one specific cut of it: a given weight, style and size."
+          },
+          {
+            "prompt": "Which typeface category is generally suitable for long-form text, such as books, magazines, and newspapers, because of its legibility?",
+            "options": ["Display fonts", "Script fonts", "Serif fonts", "Decorative fonts"],
+            "correct": 2,
+            "explanation": "Serifs guide the eye along a line of text, which is why they hold up over long passages. Display, script and decorative faces are made for short, expressive use."
+          },
+          {
+            "prompt": "What is the main difference between kerning and tracking?",
+            "options": [
+              "Kerning adjusts the space between lines, while tracking adjusts the space between paragraphs.",
+              "Kerning adjusts the space between two individual characters, while tracking adjusts spacing across a group of letters.",
+              "Kerning changes the font's weight, while tracking changes its height.",
+              "Kerning applies only to lowercase text, while tracking applies only to uppercase text."
+            ],
+            "correct": 1,
+            "explanation": "Kerning fine-tunes a single pair of letters. Tracking opens or closes the spacing evenly across a whole run of text."
+          },
+          {
+            "prompt": "Which factor can improve the legibility of a typeface when it is displayed at a small size?",
+            "options": [
+              "Using extremely thin strokes",
+              "Choosing a highly decorative typeface",
+              "Using a typeface with a taller x-height",
+              "Increasing the contrast between thick and thin strokes as much as possible"
+            ],
+            "correct": 2,
+            "explanation": "A taller x-height makes the lowercase letters read larger at the same point size, so the text stays legible when small. Thin strokes and high contrast do the opposite."
+          },
+          {
+            "prompt": "A designer is creating a formal restaurant menu and wants the typography to communicate elegance and sophistication. According to the lesson, what should guide the designer's font selection?",
+            "options": [
+              "The font's personality and whether it suits the content and intended audience",
+              "The number of decorative effects available in the font",
+              "The designer's preference, regardless of the menu's purpose",
+              "The use of as many different typefaces as possible"
+            ],
+            "correct": 0,
+            "explanation": "Fonts carry personality. The choice should answer to what the design is for and who will read it, not to the designer's taste alone or how many effects a face offers."
+          },
+          {
+            "prompt": "Which of the following is a recommended approach to combining fonts in a design?",
+            "options": [
+              "Combine several fonts from the same category that look almost identical.",
+              "Use at least five different fonts to make the design visually interesting.",
+              "Combine fonts with different characteristics, such as a serif and a sans serif, while keeping the number of fonts limited.",
+              "Use decorative fonts for every heading and paragraph."
+            ],
+            "correct": 2,
+            "explanation": "Contrast is what makes a pairing work, but the pair still has to get along. Two clearly different faces keep the design readable; a shelf of half-similar ones looks accidental."
+          },
+          {
+            "prompt": "A paragraph contains a single word on the last line, separated from the rest of the paragraph. What is this typesetting problem called?",
+            "options": ["A rag", "A widow", "A river", "An orphan"],
+            "correct": 1,
+            "explanation": "A short last line stranded on its own is a widow. An orphan is the opposite — a line stranded at the top of a new page or column."
+          }
+        ]
+      }
+    }
+  ]
+}
