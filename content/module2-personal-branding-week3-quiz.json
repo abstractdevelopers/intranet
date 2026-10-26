@@ -1,0 +1,109 @@
+{
+  "courseSlug": "personal-branding",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "Understanding Content Strategy",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "personal-branding-m2-week3",
+        "title": "Module 2 — Understanding Content Strategy",
+        "description": "Monday and Tuesday's combined quiz. It covers what a content strategy is and includes, choosing content pillars, and planning a calendar; then what the second video adds — how algorithms match content to viewers, on-target virality, staying consistent with one topic, picking the platform where your audience is, and building owned offers rather than relying on ads and brand deals.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-19",
+        "questions": [
+          {
+            "prompt": "What is the primary purpose of a content strategy for a brand or business?",
+            "options": [
+              "To publish as many posts as possible every day",
+              "To copy the content strategies of successful competitors",
+              "To plan what content to create, how often to publish, and how it supports business goals",
+              "To focus exclusively on gaining followers"
+            ],
+            "correct": 2,
+            "explanation": "A strategy answers what you make, how often, and why it matters to the goal. Volume, imitation and follower counts are all ways of avoiding that question."
+          },
+          {
+            "prompt": "Which of the following is an essential element of developing a content strategy?",
+            "options": [
+              "Defining goals, understanding the audience, selecting content pillars, choosing platforms, and planning a content calendar",
+              "Posting on every social media platform regardless of available resources",
+              "Prioritising viral content without considering the target audience",
+              "Creating content without measuring its performance"
+            ],
+            "correct": 0,
+            "explanation": "Those five decisions hang together: goals set direction, audience and pillars decide subject matter, and platform and calendar make it executable."
+          },
+          {
+            "prompt": "A fitness coach wants to establish clear content pillars for their social media account. Which option best represents appropriate content pillars?",
+            "options": [
+              "Monday, Wednesday, Friday, and Sunday",
+              "Instagram, TikTok, Facebook, and YouTube",
+              "Likes, comments, shares, and followers",
+              "Workout tips, nutrition advice, and client success stories"
+            ],
+            "correct": 3,
+            "explanation": "Pillars are the recurring subjects you want to be known for. The other options are days, platforms and metrics — none of them describe what the content is about."
+          },
+          {
+            "prompt": "According to the second video, what is the main way social media algorithms help creators grow?",
+            "options": [
+              "By showing every post exclusively to existing followers",
+              "By matching content with viewers who are likely to find it interesting",
+              "By promoting accounts that publish the highest number of posts",
+              "By prioritising creators who use the most hashtags"
+            ],
+            "correct": 1,
+            "explanation": "The algorithm is a matching system. It finds people who will engage with what you made, which is why clear, specific content travels further than volume."
+          },
+          {
+            "prompt": "What does the second video mean by on-target virality?",
+            "options": [
+              "Creating content that appeals equally to everyone on the internet",
+              "Trying to gain millions of views regardless of who watches",
+              "Reaching a large proportion of the specific audience a creator wants to attract",
+              "Publishing the same video on every available platform"
+            ],
+            "correct": 2,
+            "explanation": "Reach among the wrong people does not build a brand. On-target virality means the audience you wanted saw it — which is what converts into opportunity."
+          },
+          {
+            "prompt": "A content creator regularly posts about technology, fashion, sports, cooking, and finance on the same account, but wants to attract a specific audience interested in graphic design. Based on the second video, what should the creator do?",
+            "options": [
+              "Focus consistently on graphic design content intended for the target audience",
+              "Continue posting about every topic to reach the widest possible audience",
+              "Stop using captions so the algorithm can decide the account's topic",
+              "Publish more frequently without changing the content topics"
+            ],
+            "correct": 0,
+            "explanation": "A scattered account gives the audience and the algorithm no clear signal about who the content is for. Narrowing the focus is what makes the account findable."
+          },
+          {
+            "prompt": "What does the second video recommend when choosing social media platforms for a business or creator who wants to grow effectively?",
+            "options": [
+              "Establish a presence on every platform simultaneously",
+              "Focus only on the platform with the largest number of users",
+              "Move followers from one platform to another as frequently as possible",
+              "Focus on the platform where the target audience is most active and consistently create content there"
+            ],
+            "correct": 3,
+            "explanation": "Growth comes from depth on the platform your audience already uses, not from thin presence everywhere or from the biggest user base in general."
+          },
+          {
+            "prompt": "According to the second video, what is a more sustainable approach to making money from content than relying entirely on advertising revenue and brand deals?",
+            "options": [
+              "Publishing viral videos without offering any products or services",
+              "Using content to attract attention and directing that attention toward owned products, services, or affiliate offers",
+              "Focusing exclusively on increasing follower counts",
+              "Creating content for as many unrelated audiences as possible"
+            ],
+            "correct": 1,
+            "explanation": "Ad rates and sponsorships are outside your control. Pointing attention at something you own or earn from turns an audience into income you can sustain."
+          }
+        ]
+      }
+    }
+  ]
+}
