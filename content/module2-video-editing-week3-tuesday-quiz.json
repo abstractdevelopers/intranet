@@ -1,0 +1,104 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "Professional Talking-Head Editing",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "video-editing-m2-week3-tuesday",
+        "title": "Module 2 — Tuesday — Audio Editing in CapCut",
+        "description": "Tuesday's quiz covers audio quality, syncing external audio, Mark Beats, cutting before the beat drops, keyframed volume, fades, Enhanced Voice, and the difference between J-cuts and L-cuts.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-20",
+        "questions": [
+          {
+            "prompt": "Why does the instructor consider audio quality especially important when creating video content?",
+            "options": [
+              "Audio quality eliminates the need for video editing.",
+              "Audio quality is only important for cinematic videos.",
+              "Poor audio can cause viewers to lose interest, even when the video quality is good.",
+              "Good audio automatically improves video resolution."
+            ],
+            "correct": 2,
+            "explanation": "Viewers will forgive a soft image far more readily than sound they have to strain to hear. Bad audio drives people away even when the picture is clean."
+          },
+          {
+            "prompt": "Which CapCut feature allows an editor to synchronise external audio with video footage automatically?",
+            "options": ["Mark Beats", "Sync Video to Sound", "Enhanced Voice", "Extract Audio"],
+            "correct": 1,
+            "explanation": "Sync Video to Sound matches a separately recorded track to the picture, which saves hunting for the right offset by hand. Mark Beats, Enhanced Voice and Extract Audio all do other jobs."
+          },
+          {
+            "prompt": "What is the purpose of using the Mark Beats feature when editing music in CapCut?",
+            "options": [
+              "To remove background noise from recorded audio.",
+              "To increase the volume of every music track.",
+              "To separate the audio from the video automatically.",
+              "To identify beats in a song so video clips can be aligned with the music."
+            ],
+            "correct": 3,
+            "explanation": "Mark Beats puts markers on the song's beats so you can snap cuts to them instead of guessing where the rhythm lands."
+          },
+          {
+            "prompt": "According to the instructor, why might cutting a video one frame before a beat drops create a smoother viewing experience?",
+            "options": [
+              "It can make the visual cut feel more naturally synchronised with the music.",
+              "It increases the video's frame rate automatically.",
+              "It prevents the music from playing during transitions.",
+              "It removes the need to edit the audio track."
+            ],
+            "correct": 0,
+            "explanation": "Because we see slightly before we hear, cutting a frame early lands the visual change right on the beat perceptually — the edit feels tighter than cutting exactly on it."
+          },
+          {
+            "prompt": "What is the advantage of using keyframes to control music volume?",
+            "options": [
+              "They automatically remove unwanted sounds from a recording.",
+              "They allow the editor to gradually change volume levels instead of creating abrupt transitions.",
+              "They synchronise all video clips with external microphones.",
+              "They convert background music into sound effects."
+            ],
+            "correct": 1,
+            "explanation": "Keyframes hold a volume value at a point in time, so setting two animates smoothly between them. That gives a gradual dip or lift instead of a jarring jump."
+          },
+          {
+            "prompt": "What does applying a fade-in effect to an audio clip achieve?",
+            "options": [
+              "It makes the audio start at full volume and stop immediately.",
+              "It removes the audio from the timeline.",
+              "It gradually increases the audio from a quieter level to its intended volume.",
+              "It automatically synchronises the audio with the video."
+            ],
+            "correct": 2,
+            "explanation": "A fade-in ramps the clip up from silence or a low level, so the sound arrives gently rather than starting abruptly."
+          },
+          {
+            "prompt": "What is the primary purpose of CapCut's Enhanced Voice feature, as explained in the tutorial?",
+            "options": [
+              "To reduce background noise and improve voice clarity.",
+              "To add music markers to a soundtrack.",
+              "To create J-cuts and L-cuts automatically.",
+              "To increase the resolution of video footage."
+            ],
+            "correct": 0,
+            "explanation": "Enhanced Voice cleans up recorded speech, lifting the voice while pushing down noise so the dialogue sounds clearer."
+          },
+          {
+            "prompt": "What is the main difference between a J-cut and an L-cut?",
+            "options": [
+              "A J-cut changes video speed, while an L-cut changes audio pitch.",
+              "A J-cut removes the previous scene's audio, while an L-cut removes the next scene's audio.",
+              "A J-cut and an L-cut are both techniques for increasing music volume.",
+              "In a J-cut, the next scene's audio begins before its video appears; in an L-cut, the previous scene's audio continues after the video changes."
+            ],
+            "correct": 3,
+            "explanation": "The names describe the shape on the timeline. In a J-cut the incoming audio leads its picture; in an L-cut the outgoing audio trails behind its picture."
+          }
+        ]
+      }
+    }
+  ]
+}
