@@ -1,0 +1,109 @@
+{
+  "courseSlug": "communication-influence",
+  "weeks": [
+    {
+      "weekNumber": 3,
+      "moduleNumber": 2,
+      "title": "Developing a Strong Speaking Voice",
+      "releaseDate": "2026-10-19",
+      "quiz": {
+        "slug": "communication-influence-m2-week3",
+        "title": "Module 2 — Developing a Strong Speaking Voice",
+        "description": "Monday's quiz covers the elements of vocal communication — rate of speech, volume, pitch, tonality and pausing — plus varying pace, pausing to let listeners process, handling nerves, pronunciation with a second language, neutral ears, and learning from effective speakers.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-10-19",
+        "questions": [
+          {
+            "prompt": "Which five elements form the foundation of effective vocal communication?",
+            "options": [
+              "Grammar, spelling, vocabulary, gestures, and posture",
+              "Rate of speech, volume, pitch, tonality, and pausing",
+              "Confidence, appearance, facial expressions, and eye contact",
+              "Listening, writing, reading, and speaking"
+            ],
+            "correct": 1,
+            "explanation": "These five are the working controls of delivery. The others matter to communication, but they are not the vocal elements you adjust while speaking."
+          },
+          {
+            "prompt": "Why is it important to vary your rate of speech when speaking to an audience?",
+            "options": [
+              "It makes the speech longer.",
+              "It prevents the audience from asking questions.",
+              "It keeps listeners engaged and helps emphasize important points.",
+              "It makes every sentence sound the same."
+            ],
+            "correct": 2,
+            "explanation": "A steady pace flattens a speech. Slowing down or speeding up is how a speaker signals that something matters and pulls attention back."
+          },
+          {
+            "prompt": "When preparing to answer the question \"Tell me about yourself,\" what is the most effective approach?",
+            "options": [
+              "Share every personal detail about your life.",
+              "Give a relevant story that demonstrates your experience, values, and connection to the role.",
+              "Memorize a long speech without considering your audience.",
+              "Avoid mentioning your experience or achievements."
+            ],
+            "correct": 1,
+            "explanation": "The question is an invitation to frame yourself in relation to what you are being considered for. A relevant story does that; a recital of biography does not."
+          },
+          {
+            "prompt": "Which strategy can help reduce nervousness before public speaking?",
+            "options": [
+              "Avoid preparing until the last minute.",
+              "Speak as quickly as possible to finish early.",
+              "Focus only on what could go wrong.",
+              "Practice breathing techniques, engage in light physical activity, and focus on the audience."
+            ],
+            "correct": 3,
+            "explanation": "Breathing and light movement settle the body, and turning attention outward to the audience takes it off the speaker's own anxiety."
+          },
+          {
+            "prompt": "What is one important purpose of pausing during a speech?",
+            "options": [
+              "To give listeners time to process information and give the speaker time to think.",
+              "To make the audience lose interest.",
+              "To avoid emphasizing important points.",
+              "To replace the need for preparation."
+            ],
+            "correct": 0,
+            "explanation": "A pause serves both sides at once: it lets the point land and gives the speaker a moment to collect the next thought."
+          },
+          {
+            "prompt": "What is a useful way to improve pronunciation when speaking a second language?",
+            "options": [
+              "Avoid speaking the language until you are fluent.",
+              "Speak as quickly as possible.",
+              "Record yourself speaking and seek feedback from qualified professionals, such as a speech-language pathologist or language teacher.",
+              "Focus only on learning new vocabulary."
+            ],
+            "correct": 2,
+            "explanation": "Recording reveals what you cannot hear while speaking, and informed feedback turns that into something you can correct. Waiting for fluency delays the practice that produces it."
+          },
+          {
+            "prompt": "In communication, what does the idea of having \"neutral ears\" mean?",
+            "options": [
+              "Speaking without changing your tone.",
+              "Practicing in complete silence.",
+              "Listening only to people who agree with you.",
+              "Practicing with people who have no fixed expectations about your usual communication style."
+            ],
+            "correct": 3,
+            "explanation": "People who know you hear what they expect from you. A listener with no assumptions gives you accurate feedback on what you actually said."
+          },
+          {
+            "prompt": "Why can observing and imitating effective communicators help you improve your speaking skills?",
+            "options": [
+              "It allows you to avoid developing your own communication style.",
+              "It helps you learn effective techniques that you can adapt to develop your own style.",
+              "It guarantees that every audience will respond positively.",
+              "It removes the need to practice speaking."
+            ],
+            "correct": 1,
+            "explanation": "Imitation is a starting point for finding your own approach, not a substitute for it. You borrow techniques and adapt them until they fit you."
+          }
+        ]
+      }
+    }
+  ]
+}
