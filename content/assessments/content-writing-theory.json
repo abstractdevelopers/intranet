@@ -1,0 +1,188 @@
+{
+  "title": "Content Writing — Objective Assessment",
+  "description": "Objective assessment. 15 multiple-choice questions.",
+  "instructions": "Carefully read each question and select the most appropriate answer from options A-D. Each question carries equal marks. Multiple-choice questions are marked automatically when you submit.",
+  "passMark": 50,
+  "questions": [
+    {
+      "kind": "MCQ",
+      "prompt": "What does the rule \u201cone post equals one idea\u201d mean?",
+      "points": 1,
+      "options": [
+        "Every post should contain only one sentence.",
+        "Each post should focus on one main idea rather than several different ideas.",
+        "A writer should publish only one post per day.",
+        "Each post should use only one type of visual."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Why is it important for a writer to understand their audience before creating content?",
+      "points": 1,
+      "options": [
+        "It allows the writer to use more complicated vocabulary.",
+        "It helps determine what information, language, and approach will be relevant.",
+        "It guarantees that everyone will agree with the content.",
+        "It allows the writer to avoid having a clear purpose."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the primary difference between active voice and passive voice?",
+      "points": 1,
+      "options": [
+        "Active voice uses shorter words, while passive voice uses longer words.",
+        "In active voice, the subject performs the action; in passive voice, the subject receives the action.",
+        "Active voice is only used in fiction, while passive voice is used in nonfiction.",
+        "Active voice describes emotions, while passive voice describes physical actions."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Which hashtag strategy does the second video recommend for Instagram captions?",
+      "points": 1,
+      "options": [
+        "Use all 30 hashtags Instagram allows on every post.",
+        "Avoid hashtags completely because they never help content get discovered.",
+        "Use long, general hashtags to attract the widest possible audience.",
+        "Use one or two relevant hashtags to target a specific audience."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the video, what is the first step in creating an engaging LinkedIn post?",
+      "points": 1,
+      "options": [
+        "Adding an attractive image to the post.",
+        "Writing a catchy hook immediately.",
+        "Finding a unique, fresh, and interesting insight.",
+        "Adding hashtags to increase visibility."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What can happen when content does not have a clear purpose?",
+      "points": 1,
+      "options": [
+        "The content may contain many words without actually accomplishing anything.",
+        "The audience will automatically understand the message.",
+        "The content becomes more persuasive.",
+        "The writer becomes more creative."
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Consider the sentence: \"He was running down the street.\" Which revision follows the recommendation to reduce unnecessary \"was + verb-ing\" constructions?",
+      "points": 1,
+      "options": [
+        "He had been running down the street.",
+        "He was quickly running down the street.",
+        "He ran down the street.",
+        "He continued to be running down the street."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the first video, why should social media writers aim to communicate their message in as few words as possible?",
+      "points": 1,
+      "options": [
+        "Longer posts are not allowed on social media platforms.",
+        "People often scroll or skim quickly, so concise writing helps capture their attention.",
+        "Short posts do not require correct grammar or spelling.",
+        "Short posts automatically receive more likes and comments."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What are the three main roles of a good LinkedIn hook?",
+      "points": 1,
+      "options": [
+        "Entertain the reader, advertise a product, and include hashtags.",
+        "Trigger interest, make the topic clear, and help readers feel that the content is relevant to them.",
+        "Introduce the writer, explain their background, and summarize the conclusion.",
+        "Provide every detail, answer all questions, and end the discussion."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Which question helps a writer determine the audience's existing level of knowledge?",
+      "points": 1,
+      "options": [
+        "What platform should I publish on?",
+        "How long should my article be?",
+        "What does my audience already know?",
+        "What font should I use?"
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Why should writers avoid using overly complicated sentences too frequently?",
+      "points": 1,
+      "options": [
+        "Complicated sentences are always grammatically incorrect.",
+        "They prevent writers from including descriptive details.",
+        "They can slow down reading, obscure the main point, and distance readers from the action.",
+        "They make every piece of writing sound informal."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the second video, why does it recommend beginning LinkedIn captions with an intriguing hook?",
+      "points": 1,
+      "options": [
+        "It encourages readers to click \u201csee more\u201d and continue reading.",
+        "It allows users to publish without writing a complete message.",
+        "It guarantees that every reader will follow the account.",
+        "It removes the need to include a call to action."
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Which of the following is an example of a content purpose?",
+      "points": 1,
+      "options": [
+        "Increasing the number of words in an article.",
+        "Making the writer sound intelligent.",
+        "Educating the audience about a subject.",
+        "Using as many writing techniques as possible."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the video, which of the following is a useful way to discover original insights for LinkedIn content?",
+      "points": 1,
+      "options": [
+        "Copying popular posts from successful creators.",
+        "Repeating the same ideas used by competitors.",
+        "Writing only about trending topics without considering personal experience.",
+        "Analyzing audience questions, documenting daily experiments, and reflecting on personal experiences."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "How can sentence length influence the pace and mood of a piece of writing?",
+      "points": 1,
+      "options": [
+        "Short sentences generally convey urgency and tension, while longer sentences can create a more reflective, thoughtful mood.",
+        "Longer sentences always make writing more exciting, while shorter sentences make it boring.",
+        "Sentence length has no effect on how readers experience a story.",
+        "Short sentences are appropriate only for dialogue, while longer sentences are appropriate only for descriptions."
+      ],
+      "correct": 0
+    }
+  ]
+}
