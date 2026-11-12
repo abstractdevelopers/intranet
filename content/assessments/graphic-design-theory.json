@@ -1,0 +1,188 @@
+{
+  "title": "Graphic Design — Objective Assessment",
+  "description": "Module 1 & Module 2 objective assessment. 15 multiple-choice questions.",
+  "instructions": "Answer all 15 questions. Select the most appropriate answer from the options provided. Multiple-choice questions are marked automatically when you submit.",
+  "passMark": 50,
+  "questions": [
+    {
+      "kind": "MCQ",
+      "prompt": "What is the primary function of visual hierarchy in a design?",
+      "points": 1,
+      "options": [
+        "To arrange elements alphabetically",
+        "To guide viewers on what to notice first and where to look next",
+        "To ensure that every element receives equal attention",
+        "To make all sections of a design visually identical"
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Which software is the primary tool for the Smartphone Graphic Design track?",
+      "points": 1,
+      "options": [
+        "Adobe Photoshop",
+        "Canva",
+        "PixelLab",
+        "Adobe Illustrator"
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What does the 60/30/10 rule mean in colour palette design?",
+      "points": 1,
+      "options": [
+        "Using three colours equally in a design",
+        "Using 60% primary colour, 30% secondary colour, and 10% accent colour",
+        "Using 60% accent colour, 30% primary colour, and 10% secondary colour",
+        "Using only three shades of the same colour"
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the typography lesson, why should designers avoid forcing paragraphs into justified alignment when it creates unwanted gaps?",
+      "points": 1,
+      "options": [
+        "Justified text cannot be used in graphic design",
+        "It makes the font weight too heavy",
+        "Large or awkward spaces can disrupt the natural reading flow",
+        "It prevents designers from using a grid"
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "A designer notices that a poster looks cluttered and uncomfortable to read. Which adjustment would most likely improve the composition?",
+      "points": 1,
+      "options": [
+        "Adding more decorative elements",
+        "Making every text element bold",
+        "Increasing the white space between content elements",
+        "Removing all margins from the design"
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the primary purpose of learning the Lightroom Mobile interface?",
+      "points": 1,
+      "options": [
+        "To understand where its major controls and features are located",
+        "To replace PixelLab completely",
+        "To learn professional video editing",
+        "To create vector illustrations"
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What should you consider when choosing text and background colours?",
+      "points": 1,
+      "options": [
+        "Whether the colours make the text difficult to read",
+        "Whether the text and background have exactly the same colour",
+        "Whether the background is brighter than every other element",
+        "Whether the design contains as many colours as possible"
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "In the typography lesson, a designer uses a heading size of 75 points and divides it by 5 to determine the body text size. What is the resulting body text size?",
+      "points": 1,
+      "options": [
+        "10 points",
+        "15 points",
+        "25 points",
+        "35 points"
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Why is consistent alignment important in a design?",
+      "points": 1,
+      "options": [
+        "It makes every object identical in appearance.",
+        "It helps the composition look organised and easier to navigate.",
+        "It ensures that all text is centre-aligned.",
+        "It eliminates the need for white space."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the main purpose of becoming familiar with design software at this stage of the course?",
+      "points": 1,
+      "options": [
+        "To master every available design tool immediately",
+        "To become comfortable with the software's interface and working environment",
+        "To begin creating professional client projects",
+        "To learn how to use every feature before learning design principles"
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the main purpose of an accent colour in a design?",
+      "points": 1,
+      "options": [
+        "To fill every empty space",
+        "To replace the primary colour",
+        "To make all text appear the same",
+        "To draw attention to important elements, such as call-to-action buttons"
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "How can lines and shapes help improve the organisation of typography in a design?",
+      "points": 1,
+      "options": [
+        "By making every text element the same size",
+        "By visually separating and grouping related text elements",
+        "By replacing all headings with decorative symbols",
+        "By forcing every paragraph into the centre of the layout"
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "A designer wants an important announcement to catch the viewer's attention immediately. Which technique would best help achieve this?",
+      "points": 1,
+      "options": [
+        "Making every element the same size and colour",
+        "Placing all elements close together",
+        "Using contrast to make the announcement stand out",
+        "Removing the visual hierarchy from the design"
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Which of the following best demonstrates the principle of repetition?",
+      "points": 1,
+      "options": [
+        "Using a different font style for every heading",
+        "Placing unrelated elements next to each other",
+        "Using the same colour palette and header style throughout a project",
+        "Making the main headline smaller than the supporting text"
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Why should designers test different colour combinations before finalising a design?",
+      "points": 1,
+      "options": [
+        "To ensure the design uses at least ten colours",
+        "To make every colour equally prominent",
+        "To eliminate the need for visual hierarchy",
+        "To check readability, contrast, and how well the colours work together"
+      ],
+      "correct": 3
+    }
+  ]
+}
