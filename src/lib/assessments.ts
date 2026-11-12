@@ -153,6 +153,14 @@ async function buildView(assessmentId: string, userId: string): Promise<Assessme
   const questions = assessment.questions as RawQuestion[];
   const totalPoints = questions.reduce((sum, q) => sum + q.points, 0);
   const submission = assessment.submissions[0] ?? null;
+  const window = assessmentWindow(assessment);
+
+  // Withhold the paper until it opens. A paper is published ahead of time so
+  // the countdown and "opens Thursday" notice can show, but the questions must
+  // not be readable before the window — otherwise a student could see them
+  // early. A student who already has a submission (only possible once open)
+  // keeps their view.
+  const questionsVisible = !window.upcoming || Boolean(submission);
 
   const storedAnswers =
     submission && submission.answers && typeof submission.answers === "object"
@@ -169,16 +177,18 @@ async function buildView(assessmentId: string, userId: string): Promise<Assessme
     pathway: assessment.pathway,
     maxScore: assessment.maxScore,
     passMark: assessment.passMark,
-    window: assessmentWindow(assessment),
-    questions: questions.map((q) => ({
-      id: q.id,
-      kind: q.kind as QuestionKind,
-      prompt: q.prompt,
-      points: q.points,
-      order: q.order,
-      options: q.options,
-    })),
-    totalPoints,
+    window,
+    questions: questionsVisible
+      ? questions.map((q) => ({
+          id: q.id,
+          kind: q.kind as QuestionKind,
+          prompt: q.prompt,
+          points: q.points,
+          order: q.order,
+          options: q.options,
+        }))
+      : [],
+    totalPoints: questionsVisible ? totalPoints : 0,
     submission: submission
       ? {
           status: submission.status,

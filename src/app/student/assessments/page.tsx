@@ -98,6 +98,12 @@ export default async function StudentAssessmentsPage() {
                     <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-success">
                       <IconCheckCircle className="h-4 w-4" /> {Math.round(data.submission.score)}%
                     </p>
+                  ) : data.window.upcoming ? (
+                    <p className="mt-3 text-xs text-text-muted">
+                      {data.kind === "THEORY"
+                        ? `${data.totalPoints} marks · opens Thursday`
+                        : `Marked out of ${data.maxScore} · opens Thursday`}
+                    </p>
                   ) : (
                     <p className="mt-3 text-xs text-text-muted">
                       {data.kind === "THEORY"

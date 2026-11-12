@@ -1,0 +1,188 @@
+{
+  "title": "Video Editing — Objective Assessment",
+  "description": "Module 1 & Module 2 objective assessment. 15 multiple-choice questions.",
+  "instructions": "Answer all 15 questions. Select the most appropriate answer from the options provided. Multiple-choice questions are marked automatically when you submit.",
+  "passMark": 50,
+  "questions": [
+    {
+      "kind": "MCQ",
+      "prompt": "What is the main difference between a J-cut and an L-cut?",
+      "points": 1,
+      "options": [
+        "A J-cut changes video speed, while an L-cut changes audio pitch.",
+        "A J-cut removes the previous scene's audio, while an L-cut removes the next scene's audio.",
+        "A J-cut and an L-cut are both techniques for increasing music volume.",
+        "In a J-cut, the next scene's audio begins before its video appears; in an L-cut, the previous scene's audio continues after the video changes."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the main purpose of cutting and trimming footage?",
+      "points": 1,
+      "options": [
+        "To increase the video's resolution.",
+        "To keep the useful parts of a clip and remove unnecessary sections.",
+        "To automatically add music to the video.",
+        "To change a landscape video into portrait."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Which type of shot is primarily used to establish where a scene takes place?",
+      "points": 1,
+      "options": [
+        "Extreme close-up",
+        "Cowboy shot",
+        "Medium close-up",
+        "Establishing shot"
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the purpose of using the Mark Beats feature when editing music in CapCut?",
+      "points": 1,
+      "options": [
+        "To remove background noise from recorded audio.",
+        "To increase the volume of every music track.",
+        "To separate the audio from the video automatically.",
+        "To identify beats in a song so video clips can be aligned with the music."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "In the tutorial, why does the instructor separate individual words into different text layers?",
+      "points": 1,
+      "options": [
+        "To make the video file smaller.",
+        "To allow individual words to have different fonts, positions, colours, and animations.",
+        "To prevent the captions from appearing on screen.",
+        "To automatically correct spelling mistakes."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Why is rearranging clips important when building a video?",
+      "points": 1,
+      "options": [
+        "The order of clips can affect the flow, meaning, and story of the video.",
+        "It automatically improves the quality of every clip.",
+        "It removes the need to trim footage.",
+        "It changes the video's aspect ratio."
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "A filmmaker wants to make a character appear powerful and dominant in a scene. Which camera angle would best support this intention?",
+      "points": 1,
+      "options": [
+        "High-angle shot",
+        "Low-angle shot",
+        "Extreme close-up",
+        "Over-the-shoulder shot"
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the advantage of using keyframes to control music volume?",
+      "points": 1,
+      "options": [
+        "They automatically remove unwanted sounds from a recording.",
+        "They allow the editor to gradually change volume levels instead of creating abrupt transitions.",
+        "They synchronise all video clips with external microphones.",
+        "They convert background music into sound effects."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the purpose of enabling the Instagram interface preview while positioning captions?",
+      "points": 1,
+      "options": [
+        "To automatically add Instagram music to the video.",
+        "To change all captions to Instagram's default font.",
+        "To increase the size of the video timeline.",
+        "To ensure captions do not appear behind interface elements such as buttons."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Which statement best describes the proper use of transitions?",
+      "points": 1,
+      "options": [
+        "Every clip should have a different transition.",
+        "Transitions should be used as frequently as possible.",
+        "Transitions should replace good editing decisions.",
+        "Transitions should serve the edit rather than distract from it."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the instructor, why might cutting a video one frame before a beat drops create a smoother viewing experience?",
+      "points": 1,
+      "options": [
+        "It can make the visual cut feel more naturally synchronised with the music.",
+        "It increases the video's frame rate automatically.",
+        "It prevents the music from playing during transitions.",
+        "It removes the need to edit the audio track."
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the primary purpose of CapCut's Enhanced Voice feature, as explained in the tutorial?",
+      "points": 1,
+      "options": [
+        "To reduce background noise and improve voice clarity.",
+        "To add music markers to a soundtrack.",
+        "To create J-cuts and L-cuts automatically.",
+        "To increase the resolution of video footage."
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "An editor wants a caption to move upward while also becoming less blurry. According to the tutorial, which technique can help create this customised motion?",
+      "points": 1,
+      "options": [
+        "Changing the video's aspect ratio several times.",
+        "Applying the same font to every text layer.",
+        "Using transform keyframes to control the caption's movement and adjusting the animation's speed curve.",
+        "Increasing the background music volume."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "You created a video in landscape format, but you want to publish it as a portrait video for a platform that uses vertical content. What should you do?",
+      "points": 1,
+      "options": [
+        "Split every clip in the timeline.",
+        "Change the project's aspect ratio from landscape to portrait and adjust the framing as needed.",
+        "Add a transition between every clip.",
+        "Increase the video's frame rate."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the potential problem with cutting scenes too quickly?",
+      "points": 1,
+      "options": [
+        "It automatically lowers the video's resolution.",
+        "It makes every scene feel emotional.",
+        "It can confuse viewers and make it difficult for them to follow what is happening.",
+        "It prevents the editor from adding music."
+      ],
+      "correct": 2
+    }
+  ]
+}
