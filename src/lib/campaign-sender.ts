@@ -221,8 +221,10 @@ async function renewLease(holder: string): Promise<void> {
  *
  * The increment is a single atomic upsert, so concurrent callers serialise on
  * the row and cannot both read the same count.
+ *
+ * Exported so other bulk senders (result release) pace against the same window.
  */
-async function reserveSendSlots(n: number): Promise<void> {
+export async function reserveSendSlots(n: number): Promise<void> {
   for (;;) {
     const rows = await db.$queryRaw<{ count: number; windowStart: Date }[]>`
       INSERT INTO "CampaignRateWindow" ("id", "windowStart", "count")

@@ -17,6 +17,8 @@ export default async function AdminDashboard() {
     activeCourses,
     awaitingReview,
     recentActivity,
+    resultCounts,
+    awaitingAssessmentMarking,
   ] = await Promise.all([
     db.user.count({ where: { role: "STUDENT" } }),
     db.user.count({ where: { role: "STUDENT", status: "ACTIVE" } }),
@@ -28,7 +30,15 @@ export default async function AdminDashboard() {
       take: 8,
       include: { actor: { include: { profile: true } } },
     }),
+    db.studentResult.findMany({ select: { overallPercent: true, band: true, emailSentAt: true } }),
+    db.assessmentSubmission.count({ where: { status: "SUBMITTED" } }),
   ]);
+
+  const releasedResults = resultCounts.filter((r) => r.emailSentAt !== null).length;
+  const averageOverall =
+    resultCounts.length > 0
+      ? Math.round(resultCounts.reduce((s, r) => s + r.overallPercent, 0) / resultCounts.length)
+      : null;
 
   const stats = [
     { label: "Total students", value: totalStudents },
@@ -64,6 +74,39 @@ export default async function AdminDashboard() {
           </div>
         </Card>
       ) : null}
+
+      <section>
+        <h2 className="text-lg font-semibold">End-of-term results</h2>
+        <Card className="mt-3">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <p className="text-xs text-text-muted">Average overall score</p>
+              <p className="mt-1 text-2xl font-bold">
+                {averageOverall === null ? "—" : `${averageOverall}%`}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-text-muted">Students with a collated result</p>
+              <p className="mt-1 text-2xl font-bold">{resultCounts.length}</p>
+            </div>
+            <div>
+              <p className="text-xs text-text-muted">Reports released</p>
+              <p className="mt-1 text-2xl font-bold">
+                {releasedResults}
+                <span className="text-base font-normal text-text-muted"> / {resultCounts.length}</span>
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+            <p className="text-sm text-text-muted">
+              {awaitingAssessmentMarking > 0
+                ? `${awaitingAssessmentMarking} assessment submission${awaitingAssessmentMarking === 1 ? "" : "s"} awaiting marking.`
+                : "No assessment submissions awaiting marking."}
+            </p>
+            <ButtonLink href="/admin/results">Open results</ButtonLink>
+          </div>
+        </Card>
+      </section>
 
       <section>
         <h2 className="text-lg font-semibold">Recent activity</h2>

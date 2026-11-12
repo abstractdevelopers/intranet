@@ -118,6 +118,10 @@ model User {
   promises                Promise[]
   promiseCheers           PromiseCheer[]
   quizAttempts            QuizAttempt[]
+  assessmentSubmissions   AssessmentSubmission[]
+  assessmentGraded        AssessmentSubmission[] @relation("AssessmentGrader")
+  studentResult           StudentResult?
+  releasedResults         StudentResult[]        @relation("ResultReleaser")
 }
 
 // ---------------------------------------------------------------------------
@@ -196,6 +200,173 @@ model QuizAttempt {
   submittedAt DateTime @default(now())
 
   @@index([userId, quizId])
+}
+
+// ---------------------------------------------------------------------------
+// End-of-term assessments (theory + practical)
+// ---------------------------------------------------------------------------
+
+/**
+ * A pathway assessment. Every student sits exactly one THEORY and one
+ * PRACTICAL paper: the one matching their pathway. `pathway` null makes a paper
+ * apply to every pathway (used as a fallback before the per-pathway papers
+ * exist).
+ *
+ * The window is per-paper: `openAt` is when students may begin and `closeAt` is
+ * the hard submission deadline. Both are enforced server-side — the UI only
+ * reflects them.
+ */
+model Assessment {
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  title        String
+  description  String?
+  kind         String // THEORY | PRACTICAL
+  pathway      String? // null = every pathway
+  instructions String?
+  // Submission window. Null openAt means "already open"; null closeAt means
+  // "no deadline", but the academy always sets one.
+  openAt       DateTime?
+  closeAt      DateTime?
+  // Practical papers are marked out of maxScore. Theory papers derive their
+  // total from the question points and normalise to a percentage, so maxScore
+  // is ignored there.
+  maxScore     Int       @default(100)
+  passMark     Int       @default(50)
+  status       String    @default("DRAFT") // DRAFT | PUBLISHED | ARCHIVED
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  questions   AssessmentQuestion[]
+  submissions AssessmentSubmission[]
+
+  @@index([pathway, kind, status])
+}
+
+/**
+ * A question on a theory paper.
+ *
+ * MCQ questions are auto-graded from `AssessmentOption.isCorrect`; TEXT
+ * questions are marked by staff. `points` is what the question is worth, so the
+ * paper total is the sum of its questions and each answer contributes its own
+ * weight to the final percentage.
+ */
+model AssessmentQuestion {
+  id           String @id @default(cuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  kind         String // MCQ | TEXT
+  prompt       String
+  explanation  String? // shown to staff while marking, never to students
+  points       Int    @default(1)
+  order        Int
+
+  options AssessmentOption[]
+
+  @@index([assessmentId, order])
+}
+
+model AssessmentOption {
+  id         String             @id @default(cuid())
+  questionId String
+  question   AssessmentQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  label      String
+  isCorrect  Boolean            @default(false)
+  order      Int
+
+  @@index([questionId, order])
+}
+
+/**
+ * One student's answer to one paper. Upserted on `(assessmentId, userId)`, so a
+ * student may revise their answers freely until the deadline and exactly one
+ * paper is recorded.
+ *
+ * `answers` maps question id to the chosen option id (MCQ) or the written text
+ * (TEXT). `autoScore` is the MCQ-only percentage, `score` the final percentage
+ * after staff mark any written answers or the practical deliverable.
+ */
+model AssessmentSubmission {
+  id           String     @id @default(cuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status       String     @default("SUBMITTED") // SUBMITTED | GRADED
+  answers      Json?
+  // Staff marks for written (TEXT) theory questions, keyed by question id, as
+  // points awarded. MCQ questions are auto-scored and never appear here.
+  marks        Json?
+  // Practical deliverable: written response, a hosted link, or uploaded files.
+  textContent  String?
+  externalUrl  String?
+  autoScore    Float? // MCQ-only percentage, theory papers
+  score        Float? // final percentage 0-100 once marked
+  gradedById   String?
+  gradedBy     User?      @relation("AssessmentGrader", fields: [gradedById], references: [id])
+  gradedAt     DateTime?
+  feedback     String?
+  submittedAt  DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  files AssessmentSubmissionFile[]
+
+  @@unique([assessmentId, userId])
+  @@index([userId, status])
+}
+
+model AssessmentSubmissionFile {
+  id           String               @id @default(cuid())
+  submissionId String
+  submission   AssessmentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  documentId   String
+  document     Document             @relation(fields: [documentId], references: [id])
+  fileName     String
+}
+
+/**
+ * Grading weights for the final academic score. A single global row: the three
+ * components always sum to 100, so the overall result can never exceed 100%
+ * however much work a student completes.
+ */
+model AssessmentConfig {
+  id               String   @id @default("global")
+  assignmentWeight Int      @default(50)
+  theoryWeight     Int      @default(30)
+  practicalWeight  Int      @default(20)
+  updatedById      String?
+  updatedAt        DateTime @updatedAt
+}
+
+/**
+ * A student's collated end-of-term result.
+ *
+ * Computed from their assignment average and their theory/practical papers, as
+ * a single percentage that can never exceed 100. Hidden from the student until
+ * staff release it — `released` is the gate the student portal reads, and the
+ * report email is sent at release.
+ */
+model StudentResult {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Component percentages (0-100). A missing component is null and is
+  // re-normalised away rather than counted as zero.
+  assignmentPercent Float?
+  theoryPercent     Float?
+  practicalPercent  Float?
+  overallPercent    Float // the final, capped 0-100 figure
+  band              String // FAIL | PROGRESS | DISTINCTION
+  released          Boolean   @default(false)
+  releasedAt        DateTime?
+  releasedById      String?
+  releasedBy        User?     @relation("ResultReleaser", fields: [releasedById], references: [id])
+  emailSentAt       DateTime?
+  emailError        String?
+  computedAt        DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([released])
 }
 
 model Profile {
@@ -419,6 +590,7 @@ model Document {
   submissionFiles SubmissionFile[]
   projectAssets   ProjectAsset[]
   profileAvatars  Profile[]        @relation("ProfileAvatar")
+  assessmentFiles AssessmentSubmissionFile[]
 }
 
 // ---------------------------------------------------------------------------

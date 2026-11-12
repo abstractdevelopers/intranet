@@ -357,3 +357,72 @@ export const PATHWAY_TONES: Record<Pathway, string> = {
   COMMUNICATION_INFLUENCE: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
   CONTENT_WRITING: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
 };
+
+// ---------------------------------------------------------------------------
+// End-of-term assessments (theory + practical)
+// ---------------------------------------------------------------------------
+
+export const ASSESSMENT_KIND = {
+  THEORY: "THEORY",
+  PRACTICAL: "PRACTICAL",
+} as const;
+
+export type AssessmentKind = keyof typeof ASSESSMENT_KIND;
+
+export const ASSESSMENT_STATUS = {
+  DRAFT: "DRAFT",
+  PUBLISHED: "PUBLISHED",
+  ARCHIVED: "ARCHIVED",
+} as const;
+
+export const QUESTION_KIND = {
+  MCQ: "MCQ",
+  TEXT: "TEXT",
+} as const;
+
+export type QuestionKind = keyof typeof QUESTION_KIND;
+
+export const ASSESSMENT_SUBMISSION_STATUS = {
+  SUBMITTED: "SUBMITTED",
+  GRADED: "GRADED",
+} as const;
+
+/**
+ * The assessment window, shared by both papers: opens Thursday 12 November 2026
+ * and closes Saturday 14 November at 14:00 WAT. WAT is UTC+1 year-round, so the
+ * deadline is 13:00 UTC — the same convention `atWat` uses for releases.
+ *
+ * Enforced server-side on every read and write; the UI only reflects it.
+ */
+export const ASSESSMENT_OPENS_AT = new Date("2026-11-12T09:00:00.000Z"); // 10:00 WAT Thu
+export const ASSESSMENT_CLOSES_AT = new Date("2026-11-14T13:00:00.000Z"); // 14:00 WAT Sat
+
+/**
+ * Result bands. The band decides which report message a student receives, so
+ * the thresholds are named here rather than repeated in the email code.
+ */
+export const RESULT_BANDS = {
+  FAIL: "FAIL", // below 50%
+  PROGRESS: "PROGRESS", // 50-69%
+  DISTINCTION: "DISTINCTION", // 70-100%
+} as const;
+
+export type ResultBand = keyof typeof RESULT_BANDS;
+
+export function resultBand(overallPercent: number): ResultBand {
+  if (overallPercent >= 70) return "DISTINCTION";
+  if (overallPercent >= 50) return "PROGRESS";
+  return "FAIL";
+}
+
+/**
+ * Default grading weights for the final academic score. They always sum to 100,
+ * and the collation re-normalises over whichever components exist, so the
+ * overall figure can never exceed 100% however much work a student completes.
+ */
+export const DEFAULT_ASSESSMENT_WEIGHTS = {
+  assignment: 50,
+  theory: 30,
+  practical: 20,
+} as const;
+

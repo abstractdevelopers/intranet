@@ -49,6 +49,14 @@ type LayoutOptions = {
   storyboard?: { title: string; body: string }[];
   /** Optional sub-heading introducing the storyboard. */
   storyboardLabel?: string;
+  /**
+   * A two-column results table: label on the left, value on the right. The last
+   * row is rendered as the emphasised total, so a report reads as a breakdown
+   * with its overall figure at the foot.
+   */
+  table?: { label: string; value: string }[];
+  /** Optional sub-heading introducing the table. */
+  tableLabel?: string;
   /** Primary call to action. */
   cta?: { label: string; url: string };
   /** Optional note rendered in a muted box under the CTA. */
@@ -70,7 +78,7 @@ type LayoutOptions = {
  * card, then a quiet footer. Width is fixed at 600px because Outlook has no
  * reliable max-width support on nested tables.
  */
-function layout(options: LayoutOptions) {
+export function layout(options: LayoutOptions) {
   const paragraphs = options.paragraphs
     .map(
       (p) =>
@@ -166,6 +174,34 @@ function layout(options: LayoutOptions) {
         </table>`
       : "";
 
+  const table =
+    options.table && options.table.length
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 4px;">
+          ${
+            options.tableLabel
+              ? `<tr><td style="padding:0 0 12px;"><p style="margin:0;font-family:${FONT};font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:${BRAND_1};">${esc(
+                  options.tableLabel
+                )}</p></td></tr>`
+              : ""
+          }
+          ${options.table
+            .map((row, i) => {
+              const last = i === options.table!.length - 1;
+              return `<tr>
+            <td style="padding:11px 0;border-bottom:1px solid ${BORDER};font-family:${FONT};font-size:${
+              last ? "15px" : "14px"
+            };line-height:22px;${last ? "font-weight:700;" : ""}color:${last ? INK : TEXT_MUTED};">${esc(
+              row.label
+            )}</td>
+            <td align="right" style="padding:11px 0;border-bottom:1px solid ${BORDER};font-family:${FONT};font-size:${
+              last ? "18px" : "14px"
+            };line-height:22px;font-weight:700;color:${last ? BRAND_1 : INK};">${esc(row.value)}</td>
+          </tr>`;
+            })
+            .join("")}
+        </table>`
+      : "";
+
   const note = options.note
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
           <tr>
@@ -231,6 +267,7 @@ function layout(options: LayoutOptions) {
             ${images}
             ${paragraphs}
             ${storyboard}
+            ${table}
             ${highlights}
             ${cta}
             ${note}
