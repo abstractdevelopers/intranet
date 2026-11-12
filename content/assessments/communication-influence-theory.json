@@ -1,0 +1,188 @@
+{
+  "title": "Communication & Influence — Objective Assessment",
+  "description": "Objective assessment. 15 multiple-choice questions.",
+  "instructions": "Carefully read each question and select the most appropriate answer from options A-D. Each question carries equal marks. Multiple-choice questions are marked automatically when you submit.",
+  "passMark": 50,
+  "questions": [
+    {
+      "kind": "MCQ",
+      "prompt": "What is the primary purpose of reflective listening?",
+      "points": 1,
+      "options": [
+        "To provide immediate solutions to another person's problems.",
+        "To listen carefully and reflect your understanding of what the speaker is communicating.",
+        "To convince the speaker to adopt a different perspective.",
+        "To ask questions until the speaker explains every detail."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the video, what is one major characteristic of a rookie communicator's vocal delivery?",
+      "points": 1,
+      "options": [
+        "Using varied pitch and volume to emphasize important points.",
+        "Speaking with expressive emotions throughout a presentation.",
+        "Using pauses strategically to create impact.",
+        "Speaking with a flat delivery, using nearly the same speed, pitch, volume, and emotion throughout."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "In the CLEAR framework, what does the \u201cL\u201d stand for?",
+      "points": 1,
+      "options": [
+        "Listen",
+        "Link",
+        "Language",
+        "Lead"
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is the purpose of dividing a classroom into three sections when presenting?",
+      "points": 1,
+      "options": [
+        "To decide where the audience should sit.",
+        "To help distribute eye contact across the room.",
+        "To make the presentation shorter.",
+        "To identify the most attentive students."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Why are communication frameworks such as PREP, STAR, and the 3-2-1 method useful?",
+      "points": 1,
+      "options": [
+        "They eliminate the need to understand the topic being discussed.",
+        "They help speakers use more technical vocabulary in their responses.",
+        "They encourage speakers to explain every thought that comes to mind.",
+        "They help speakers organize their thoughts into clear, concise, and coherent responses, especially under pressure."
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "A colleague says, \"I've been working on this project for months, and I still don't know if I'm making the right decision.\" Which response best demonstrates reflective listening?",
+      "points": 1,
+      "options": [
+        "\"You should stop worrying and trust your instincts.\"",
+        "\"Why didn't you make the decision earlier?\"",
+        "\"I think you're overcomplicating the situation.\"",
+        "\"It sounds like you're uncertain about which direction to take.\""
+      ],
+      "correct": 3
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What is one major problem that concise communication is designed to reduce?",
+      "points": 1,
+      "options": [
+        "Having too much knowledge about a subject.",
+        "Using unnecessary words and information that weaken the message.",
+        "Speaking to people who already understand the topic.",
+        "Using pauses while communicating."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the transcript, what should you do with your toes and torso during a date to show attention toward the other person?",
+      "points": 1,
+      "options": [
+        "Point them toward the other person.",
+        "Point them toward the nearest exit.",
+        "Keep them facing directly forward at all times.",
+        "Point them away from the other person."
+      ],
+      "correct": 0
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "What distinguishes a natural communicator from a pretty good communicator when it comes to using their voice?",
+      "points": 1,
+      "options": [
+        "A natural communicator uses only a low pitch to sound authoritative.",
+        "A natural communicator avoids emotional expression to maintain professionalism.",
+        "A natural communicator uses their full vocal range intentionally, adjusting different vocal elements to suit the message.",
+        "A natural communicator speaks loudly and quickly in every situation."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "When explaining a complicated idea to someone who is not familiar with the subject, what does the CLEAR framework recommend doing first?",
+      "points": 1,
+      "options": [
+        "Use technical language to establish credibility.",
+        "Give every available detail about the subject.",
+        "Calibrate the explanation to the audience's existing knowledge.",
+        "Ask the listener to research the topic beforehand."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "After making a reflective statement, what should you do next?",
+      "points": 1,
+      "options": [
+        "Immediately offer advice based on your interpretation.",
+        "Ask several questions to direct the conversation.",
+        "Return to listening and give the speaker space to respond.",
+        "Explain why you interpreted their feelings that way."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the transcript, what is one major benefit of nonverbal communication?",
+      "points": 1,
+      "options": [
+        "It eliminates the need for verbal communication.",
+        "It helps with leadership, negotiation, persuasion, and public speaking.",
+        "It guarantees that people will agree with you.",
+        "It makes written communication unnecessary."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "In the coherence exercise, what is the purpose of using a random word generator?",
+      "points": 1,
+      "options": [
+        "To test how many words you know.",
+        "To give you prepared topics for memorisation.",
+        "To force you to organise and express your thoughts on an unexpected topic.",
+        "To help you avoid speaking about unfamiliar subjects."
+      ],
+      "correct": 2
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "Why is it important to synchronize facial expressions with vocal emotion?",
+      "points": 1,
+      "options": [
+        "Facial expressions are more important than the actual message in every situation.",
+        "When facial expressions and vocal delivery communicate matching emotions, the audience can better feel the intended meaning.",
+        "Matching facial expressions and vocal emotion prevents all communication misunderstandings.",
+        "Facial expressions should always be exaggerated to make a speaker memorable."
+      ],
+      "correct": 1
+    },
+    {
+      "kind": "MCQ",
+      "prompt": "According to the lesson on articulation and word choice, why is having a larger usable vocabulary valuable to a communicator?",
+      "points": 1,
+      "options": [
+        "It allows the speaker to use complicated words in every situation.",
+        "It makes the speaker appear more intelligent than the listener.",
+        "It gives the speaker more language options for expressing thoughts precisely.",
+        "It eliminates the need to organise thoughts before speaking."
+      ],
+      "correct": 2
+    }
+  ]
+}
