@@ -1,0 +1,59 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Understanding Images",
+      "overview": "Welcome back.\n\nToday, we will be exploring another important aspect of graphic design: working with images.\n\nImages are a major part of visual communication. Whether you are designing posters, advertisements, social media graphics, flyers, or other visual materials, the images you choose and how you prepare them can significantly influence the quality of your final design.\n\nHowever, working with images involves more than simply downloading a photograph and placing it on your canvas. You need to understand image quality, resolution, aspect ratios, cropping, composition, and how to select images that complement the message of your design.\n\nIn today's lesson, you will explore the fundamentals of digital images and learn how different image characteristics affect the way they appear and function within a design.\n\nYou will also learn how to identify suitable images for different design purposes and understand the importance of preparing images before using them in your projects.",
+      "objectives": "Today, you will explore:\n\n1. Understanding Raster Images\n2. Image Resolution\n3. Aspect Ratios\n4. Image Quality\n5. Cropping\n6. Composition in Photography\n7. Choosing the Right Image\n8. Understanding Image Backgrounds\n9. Preparing Images for Design",
+      "releaseDate": "2026-11-24",
+      "lessons": [
+        {
+          "title": "Welcome — Understanding Images",
+          "content": "Welcome back.\n\nToday, we will be exploring another important aspect of graphic design: working with images.\n\nImages are a major part of visual communication. Whether you are designing posters, advertisements, social media graphics, flyers, or other visual materials, the images you choose and how you prepare them can significantly influence the quality of your final design.\n\nHowever, working with images involves more than simply downloading a photograph and placing it on your canvas. You need to understand image quality, resolution, aspect ratios, cropping, composition, and how to select images that complement the message of your design.\n\nIn today's lesson, you will explore the fundamentals of digital images and learn how different image characteristics affect the way they appear and function within a design.\n\nYou will also learn how to identify suitable images for different design purposes and understand the importance of preparing images before using them in your projects.\n\nThe goal is to help you develop a better understanding of images and how to work with them effectively as a graphic designer."
+        },
+        {
+          "title": "What You'll Learn Today",
+          "content": "TODAY, YOU WILL EXPLORE:\n\n- Understanding Raster Images\n- Image Resolution\n- Aspect Ratios\n- Image Quality\n- Cropping\n- Composition in Photography\n- Choosing the Right Image\n- Understanding Image Backgrounds\n- Preparing Images for Design"
+        },
+        {
+          "title": "Part 1 — Understanding Raster Images",
+          "content": "Before working extensively with photographs and other digital images, you need to understand how they are created and how they behave.\n\nIn this lesson, you will be introduced to raster images and learn about their basic structure and characteristics.\n\nYou will begin to understand how raster images are made up of pixels and why their resolution can affect how clearly they appear, particularly when resized or used in different design environments.\n\nA BRIEF OVERVIEW\n\nThe explanation above is only a summary of the topic. Watch the full lesson below to develop a better understanding of raster images and their importance in graphic design.\n\nWATCH THE LESSON HERE\n\nRaster Images\nhttps://youtu.be/FVOF0CR9ass",
+          "youtubeVideoId": "FVOF0CR9ass"
+        },
+        {
+          "title": "Part 2 — Composition in Photography",
+          "content": "The quality of an image is not determined by its resolution alone. How the subject and other visual elements are arranged within a photograph also matters.\n\nIn this lesson, you will explore composition in photography and understand how the arrangement of subjects and elements within an image can influence its visual appeal and effectiveness.\n\nYou will begin to develop an eye for identifying photographs that have strong visual structure and can work well within your designs.\n\nA BRIEF OVERVIEW\n\nThis is only a brief introduction to photographic composition. Watch the full lesson below to understand the concepts being demonstrated and how they can influence the selection and use of images in graphic design.\n\nWATCH THE LESSON HERE\n\nComposition in Photography\nhttps://youtu.be/8XBYt-_U4WE",
+          "youtubeVideoId": "8XBYt-_U4WE"
+        },
+        {
+          "title": "Part 3 — Aspect Ratio and Cropping",
+          "content": "Images come in different shapes and dimensions, and understanding these differences is important when preparing photographs for design projects.\n\nIn this lesson, you will explore aspect ratios and cropping and understand how the dimensions and framing of an image can affect its appearance.\n\nYou will also learn why cropping is important when adjusting images to fit different design layouts and formats without unnecessarily compromising the subject or composition.\n\nA BRIEF OVERVIEW\n\nThe explanation above is only a summary. Watch the full lesson below to understand aspect ratios, cropping, and how they are applied when working with images.\n\nWATCH THE LESSON HERE\n\nAspect Ratio and Cropping\nhttps://youtu.be/_8vYe5Nrtdw",
+          "youtubeVideoId": "_8vYe5Nrtdw"
+        },
+        {
+          "title": "Part 4 — Choosing the Right Image & Understanding Image Backgrounds",
+          "content": "Not every attractive photograph is suitable for every design.\n\nThe images you select should complement the message, purpose, audience, and overall visual direction of your project.\n\nIn this lesson, you will explore how to choose appropriate images for different design purposes and understand the importance of image backgrounds.\n\nYou will begin to recognise how the subject, background, surrounding elements, and overall appearance of a photograph can influence how easily it fits into a design composition.\n\nA BRIEF OVERVIEW\n\nThis is only a brief introduction to image selection and image backgrounds. Watch the full lesson below to understand how to identify suitable images and the considerations involved in using them effectively.\n\nWATCH THE LESSON HERE\n\nChoosing the Right Image & Image Backgrounds\nhttps://youtu.be/33zt2FpWNBA",
+          "youtubeVideoId": "33zt2FpWNBA"
+        },
+        {
+          "title": "Today's Goal",
+          "content": "Today's goal is to develop a better understanding of digital images and how to prepare and select them for graphic design projects.\n\nBy the end of today's lessons, you should have a clearer understanding of raster images, resolution, aspect ratios, image quality, cropping, photographic composition, and the importance of selecting appropriate images.\n\nRemember, a good design does not depend only on how well you arrange your elements. The quality and suitability of the images you use also matter.\n\nAs you watch the lessons, pay attention to how images are structured, how they can be adjusted, and how the right image can contribute to the overall effectiveness of a design."
+        }
+      ],
+      "assignment": {
+        "title": "Practical Session — Recreate a Flyer Tutorial",
+        "description": "Your practical session this week is a flyer design tutorial.\n\nTwo tutorials are provided: a photography flyer and a birthday flyer. Choose ONE and recreate it.\n\nYou can produce a complete replication of the final design, or your own version that uses every technique the tutorial demonstrates. Both are accepted.\n\nYou must also submit a screenshot of the original final design from the tutorial you chose, so your work can be compared against it.",
+        "instructions": "CHOOSE ONE TUTORIAL\n\nOption 1 — How to design a photography flyer\nhttps://youtu.be/pBK3mbeZsIs\n\nOption 2 — How to design a Birthday Flyer\nhttps://youtu.be/mlziVVwAlJ0\n\nWatch your chosen tutorial from beginning to end before you start. Pause and rewind as you need to — flyers are built in layers, and it is easier to follow a step at a time.\n\nYOUR TASK\n\nRecreate either one of the tutorial videos.\n\n1. Capture the original.\n   Take a screenshot of the final design shown in the tutorial you chose. This is the reference your work will be compared against.\n\n2. Build your version.\n   Either replicate the design as closely as you can, or produce your own version that uses every technique explained in the video.\n\n3. Submit both.\n   Upload the screenshot of the original, and your finished design, together in one submission.\n\nUse the software for your pathway: PixelLab for smartphone graphic design, Adobe Photoshop for PC graphic design.\n\nBEFORE YOU SUBMIT\n\n- Check your design is exported at a sensible size and resolution.\n- Make sure the text is readable and the layout is deliberate.\n- Confirm both images are included: the original screenshot and your version.\n- Open the link in a private browser window to make sure it can be viewed.\n\nHOW TO SUBMIT\n\nUpload both images to Google Drive, set the sharing so anyone with the link can view, and submit the folder or document link here.",
+        "requirements": "WHAT YOU WILL BE GRADED ON\n\n1. COMPLETION — Did you submit both the original screenshot and a finished design?\n\n2. TECHNIQUE COVERAGE — Does your design use the techniques demonstrated in the tutorial?\n\n3. LAYOUT AND COMPOSITION — Is the arrangement deliberate, with a clear hierarchy and sensible spacing?\n\n4. TYPOGRAPHY AND COLOUR — Is the text readable, and do the colours work together?\n\n5. CRAFT — Is the export clean, at a proper size, without rough edges or unfinished areas?\n\n6. SUBMISSION — Are both images present and is the link openable?",
+        "releaseDate": "2026-11-24",
+        "deadlineDate": "2026-11-30",
+        "allowedTypes": ["IMAGE", "URL"],
+        "maxAttempts": 3,
+        "latePolicy": "PENALTY",
+        "maxScore": 100
+      }
+    }
+  ]
+}
