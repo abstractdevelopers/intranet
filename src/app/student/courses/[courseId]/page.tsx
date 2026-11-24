@@ -61,6 +61,7 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
   // complete, and the previous week's Captain's Log is submitted.
   const now = new Date();
   let previousComplete = true;
+  let previousWeekNumber: number | null = null;
   const moduleStates = [];
   for (const mod of modules) {
     const totalLessons = mod.lessons.length;
@@ -73,8 +74,12 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
       loggedWeeks,
       now,
       preview: user.previewUnreleasedContent,
+      // Weeks are not contiguous: 1–3 are taught, then 9–10. The first week
+      // after the gap has no predecessor to log, so it must not ask for one.
+      previousWeekExists: previousWeekNumber !== null && previousWeekNumber === mod.weekNumber - 1,
     });
     if (!complete) previousComplete = false;
+    previousWeekNumber = mod.weekNumber;
     moduleStates.push({
       mod,
       released: !mod.releaseAt || mod.releaseAt <= now,

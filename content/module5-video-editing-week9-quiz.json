@@ -1,0 +1,109 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 9,
+      "moduleNumber": 5,
+      "title": "Video Advertising",
+      "releaseDate": "2026-11-30",
+      "quiz": {
+        "slug": "video-editing-m5-week9",
+        "title": "Module 5 — Video Advertising",
+        "description": "Monday's quiz covers what makes an advertisement work: the hook, high-quality visuals, when the product appears, the problem-solution narrative, demonstration as proof, the metrics that measure creative performance, what a creative brief contains, and disclosure when using testimonials.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-11-30",
+        "questions": [
+          {
+            "prompt": "According to the video, what is the most important element of a successful advertisement?",
+            "options": [
+              "The background music.",
+              "The length of the advertisement.",
+              "The hook that captures the viewer's attention.",
+              "The number of products displayed."
+            ],
+            "correct": 2,
+            "explanation": "Everything after the opening depends on the viewer still being there. If the hook fails, the music, length and product count never get a chance to matter."
+          },
+          {
+            "prompt": "Why should an advertisement have high-quality visuals?",
+            "options": [
+              "To make the advertisement look visually appealing through good lighting, setting, and overall aesthetics.",
+              "To make the video look like a traditional television commercial.",
+              "To ensure that the advertisement is longer.",
+              "To reduce the need for a product demonstration."
+            ],
+            "correct": 0,
+            "explanation": "Lighting, setting and overall craft signal that the product is worth taking seriously. Production quality is part of the message, not decoration on top of it."
+          },
+          {
+            "prompt": "According to the video, when should the product first become visible in an advertisement?",
+            "options": [
+              "Within the first two seconds.",
+              "After the first 15 seconds.",
+              "Only during the final scene.",
+              "After the call to action."
+            ],
+            "correct": 0,
+            "explanation": "Viewers decide almost immediately whether the video is for them. Showing the product early tells them what they are watching before they scroll on."
+          },
+          {
+            "prompt": "What is the purpose of a clear problem-solution narrative in an advertisement?",
+            "options": [
+              "To entertain viewers without discussing the product.",
+              "To show the problem the audience faces and explain how the product solves it.",
+              "To list every feature of the product.",
+              "To focus only on the company's history."
+            ],
+            "correct": 1,
+            "explanation": "A problem the viewer recognises earns their attention, and the product arrives as the answer to it rather than as an unrelated pitch."
+          },
+          {
+            "prompt": "Why is product demonstration important in an advertisement?",
+            "options": [
+              "It makes the advertisement more complicated.",
+              "It replaces the need for a strong hook.",
+              "It provides proof that the product works and helps build consumer trust.",
+              "It allows the creator to avoid showing the product."
+            ],
+            "correct": 2,
+            "explanation": "A claim asks to be believed; a demonstration shows the thing working. Seeing it happen is what turns interest into trust."
+          },
+          {
+            "prompt": "According to the video, which metrics are especially useful for evaluating creative performance?",
+            "options": [
+              "Video resolution and number of followers.",
+              "Hook rate, hold rate, click-to-purchase ratio, spend, and return on ad spend.",
+              "Number of hashtags and comments only.",
+              "Cost per click and click-through rate only."
+            ],
+            "correct": 1,
+            "explanation": "These measure the journey the creative is built to drive — whether people stop, stay, and go on to buy — and whether the spend returned more than it cost."
+          },
+          {
+            "prompt": "What should a creative strategist include in a creative brief?",
+            "options": [
+              "Only the product name and price.",
+              "A general idea and leave the rest to the creator.",
+              "Scripts, storyboards, and shot lists to guide creators and editors.",
+              "Only the background music and video length."
+            ],
+            "correct": 2,
+            "explanation": "A brief that stops at a general idea leaves the editor guessing at the message. Scripts, storyboards and shot lists make the intent concrete enough to shoot and cut against."
+          },
+          {
+            "prompt": "According to the video, what is important when using testimonials in advertisements?",
+            "options": [
+              "Make the testimonial appear completely unscripted, even if it is misleading.",
+              "Remove all disclosures to make the advertisement look natural.",
+              "Include the appropriate FTC disclosure when there is a commercial connection between the testimonial and the brand.",
+              "Use trending copyrighted music to increase engagement."
+            ],
+            "correct": 2,
+            "explanation": "A paid or incentivised testimonial has to be disclosed. The audience needs to know about the commercial relationship to judge the claim fairly, and the disclosure is a legal requirement."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -71,16 +71,22 @@ function unlockedWeeksByCourse(
   for (const [courseId, courseModules] of byCourse) {
     let previousComplete = true;
     let highest = 0;
+    let previousWeekNumber: number | null = null;
     for (const mod of courseModules) {
       const totalLessons = mod.lessons.length;
       const doneLessons = mod.lessons.filter((l) => l.progress[0]?.completedAt).length;
       const complete = totalLessons > 0 && doneLessons === totalLessons;
       const released = !mod.releaseAt || mod.releaseAt <= now;
-      const logSatisfied = mod.weekNumber <= 1 || loggedWeeks.has(mod.weekNumber - 1);
+      // Only a contiguous predecessor is required to have a log. Where weeks
+      // were skipped (1–3 then 9–10) the missing week was never taught, so its
+      // log cannot be demanded.
+      const contiguous = previousWeekNumber !== null && previousWeekNumber === mod.weekNumber - 1;
+      const logSatisfied = mod.weekNumber <= 1 || !contiguous || loggedWeeks.has(mod.weekNumber - 1);
       if (released && previousComplete && logSatisfied) {
         highest = Math.max(highest, mod.weekNumber);
       }
       if (!complete) previousComplete = false;
+      previousWeekNumber = mod.weekNumber;
     }
     highestByCourse.set(courseId, highest);
   }
@@ -318,6 +324,15 @@ export function isModuleUnlocked(input: {
    * still apply, so a reviewer sees the content without a broken progress state.
    */
   preview?: boolean;
+  /**
+   * Whether the week immediately before this one exists in the course.
+   *
+   * Defaults to true, which preserves the original behaviour for every
+   * contiguous course. Pass false where the academy skipped weeks — 1–3 then
+   * 9–10 — so the missing week's log is not demanded of content that never had
+   * a predecessor.
+   */
+  previousWeekExists?: boolean;
 }): { unlocked: boolean; reason: "LOCKED_RELEASE" | "LOCKED_PREVIOUS" | "LOCKED_LOG" | null } {
   const now = input.now ?? new Date();
   if (!input.preview && input.releaseAt && input.releaseAt > now) {
@@ -326,11 +341,34 @@ export function isModuleUnlocked(input: {
   if (!input.previousComplete) {
     return { unlocked: false, reason: "LOCKED_PREVIOUS" };
   }
-  // Week 1 has no preceding week to reflect on.
-  if (input.weekNumber > 1 && !input.loggedWeeks.has(input.weekNumber - 1)) {
+  // Week 1 has no preceding week to reflect on, and neither does the first week
+  // after a gap in the calendar.
+  const needsLog = input.weekNumber > 1 && (input.previousWeekExists ?? true);
+  if (needsLog && !input.loggedWeeks.has(input.weekNumber - 1)) {
     return { unlocked: false, reason: "LOCKED_LOG" };
   }
   return { unlocked: true, reason: null };
+}
+
+/**
+ * Whether a week's Captain's Log blocks the week that follows it.
+ *
+ * A log only gates a week that actually exists. The academy skips weeks — it
+ * runs 1–3 and then 9–10 — so demanding week 8's log before week 9 would lock
+ * content that has no missing prerequisite at all, and no student could ever
+ * satisfy it because week 8 was never taught.
+ *
+ * The rule therefore holds only where the preceding week is part of the
+ * course: if the previous week's module exists and is released, its log is
+ * required. Where there is no previous week to reflect on, there is nothing to
+ * gate on.
+ */
+export function isLogRequiredForWeek(
+  weekNumber: number,
+  context: { previousWeekExists: boolean; previousWeekReleased: boolean },
+): boolean {
+  if (weekNumber <= 1) return false;
+  return context.previousWeekExists && context.previousWeekReleased;
 }
 
 /** Week numbers this student has submitted a Captain's Log for. */

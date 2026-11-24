@@ -33,6 +33,7 @@ export async function getModuleAccess(userId: string, courseId: string): Promise
 
   const now = new Date();
   let previousComplete = true;
+  let previousWeekNumber: number | null = null;
   return modules.map((mod) => {
     const totalLessons = mod.lessons.length;
     const doneLessons = mod.lessons.filter((l) => l.progress[0]?.completedAt).length;
@@ -44,8 +45,13 @@ export async function getModuleAccess(userId: string, courseId: string): Promise
       loggedWeeks,
       now,
       preview,
+      // A skipped week has no predecessor to reflect on. The academy runs 1–3
+      // then 9–10, so week 9 must not demand a week-8 log that could never
+      // exist. Contiguity is read from the week numbers themselves.
+      previousWeekExists: previousWeekNumber !== null && previousWeekNumber === mod.weekNumber - 1,
     });
     if (!complete) previousComplete = false;
+    previousWeekNumber = mod.weekNumber;
     return {
       id: mod.id,
       weekNumber: mod.weekNumber,
