@@ -17,14 +17,13 @@ export const metadata = { title: "Profile" };
 
 export default async function ProfilePage() {
   const user = await requireStudent();
-  const [profile, enrollments, subscription, pathway, counts] = await Promise.all([
+  const [profile, enrollments, pathway, counts] = await Promise.all([
     db.profile.findUnique({ where: { userId: user.id } }),
     db.enrollment.findMany({
       where: { userId: user.id },
       include: { course: true },
       orderBy: { createdAt: "asc" },
     }),
-    db.subscription.findUnique({ where: { userId: user.id } }),
     getStudentPathway(user.id),
     db.user.findUnique({
       where: { id: user.id },
@@ -151,32 +150,6 @@ export default async function ProfilePage() {
         </Card>
       </section>
 
-      {subscription ? (
-        <section>
-          <p className="eyebrow">03 — Membership</p>
-          <Card className="mt-4">
-            <dl className="grid gap-3 text-sm md:grid-cols-2">
-              <div>
-                <dt className="text-text-muted">Status</dt>
-                <dd>
-                  <Badge tone={statusTone(subscription.status)}>
-                    {subscription.status.toLowerCase()}
-                  </Badge>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-text-muted">Free month ends</dt>
-                <dd className="font-medium">{formatDate(subscription.trialEndsAt)}</dd>
-              </div>
-            </dl>
-            <p className="mt-3 text-xs text-text-muted">
-              <Link href="/student/billing" className="underline-offset-2 hover:underline">
-                Manage billing
-              </Link>
-            </p>
-          </Card>
-        </section>
-      ) : null}
     </div>
   );
 }

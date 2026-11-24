@@ -29,8 +29,7 @@ import { getCaptainLogState } from "@/lib/captains-log";
 import { isPromiseWallOpen, CLASSES_START } from "@/lib/constants";
 import { getStudentPathway, getStudentCommunities } from "@/lib/communities";
 import { syncStudentNotifications } from "@/lib/notification-triggers";
-import { formatNaira, formatDate, formatDateTime } from "@/lib/format";
-import { subscriptionMonthlyTotal } from "@/lib/enrollment";
+import { formatDate, formatDateTime } from "@/lib/format";
 import { needsIntranet101 } from "@/lib/quiz";
 
 export const metadata = { title: "Dashboard" };
@@ -47,7 +46,6 @@ export default async function StudentDashboard() {
     enrollments,
     notifications,
     announcements,
-    subscription,
     application,
     lessonDone,
     submissions,
@@ -70,7 +68,6 @@ export default async function StudentDashboard() {
       take: 5,
     }),
     db.announcement.findMany({ orderBy: { createdAt: "desc" }, take: 3 }),
-    db.subscription.findUnique({ where: { userId: user.id }, include: { items: true } }),
     db.application.findFirst({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
     db.lessonProgress.count({ where: { userId: user.id, completedAt: { not: null } } }),
     db.assignmentSubmission.count({ where: { userId: user.id } }),
@@ -490,49 +487,6 @@ export default async function StudentDashboard() {
           />
         </div>
       </section>
-
-      {subscription ? (
-        <section aria-label="Billing">
-          <p className="eyebrow">06 — Membership</p>
-          <Card className="mt-4">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <h2 className="text-base font-semibold">Billing</h2>
-                <p className="mt-1 text-sm text-text-muted">
-                  {subscription.status === "TRIAL"
-                    ? `Your free month runs until ${formatDate(subscription.trialEndsAt)}.`
-                    : "Your subscription is active."}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge tone={statusTone(subscription.status)}>
-                  {subscription.status.toLowerCase()}
-                </Badge>
-                <Link
-                  href="/student/billing"
-                  className="text-xs font-semibold text-brand-1 hover:underline dark:text-brand-3"
-                >
-                  Manage billing
-                </Link>
-              </div>
-            </div>
-            <div className="mt-4 space-y-1 text-sm">
-              {subscription.items.map((item) => (
-                <div key={item.id} className="flex justify-between">
-                  <span>
-                    {enrollments.find((e) => e.courseId === item.courseId)?.course.name ?? "Course"}
-                  </span>
-                  <span>{formatNaira(item.price)}</span>
-                </div>
-              ))}
-              <div className="flex justify-between border-t border-border pt-2 font-semibold">
-                <span>After your first month</span>
-                <span>{formatNaira(subscriptionMonthlyTotal(subscription.items))}/month</span>
-              </div>
-            </div>
-          </Card>
-        </section>
-      ) : null}
 
       <div className="grid gap-6 md:grid-cols-2">
         <section aria-label="Notifications">

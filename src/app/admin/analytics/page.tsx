@@ -37,8 +37,6 @@ export default async function AdminAnalyticsPage() {
     submissionCount,
     gradedSubmissions,
     gradeAgg,
-    trials,
-    activeSubs,
     courses,
     pathwayRows,
     captainLogCompliance,
@@ -55,8 +53,6 @@ export default async function AdminAnalyticsPage() {
     db.assignmentSubmission.count(),
     db.assignmentSubmission.count({ where: { status: "GRADED" } }),
     db.grade.aggregate({ _avg: { score: true }, _count: true }),
-    db.subscription.count({ where: { status: "TRIAL" } }),
-    db.subscription.count({ where: { status: "ACTIVE" } }),
     db.course.findMany({
       where: { isActive: true },
       select: {
@@ -82,13 +78,6 @@ export default async function AdminAnalyticsPage() {
 
   const completionRate = enrollments > 0 ? Math.round((completedEnrollments / enrollments) * 100) : 0;
   const gradingRate = submissionCount > 0 ? Math.round((gradedSubmissions / submissionCount) * 100) : 0;
-  const trialConversion = trials + activeSubs > 0 ? Math.round((activeSubs / (trials + activeSubs)) * 100) : 0;
-  const mrr = activeSubs > 0
-    ? await db.subscriptionItem.aggregate({
-        _sum: { price: true },
-        where: { subscription: { status: "ACTIVE" } },
-      })
-    : null;
   const maxEnrollment = Math.max(1, ...courses.map((c) => c._count.enrollments));
 
   const pathwayMix = pathwayRows
@@ -119,8 +108,6 @@ export default async function AdminAnalyticsPage() {
           value={gradeAgg._count > 0 ? `${Math.round(gradeAgg._avg.score ?? 0)}` : "—"}
           hint={gradeAgg._count > 0 ? `across ${gradeAgg._count} grades` : "no grades yet"}
         />
-        <Stat label="Trial conversion" value={`${trialConversion}%`} hint={`${activeSubs} active · ${trials} on trial`} />
-        <Stat label="Monthly recurring" value={mrr?._sum.price ? formatNaira(mrr._sum.price) : "—"} hint="active subscriptions" />
       </section>
 
       {/* Intranet engagement (#18) */}

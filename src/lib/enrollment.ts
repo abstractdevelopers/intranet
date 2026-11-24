@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { PATHWAY_LABELS, TRIAL_DAYS, pathwayFromSlug, type Pathway } from "./constants";
+import { PATHWAY_LABELS, pathwayFromSlug, type Pathway } from "./constants";
 
 export class EnrollmentError extends Error {}
 
@@ -9,8 +9,7 @@ export class EnrollmentError extends Error {}
  * Enforces the business rules server-side:
  *  - Personal Branding + Social Media are auto-included and auto-approved.
  *  - Exactly one elective is selected; it starts as PENDING.
- *  - A free first month (trial) starts at enrollment; billing starts after it.
- *  - Subscription items are stored per course (never a hardcoded total).
+ *  - The academy is free: no subscription or payment record is created.
  */
 export async function submitApplication(input: {
   userId: string;
@@ -44,7 +43,6 @@ export async function submitApplication(input: {
   }
 
   const now = new Date();
-  const trialEndsAt = new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000);
 
   return db.$transaction(async (tx) => {
     const application = await tx.application.create({
@@ -90,29 +88,6 @@ export async function submitApplication(input: {
         status: "PENDING",
         enrollmentType: "ELECTIVE",
         pathway,
-      },
-    });
-
-    // Free first month + per-course subscription items.
-    const programCourses = [...compulsoryCourses, elective];
-    await tx.subscription.upsert({
-      where: { userId: input.userId },
-      update: {},
-      create: {
-        userId: input.userId,
-        status: "TRIAL",
-        trialStartedAt: now,
-        trialEndsAt,
-        billingStartedAt: trialEndsAt,
-        billingCycle: "MONTHLY",
-        currency: "NGN",
-        items: {
-          create: programCourses.map((course) => ({
-            courseId: course.id,
-            price: course.price,
-            currency: course.currency,
-          })),
-        },
       },
     });
 
@@ -187,17 +162,11 @@ export async function reviewElective(input: {
   });
 }
 
-/** Monthly total derived from subscription items — never hardcoded. */
-export function subscriptionMonthlyTotal(items: { price: number }[]) {
-  return items.reduce((sum, item) => sum + item.price, 0);
-}
-
 /**
  * Pick a pathway and start the programme immediately (reclaim flow).
  *
- * Same core rules as `submitApplication` — compulsory courses auto-included, one
- * elective, per-course subscription items, free first month — but the elective
- * is ACCEPTED rather than PENDING. This is the time-boxed exception used while
+ * Same core rules as `submitApplication` — compulsory courses auto-included and
+ * one elective — but the elective is ACCEPTED rather than PENDING. This is the time-boxed exception used while
  * rebuilding accounts (see PATHWAY_AUTO_APPROVAL_UNTIL); the caller must check
  * `isPathwayAutoApprovalActive()` before calling it.
  *
@@ -219,7 +188,6 @@ export async function enrollInPathway(input: { userId: string; electiveCourseId:
   }
 
   const now = new Date();
-  const trialEndsAt = new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000);
   const pathway = elective.pathway ?? pathwayFromSlug(elective.slug);
 
   return db.$transaction(async (tx) => {
@@ -281,28 +249,6 @@ export async function enrollInPathway(input: { userId: string; electiveCourseId:
         pathway,
         approvedAt: now,
         startedAt: now,
-      },
-    });
-
-    const programCourses = [...compulsoryCourses, elective];
-    await tx.subscription.upsert({
-      where: { userId: input.userId },
-      update: {},
-      create: {
-        userId: input.userId,
-        status: "TRIAL",
-        trialStartedAt: now,
-        trialEndsAt,
-        billingStartedAt: trialEndsAt,
-        billingCycle: "MONTHLY",
-        currency: "NGN",
-        items: {
-          create: programCourses.map((course) => ({
-            courseId: course.id,
-            price: course.price,
-            currency: course.currency,
-          })),
-        },
       },
     });
 

@@ -9,7 +9,6 @@ import { OCCUPATIONS, EXPERIENCE_LEVELS } from "@/lib/constants";
 
 type CourseOption = { id: string; name: string; description: string; price: number };
 
-const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
 
 export function ApplicationForm({
   compulsory,
@@ -24,7 +23,6 @@ export function ApplicationForm({
   const [loading, setLoading] = useState(false);
 
   const selected = electives.find((e) => e.id === electiveId);
-  const monthlyTotal = compulsory.reduce((s, c) => s + c.price, 0) + (selected?.price ?? 0);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -167,16 +165,12 @@ export function ApplicationForm({
         <p className="mt-2 text-sm text-text-muted">{compulsory.length + (selected ? 1 : 0)} courses</p>
         <div className="mt-4 rounded-lg bg-surface-2 p-4 text-sm">
           <div className="flex justify-between">
-            <span>First month</span>
+            <span>Tuition</span>
             <span className="font-semibold text-brand-1 dark:text-brand-3">FREE</span>
           </div>
-          <div className="mt-1 flex justify-between">
-            <span>After your first month</span>
-            <span className="font-semibold">{selected ? `${naira(monthlyTotal)}/month` : "—"}</span>
-          </div>
           <p className="mt-2 text-xs text-text-muted">
-            The compulsory course is free. Only your elective is billed, at{" "}
-            {naira(selected?.price ?? 0)}/month after the free first month.
+            Every course is free, including your elective. There is no subscription and nothing
+            to pay.
           </p>
         </div>
       </Card>

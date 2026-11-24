@@ -12,8 +12,7 @@ import { CaptainLogAnswers } from "@/components/captains-log/captain-log-answers
 import { getCourseProgress } from "@/lib/progress";
 import { getMilestones } from "@/lib/milestones";
 import { getScoreBreakdown } from "@/lib/scores";
-import { formatDate, formatNaira } from "@/lib/format";
-import { subscriptionMonthlyTotal } from "@/lib/enrollment";
+import { formatDate } from "@/lib/format";
 
 export const metadata = { title: "Progress" };
 
@@ -25,7 +24,7 @@ export default async function ProgressPage() {
     orderBy: { createdAt: "asc" },
   });
 
-  const [progress, milestones, scores, captainLogs, submissions, grades, certificates, subscription] =
+  const [progress, milestones, scores, captainLogs, submissions, grades, certificates] =
     await Promise.all([
       Promise.all(enrollments.map((e) => getCourseProgress(user.id, e.courseId))),
       getMilestones(user.id),
@@ -60,7 +59,6 @@ export default async function ProgressPage() {
         where: { userId: user.id },
         include: { course: { select: { name: true, slug: true } } },
       }),
-      db.subscription.findUnique({ where: { userId: user.id }, include: { items: true } }),
     ]);
 
   const releasedWeeks = scores.overall.releasedModules;
@@ -356,22 +354,6 @@ export default async function ProgressPage() {
             </div>
           </section>
 
-          {subscription ? (
-            <section aria-label="Subscription record">
-              <p className="eyebrow">08 — Subscription</p>
-              <Card className="mt-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <Badge tone={statusTone(subscription.status)}>
-                    {subscription.status.toLowerCase()}
-                  </Badge>
-                  <span className="text-sm text-text-muted">
-                    {formatNaira(subscriptionMonthlyTotal(subscription.items))}/month after your
-                    free month
-                  </span>
-                </div>
-              </Card>
-            </section>
-          ) : null}
         </>
       )}
     </div>
