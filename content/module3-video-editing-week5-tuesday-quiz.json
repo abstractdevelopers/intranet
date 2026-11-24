@@ -1,0 +1,109 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Sound Design: Music Selection, Mood and Audio Balance",
+      "releaseDate": "2026-11-24",
+      "quiz": {
+        "slug": "video-editing-m3-week5-tuesday",
+        "title": "Module 3 — Tuesday — Sound Effects and Audio Layering",
+        "description": "Tuesday's quiz covers the purpose of sound design, why vocals carry the story, ambience against Foley, J-cuts and L-cuts, reverb for space, EQ, what a high-pass filter removes, and why mixing and normalisation matter before publishing.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-11-25",
+        "questions": [
+          {
+            "prompt": "What is the main purpose of sound design in filmmaking?",
+            "options": [
+              "To make videos longer",
+              "To create an immersive experience and connect viewers to what is happening on screen",
+              "To replace visual storytelling",
+              "To reduce the number of video clips"
+            ],
+            "correct": 1,
+            "explanation": "Sound is what puts the viewer inside the scene. It carries atmosphere and emotion that the picture alone cannot, which is why a weak mix makes good footage feel flat."
+          },
+          {
+            "prompt": "Which audio element is usually the most important in a video because it carries the story and information?",
+            "options": [
+              "Background music",
+              "Ambience",
+              "Vocals, including dialogue and voice-over",
+              "Creative sound effects"
+            ],
+            "correct": 2,
+            "explanation": "Everything else supports the voice. If dialogue or narration is buried, the viewer loses the story no matter how good the music is."
+          },
+          {
+            "prompt": "What is the difference between ambience and Foley?",
+            "options": [
+              "Ambience establishes the background environment, while Foley involves recording sounds that match on-screen actions.",
+              "Ambience is used for dialogue, while Foley is used for music.",
+              "Ambience creates transitions, while Foley changes video colours.",
+              "Ambience removes background noise, while Foley increases volume."
+            ],
+            "correct": 0,
+            "explanation": "Ambience is the bed a location sits on — traffic, room tone, weather. Foley is performed to picture, rebuilding the specific sounds of the actions on screen."
+          },
+          {
+            "prompt": "What is the difference between a J-cut and an L-cut?",
+            "options": [
+              "A J-cut removes audio, while an L-cut removes video.",
+              "A J-cut introduces the next scene's audio before the visual cut, while an L-cut allows the previous scene's audio to continue after the visual cut.",
+              "A J-cut increases volume, while an L-cut decreases volume.",
+              "A J-cut adds music, while an L-cut adds sound effects."
+            ],
+            "correct": 1,
+            "explanation": "The names describe the shape on the timeline. In a J-cut the incoming audio leads its picture; in an L-cut the outgoing audio trails behind it."
+          },
+          {
+            "prompt": "What is the primary purpose of using reverb in audio editing?",
+            "options": [
+              "To remove dialogue from a video",
+              "To increase the speed of audio",
+              "To create a sense of space and make sounds fit their environment",
+              "To remove all high frequencies"
+            ],
+            "correct": 2,
+            "explanation": "Reverb adds the reflections of a physical space. A dry sound in a large room feels wrong; the reverb tells the ear how big the space is."
+          },
+          {
+            "prompt": "What is EQ (Equalization) used for in audio editing?",
+            "options": [
+              "To adjust or control different audio frequencies",
+              "To add transitions between video clips",
+              "To increase video resolution",
+              "To synchronize subtitles with dialogue"
+            ],
+            "correct": 0,
+            "explanation": "EQ shapes the frequency balance — cutting mud, lifting presence, taming harshness. It changes the tone of a sound, not its timing or volume."
+          },
+          {
+            "prompt": "What happens when a high-pass filter is applied to audio?",
+            "options": [
+              "It removes high frequencies.",
+              "It increases all frequencies.",
+              "It removes low frequencies.",
+              "It removes the entire audio track."
+            ],
+            "correct": 2,
+            "explanation": "A high-pass filter lets the high frequencies pass and rolls off the low ones. It is the standard fix for rumble, wind and handling noise."
+          },
+          {
+            "prompt": "Why is audio mixing and normalization important before publishing a video?",
+            "options": [
+              "To make every sound equally loud",
+              "To ensure audio levels are balanced and prevent unwanted clipping or peaking",
+              "To remove all background music",
+              "To increase the video's frame rate"
+            ],
+            "correct": 1,
+            "explanation": "Mixing balances the elements against each other; normalisation keeps the overall level in range. Clipping cannot be undone once it is exported."
+          }
+        ]
+      }
+    }
+  ]
+}

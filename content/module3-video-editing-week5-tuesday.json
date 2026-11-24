@@ -1,0 +1,87 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Sound Design: Music Selection, Mood and Audio Balance",
+      "releaseDate": "2026-11-24",
+      "lessons": [
+        {
+          "title": "Welcome — Sound Design",
+          "content": "Welcome to a new week of your video editing journey!\n\nIn today's lesson, we will explore sound design and how sound influences the way viewers experience a video.\n\nSound is more than something that plays in the background. It helps communicate emotions, establish atmosphere, create excitement, and make visual storytelling more powerful.\n\nYou will learn how to select suitable music, understand the mood different sounds create, identify appropriate beats, and synchronise music with your visuals.\n\nWe will also look at how to balance background music with spoken dialogue to achieve a clean and professional audio experience."
+        },
+        {
+          "title": "1 — Why Sound Matters",
+          "content": "Understand the important role sound plays in video editing.\n\nYou will learn how music, voice, and other audio elements influence emotions, strengthen storytelling, and shape the viewer's overall experience."
+        },
+        {
+          "title": "2 — Music Selection and Understanding Mood",
+          "content": "Learn how to choose music that matches the purpose, message, and atmosphere of your video.\n\nYou will explore how different sounds and musical styles create different moods, such as excitement, suspense, happiness, sadness, and inspiration."
+        },
+        {
+          "title": "3 — Beat Selection",
+          "content": "Discover how to identify suitable beats and musical sections for your edits.\n\nYou will learn why choosing music with the right rhythm and energy can make your video more engaging and help your visuals feel connected."
+        },
+        {
+          "title": "4 — Music Timing",
+          "content": "Learn how to position music within your timeline and synchronise important visual moments with the rhythm of your chosen track.\n\nYou will understand how to time music entrances, transitions, cuts, and endings to create a smoother editing experience."
+        },
+        {
+          "title": "5 — Voice and Music Balance",
+          "content": "Understand how to balance background music with spoken dialogue.\n\nYou will learn how to adjust audio levels so that music supports the video without overpowering the speaker, ensuring that your audience can hear and understand the message clearly."
+        },
+        {
+          "title": "Compulsory Video Lesson — Sound Design",
+          "content": "COMPULSORY VIDEO LESSON\n\nSound Design\n\nWatch the video below from beginning to end. Pay attention to the sound design techniques demonstrated, particularly how music is selected, timed, and balanced with other audio elements.\n\nVideo link: https://youtu.be/Wcxw3BPSt3A\n\nTake notes as you watch and think about how you can apply these techniques to your own video projects using CapCut Mobile.",
+          "youtubeVideoId": "Wcxw3BPSt3A"
+        },
+        {
+          "title": "Your Learning Goal",
+          "content": "By the end of this lesson, you should understand why sound matters in video editing, how to select music that matches a video's mood, how to identify suitable beats, how to synchronise music with visuals, and how to balance background music with voice recordings.\n\nRemember: sound helps your audience feel what your visuals are communicating. The right music, at the right moment and volume, can transform an ordinary video into a more engaging and memorable experience."
+        },
+        {
+          "title": "Tuesday — Sound Effects and Audio Layering",
+          "content": "Welcome back to another practical lesson in your video editing journey!\n\nIn today's lesson, we will explore sound effects (SFX) and how they can make your videos more engaging, expressive, and professional. Sound effects help bring visual actions to life, emphasise important moments, create atmosphere, and make edits feel more impactful.\n\nYou will learn about different types of sound effects, how to layer them, and how to match them with movements and actions in your videos. The goal is to understand how to use sound intentionally rather than simply adding effects wherever they seem appropriate.",
+          "releaseDate": "2026-11-25"
+        },
+        {
+          "title": "1 — Understanding Sound Effects",
+          "content": "Learn what sound effects are and the role they play in video editing.\n\nYou will discover how different sounds can support visual storytelling, create atmosphere, communicate actions, and make specific moments more noticeable.",
+          "releaseDate": "2026-11-25"
+        },
+        {
+          "title": "2 — Types of Sound Effects",
+          "content": "Explore different sound effects commonly used in video editing, including:\n\n- Whooshes: Used to accompany fast movements, transitions, swipes, and objects moving across the screen.\n- Impacts: Used to emphasise dramatic moments, strong movements, transitions, or important visual reveals.\n- Risers: Sounds that gradually build intensity to create anticipation before an important moment.\n- Clicks: Small, precise sounds often used for interface interactions, selections, and subtle visual actions.\n- Pops: Short, playful sounds used to highlight text, objects, animations, and other visual elements.\n- Environmental Sounds: Sounds that recreate or support real-world surroundings, such as rain, traffic, footsteps, wind, crowds, and nature.",
+          "releaseDate": "2026-11-25"
+        },
+        {
+          "title": "3 — Layering Sounds",
+          "content": "Learn how to combine multiple sound effects with background music and voice recordings to create a richer audio experience.\n\nYou will understand how to arrange different sounds so that they complement one another without making the audio overwhelming or cluttered.",
+          "releaseDate": "2026-11-25"
+        },
+        {
+          "title": "4 — Matching Sound Effects to Movement",
+          "content": "Discover how to synchronise sound effects with actions and movements on screen.\n\nFor example, a whoosh can accompany a fast transition, an impact can match an object landing, and a click can match a button appearing or being pressed.\n\nYou will learn why accurate timing matters and how synchronising sound with movement makes edits feel more natural and satisfying.",
+          "releaseDate": "2026-11-25"
+        },
+        {
+          "title": "5 — Creating Emphasis Through Sound",
+          "content": "Understand how sound effects can draw attention to important moments, highlight information, strengthen transitions, and create emotional impact.\n\nYou will learn how to use sound strategically to guide the viewer's attention and make key moments more memorable.",
+          "releaseDate": "2026-11-25"
+        },
+        {
+          "title": "Compulsory Video Lesson — Sound Effects and Audio Layering",
+          "content": "COMPULSORY VIDEO LESSON\n\nSound Effects and Audio Layering — Tuesday\n\nWatch the video below from beginning to end. Pay close attention to the different sound effects demonstrated, how they are positioned on the timeline, and how they are synchronised with visual actions.\n\nVideo link: https://youtu.be/I66_LmOTlSk\n\nTake notes as you watch and identify the different sound effects you can practise using in CapCut Mobile.",
+          "releaseDate": "2026-11-25",
+          "youtubeVideoId": "I66_LmOTlSk"
+        },
+        {
+          "title": "Your Learning Goal",
+          "content": "By the end of this lesson, you should be able to identify and use different types of sound effects, layer sounds effectively, synchronise SFX with on-screen movements, and use audio to create emphasis and strengthen your video edits.\n\nRemember: great sound design is not about using as many sound effects as possible; it is about choosing the right sound, at the right moment, for the right purpose.",
+          "releaseDate": "2026-11-25"
+        }
+      ]
+    }
+  ]
+}
