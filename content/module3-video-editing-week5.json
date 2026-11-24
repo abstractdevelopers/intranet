@@ -1,0 +1,48 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Sound Design: Music Selection, Mood and Audio Balance",
+      "overview": "Welcome to a new week of your video editing journey.\n\nToday we will explore sound design and how sound influences the way viewers experience a video. Sound is more than something that plays in the background. It helps communicate emotions, establish atmosphere, create excitement, and make visual storytelling more powerful.\n\nYou will learn how to select suitable music, understand the mood different sounds create, identify appropriate beats, and synchronise music with your visuals. We will also look at how to balance background music with spoken dialogue to achieve a clean and professional audio experience.",
+      "objectives": "By the end of this lesson you should understand:\n\n1. Why sound matters in video editing.\n2. How to select music that matches a video's mood.\n3. How to identify suitable beats.\n4. How to synchronise music with visuals.\n5. How to balance background music with voice recordings.",
+      "releaseDate": "2026-11-24",
+      "lessons": [
+        {
+          "title": "Welcome — Sound Design",
+          "content": "Welcome to a new week of your video editing journey!\n\nIn today's lesson, we will explore sound design and how sound influences the way viewers experience a video.\n\nSound is more than something that plays in the background. It helps communicate emotions, establish atmosphere, create excitement, and make visual storytelling more powerful.\n\nYou will learn how to select suitable music, understand the mood different sounds create, identify appropriate beats, and synchronise music with your visuals.\n\nWe will also look at how to balance background music with spoken dialogue to achieve a clean and professional audio experience."
+        },
+        {
+          "title": "1 — Why Sound Matters",
+          "content": "Understand the important role sound plays in video editing.\n\nYou will learn how music, voice, and other audio elements influence emotions, strengthen storytelling, and shape the viewer's overall experience."
+        },
+        {
+          "title": "2 — Music Selection and Understanding Mood",
+          "content": "Learn how to choose music that matches the purpose, message, and atmosphere of your video.\n\nYou will explore how different sounds and musical styles create different moods, such as excitement, suspense, happiness, sadness, and inspiration."
+        },
+        {
+          "title": "3 — Beat Selection",
+          "content": "Discover how to identify suitable beats and musical sections for your edits.\n\nYou will learn why choosing music with the right rhythm and energy can make your video more engaging and help your visuals feel connected."
+        },
+        {
+          "title": "4 — Music Timing",
+          "content": "Learn how to position music within your timeline and synchronise important visual moments with the rhythm of your chosen track.\n\nYou will understand how to time music entrances, transitions, cuts, and endings to create a smoother editing experience."
+        },
+        {
+          "title": "5 — Voice and Music Balance",
+          "content": "Understand how to balance background music with spoken dialogue.\n\nYou will learn how to adjust audio levels so that music supports the video without overpowering the speaker, ensuring that your audience can hear and understand the message clearly."
+        },
+        {
+          "title": "Compulsory Video Lesson — Sound Design",
+          "content": "COMPULSORY VIDEO LESSON\n\nSound Design\n\nWatch the video below from beginning to end. Pay attention to the sound design techniques demonstrated, particularly how music is selected, timed, and balanced with other audio elements.\n\nVideo link: https://youtu.be/Wcxw3BPSt3A\n\nTake notes as you watch and think about how you can apply these techniques to your own video projects using CapCut Mobile.",
+          "youtubeVideoId": "Wcxw3BPSt3A"
+        },
+        {
+          "title": "Your Learning Goal",
+          "content": "By the end of this lesson, you should understand why sound matters in video editing, how to select music that matches a video's mood, how to identify suitable beats, how to synchronise music with visuals, and how to balance background music with voice recordings.\n\nRemember: sound helps your audience feel what your visuals are communicating. The right music, at the right moment and volume, can transform an ordinary video into a more engaging and memorable experience."
+        }
+      ]
+    }
+  ]
+}
