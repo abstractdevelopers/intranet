@@ -1,0 +1,99 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Understanding Images",
+      "releaseDate": "2026-11-24",
+      "quiz": {
+        "slug": "graphics-design-m3-week5-tuesday",
+        "title": "Module 3 — Tuesday — Photo Enhancement",
+        "description": "Tuesday's quiz covers Lightroom Mobile's three sections, cloud sync, presets, the crop tool, adjusting specific colours, masking, why a Smart Object is used before Camera Raw, and the colour grading that warms midtones and cools shadows.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-11-25",
+        "questions": [
+          {
+            "prompt": "What are the three main sections you see when you open Adobe Lightroom Mobile?",
+            "options": [
+              "Gallery, Editing and Export",
+              "Device, Lightroom and Community",
+              "Camera, Filters and Settings",
+              "Presets, Albums and Sharing"
+            ],
+            "correct": 1,
+            "explanation": "Device holds what is on the phone, Lightroom is the cloud library, and Community is where shared edits appear. Knowing which section you are in explains why an edit may not be where you expect."
+          },
+          {
+            "prompt": "What is the main advantage of Lightroom Mobile being a cloud-based application?",
+            "options": [
+              "It automatically removes unwanted objects from photos.",
+              "It allows users to edit without importing pictures.",
+              "It synchronizes imported photos and edits across different devices.",
+              "It automatically converts every image into a preset."
+            ],
+            "correct": 2,
+            "explanation": "The edit lives in the cloud, so a photo adjusted on the phone opens with those adjustments on a tablet or desktop. That portability is the point of the sync."
+          },
+          {
+            "prompt": "What is the purpose of using presets when editing photos in Lightroom Mobile?",
+            "options": [
+              "To provide a starting point for photo editing.",
+              "To permanently prevent further adjustments.",
+              "To remove the need for cropping.",
+              "To automatically export photos in every format."
+            ],
+            "correct": 0,
+            "explanation": "A preset applies a saved set of adjustments as a baseline. It is a beginning you then refine, not a finished edit and not a lock."
+          },
+          {
+            "prompt": "Which Lightroom tool allows you to change the framing and aspect ratio of a photograph?",
+            "options": ["Colour Mix", "Healing", "Effects", "Crop Tool"],
+            "correct": 3,
+            "explanation": "The crop tool sets both the framing and the aspect ratio, which is how one photo is refitted for a square post, a portrait flyer or a wide banner."
+          },
+          {
+            "prompt": "Which TWO tools in Lightroom Mobile help you adjust specific colours in an image?",
+            "options": ["Colour Mix", "Crop Tool", "Colour Grading", "Export Tool"],
+            "correct": 0,
+            "explanation": "Colour Mix targets individual hues, and Colour Grading shapes shadows, midtones and highlights separately. Both change colour; crop and export do not."
+          },
+          {
+            "prompt": "What is the main purpose of the masking tool in Lightroom and Photoshop?",
+            "options": [
+              "To resize the entire photograph.",
+              "To select specific areas of an image and edit them without affecting the entire image.",
+              "To convert photographs into vector graphics.",
+              "To automatically save images as JPEG files."
+            ],
+            "correct": 1,
+            "explanation": "A mask limits an adjustment to a chosen area, so brightening a face does not also brighten the sky. It is the difference between a global and a local edit."
+          },
+          {
+            "prompt": "In the second transcript, why is an image layer converted into a Smart Object before applying Camera Raw Filter in Photoshop?",
+            "options": [
+              "To permanently remove the background.",
+              "To reduce the image dimensions.",
+              "To make the image black and white.",
+              "To allow the applied adjustments to be changed later."
+            ],
+            "correct": 3,
+            "explanation": "A Smart Object keeps the filter editable, so the Camera Raw settings can be reopened and changed. Applied to a normal layer, the adjustment bakes in permanently."
+          },
+          {
+            "prompt": "In Photoshop colour grading, which colour adjustments were demonstrated to create a warmer skin tone and cooler shadows?",
+            "options": [
+              "Warming the midtones towards orange and cooling the shadows towards blue.",
+              "Cooling the midtones towards blue and warming the shadows towards orange.",
+              "Removing all colour from the midtones and shadows.",
+              "Increasing only the brightness of the background."
+            ],
+            "correct": 0,
+            "explanation": "Warm midtones lift skin without making it orange, while cool shadows add depth. Reversing them gives the cold-skin, muddy-shadow look this technique avoids."
+          }
+        ]
+      }
+    }
+  ]
+}
