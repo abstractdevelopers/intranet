@@ -65,11 +65,11 @@ export default async function CaptainLogPage() {
                 <IconLock className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
                 <div>
                   <p className="text-sm font-semibold">
-                    Week {state.currentWeek + 1} is waiting on this log
+                    Your Week {state.currentWeek} log is still outstanding
                   </p>
                   <p className="mt-1 text-sm text-text-muted">
-                    Submit your Week {state.currentWeek} reflection and next week&rsquo;s
-                    content unlocks automatically.
+                    Submit your Week {state.currentWeek} reflection to unlock the next week&rsquo;s
+                    content.
                   </p>
                 </div>
               </div>

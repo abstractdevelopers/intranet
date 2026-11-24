@@ -1,0 +1,94 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Understanding Images",
+      "releaseDate": "2026-11-24",
+      "quiz": {
+        "slug": "graphics-design-m3-week5",
+        "title": "Module 3 — Understanding Images",
+        "description": "Monday's quiz covers pixels and raster formats, bit depth and posterization, the difference between 8-bit and 16-bit documents, why converting a JPEG to 16-bit adds no colour, and the role of a background and adjustment layers in Photoshop.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-11-24",
+        "questions": [
+          {
+            "prompt": "What are the tiny squares that make up a raster image called?",
+            "options": ["Vectors", "Pixels", "Layers", "Gradients"],
+            "correct": 1,
+            "explanation": "A raster image is a grid of pixels, each holding a colour value. Vectors describe shapes mathematically instead, which is why they scale without losing quality."
+          },
+          {
+            "prompt": "Which of the following is a common raster image file format mentioned in the transcript?",
+            "options": ["SVG", "AI", "EPS", "PNG"],
+            "correct": 3,
+            "explanation": "PNG is a raster format. SVG, AI and EPS are vector formats, so they are not built from a pixel grid."
+          },
+          {
+            "prompt": "What does bit depth refer to in a raster image?",
+            "options": [
+              "The amount of colour information available in the file",
+              "The physical width and height of the image",
+              "The number of adjustment layers in Photoshop",
+              "The size of the image on a computer screen"
+            ],
+            "correct": 0,
+            "explanation": "Bit depth is how many bits describe each pixel's colour, which sets how many distinct colours the file can hold — not its dimensions."
+          },
+          {
+            "prompt": "What is posterization in image editing?",
+            "options": [
+              "An increase in the number of colours in an image",
+              "A process of enlarging an image without changing its colours",
+              "A decrease in apparent bit depth that causes poor colour transitions",
+              "A technique for converting raster images into vector graphics"
+            ],
+            "correct": 2,
+            "explanation": "Posterization shows up as banding in a gradient: the file no longer has enough colour steps, so smooth blends break into visible stripes."
+          },
+          {
+            "prompt": "Which TWO statements about 8-bit and 16-bit images are correct?",
+            "options": [
+              "An 8-bit document can display about 16.8 million colours.",
+              "A 16-bit image can store fewer colours than an 8-bit image.",
+              "A 16-bit image can display trillions of colours.",
+              "An 8-bit image always provides more editing flexibility than a 16-bit image."
+            ],
+            "correct": 0,
+            "explanation": "Both A and C are correct: 8-bit gives roughly 16.8 million colours, while 16-bit reaches into the trillions. More bits means more editing headroom before banding appears."
+          },
+          {
+            "prompt": "Why does converting an existing JPEG image from 8-bit to 16-bit provide no additional colour information?",
+            "options": [
+              "JPEG images cannot be opened in Photoshop.",
+              "The colour information was already limited when the image was saved as an 8-bit JPEG.",
+              "JPEG images contain only black and white pixels.",
+              "Photoshop automatically removes all colour information from JPEG images."
+            ],
+            "correct": 1,
+            "explanation": "Changing the bit depth of a file cannot restore data that was discarded at capture or save. The extra bits are empty headroom, not recovered colour."
+          },
+          {
+            "prompt": "What is one important purpose of a background in graphic design?",
+            "options": [
+              "To compete with the main text and design elements",
+              "To eliminate the need for typography",
+              "To make every element equally noticeable",
+              "To provide a foundation and establish the environment for other design elements"
+            ],
+            "correct": 3,
+            "explanation": "A background sets the environment the design sits in and gives the other elements something to rest on. It should support the hierarchy, not compete with it."
+          },
+          {
+            "prompt": "Which Photoshop feature allows designers to combine images and create unique backgrounds?",
+            "options": ["Adjustment Layers", "Text Alignment", "Page Margins", "Paragraph Spacing"],
+            "correct": 0,
+            "explanation": "Adjustment layers apply colour and tone changes without altering the underlying pixels, which is what makes combining images into a background controllable."
+          }
+        ]
+      }
+    }
+  ]
+}
