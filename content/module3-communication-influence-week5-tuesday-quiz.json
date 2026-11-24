@@ -1,0 +1,109 @@
+{
+  "courseSlug": "communication-influence",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "The Anatomy of a Compelling Story",
+      "releaseDate": "2026-11-24",
+      "quiz": {
+        "slug": "communication-influence-m3-week5-tuesday",
+        "title": "Module 3 — Tuesday — The Art of Effective Storytelling",
+        "description": "Tuesday's quiz covers what makes a story memorable, the three ingredients of effective storytelling, the five senses framework, reporting against reliving, the present-tense technique, why sharing meaning matters, when storytelling suits a situation, and the closing message about authoring your own story.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-11-25",
+        "questions": [
+          {
+            "prompt": "According to the video, what makes a story powerful and memorable?",
+            "options": [
+              "Having extraordinary life experiences.",
+              "Using complicated vocabulary.",
+              "The perspective and meaning the storyteller brings to the experience.",
+              "Speaking loudly and confidently."
+            ],
+            "correct": 2,
+            "explanation": "The events are only the raw material. What makes a story land is the meaning the teller draws out of them — which is why an ordinary experience told well beats an extraordinary one told flatly."
+          },
+          {
+            "prompt": "What are the three essential ingredients of effective storytelling discussed in the video?",
+            "options": [
+              "Be specific, relive the story, and share its meaning.",
+              "Use humour, exaggerate events, and speak quickly.",
+              "Introduce characters, create suspense, and add statistics.",
+              "Use simple words, avoid emotions, and keep stories short."
+            ],
+            "correct": 0,
+            "explanation": "Specificity puts the listener in the scene, reliving makes them feel it, and the meaning tells them why it mattered. The three build on each other."
+          },
+          {
+            "prompt": "What is the purpose of using the five senses framework when telling a story?",
+            "options": [
+              "To make the story longer and more complicated.",
+              "To help the storyteller remember every event in chronological order.",
+              "To replace emotions with physical descriptions.",
+              "To help the audience visualize and experience the events being described."
+            ],
+            "correct": 3,
+            "explanation": "Sensory detail gives the listener something to see, hear and feel. That is what turns a description into an experience they can share."
+          },
+          {
+            "prompt": "What is the main difference between reporting a story and reliving a story?",
+            "options": [
+              "Reporting uses emotions, while reliving uses only facts.",
+              "Reporting simply explains what happened, while reliving allows the audience to experience the moment through vivid details and emotions.",
+              "Reporting is always more persuasive than reliving.",
+              "Reliving a story means changing the original events."
+            ],
+            "correct": 1,
+            "explanation": "A report hands over facts; reliving puts the listener inside the moment. The events are the same — the difference is whether the audience feels them."
+          },
+          {
+            "prompt": "According to the video, which technique helps a storyteller make an audience feel as though they are experiencing the event in real time?",
+            "options": [
+              "Avoiding gestures while speaking.",
+              "Using only past-tense sentences.",
+              "Changing to the present tense and allowing body language to reflect the experience.",
+              "Focusing entirely on statistics."
+            ],
+            "correct": 2,
+            "explanation": "Present tense collapses the distance between the telling and the event, and matching body language reinforces it. The listener stops hearing about it and starts being in it."
+          },
+          {
+            "prompt": "Why is sharing the meaning of a story important?",
+            "options": [
+              "It helps the audience understand the lesson and how the story relates to their own lives.",
+              "It makes the story sound more complicated.",
+              "It allows the storyteller to avoid explaining the events.",
+              "It ensures that every story ends with humour."
+            ],
+            "correct": 0,
+            "explanation": "Without the meaning, the audience has to guess why they were told it. Naming the lesson lets them connect it to their own experience."
+          },
+          {
+            "prompt": "According to the video, when is storytelling most appropriate?",
+            "options": [
+              "Every time someone asks a simple yes-or-no question.",
+              "Only when speaking to large audiences.",
+              "Whenever the storyteller wants to entertain people.",
+              "When you have around 15 minutes or more and want to be memorable and influential."
+            ],
+            "correct": 3,
+            "explanation": "A story takes time to build. With a few minutes it crowds out the point; given real time, it is what people remember afterwards."
+          },
+          {
+            "prompt": "What is the most important lesson from the video's closing message about storytelling?",
+            "options": [
+              "Only professional writers can create meaningful stories.",
+              "You are the author of your own story, so live the experiences you want to tell.",
+              "Every life experience must become a public story.",
+              "Successful storytelling depends entirely on having an exciting life."
+            ],
+            "correct": 1,
+            "explanation": "The closing turns the craft back on the teller: the material comes from the life you choose to live, so the story starts before you open your mouth."
+          }
+        ]
+      }
+    }
+  ]
+}
