@@ -1,0 +1,104 @@
+{
+  "courseSlug": "content-writing",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "The Fundamentals of Storytelling",
+      "releaseDate": "2026-11-24",
+      "quiz": {
+        "slug": "content-writing-m3-week5-tuesday",
+        "title": "Module 3 — Tuesday — Storytelling Frameworks",
+        "description": "Tuesday's quiz covers the CAT framework, how much context a short social story needs, what makes adversity land, what a takeaway should do, Freytag's Pyramid and its five stages, the purpose of the hook, and why the takeaway carries a story that converts.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-11-25",
+        "questions": [
+          {
+            "prompt": "What does the CAT storytelling framework stand for?",
+            "options": [
+              "Character, Action, Theme",
+              "Context, Adversity, Takeaway",
+              "Climax, Action, Technique",
+              "Context, Audience, Technique"
+            ],
+            "correct": 1,
+            "explanation": "Context sets the scene, adversity supplies the difficulty, and the takeaway gives the reader something to carry away. Three parts, short enough for a caption."
+          },
+          {
+            "prompt": "According to the video, how many sentences should you ideally use to set the context of a short social media story?",
+            "options": [
+              "One, two, or three sentences",
+              "Five to seven sentences",
+              "Ten sentences",
+              "As many sentences as possible"
+            ],
+            "correct": 0,
+            "explanation": "Context has to be fast. A sentence or three is enough to orient the reader before the difficulty arrives, and anything longer loses them before the story starts."
+          },
+          {
+            "prompt": "What is the most important element of the adversity stage in the CAT framework?",
+            "options": [
+              "Including several unrelated challenges",
+              "Giving a long explanation of the character's background",
+              "Focusing on one specific challenge or difficult moment",
+              "Ending the story with a question"
+            ],
+            "correct": 2,
+            "explanation": "One concrete difficulty lands harder than a list of vague ones. Specificity is what makes the reader recognise their own situation."
+          },
+          {
+            "prompt": "What should the takeaway stage of the CAT framework communicate?",
+            "options": [
+              "A list of all the events that happened",
+              "The names of everyone involved in the story",
+              "A detailed description of the setting",
+              "One clear lesson or idea the audience can remember and apply"
+            ],
+            "correct": 3,
+            "explanation": "The takeaway is the reason the story was worth reading. One clear lesson is memorable; several competing ones cancel each other out."
+          },
+          {
+            "prompt": "Who invented Freytag's Pyramid, according to the video?",
+            "options": ["Dan Martell", "Gustav Freytag", "Louis House", "MrBeast"],
+            "correct": 1,
+            "explanation": "Gustav Freytag, a nineteenth-century German playwright and novelist, set out the five-part dramatic structure that still carries his name."
+          },
+          {
+            "prompt": "Which of the following correctly identifies the five stages of Freytag's Pyramid as explained in the video?",
+            "options": [
+              "Introduction, rising action, climax, falling action, takeaway",
+              "Context, adversity, conflict, character, conclusion",
+              "Hook, character, setting, dialogue, conclusion",
+              "Introduction, conflict, solution, character, ending"
+            ],
+            "correct": 0,
+            "explanation": "Introduction, rising action, climax, falling action and the closing beat. The shape rises to a turning point and then resolves."
+          },
+          {
+            "prompt": "What is the main purpose of the hook in Freytag's Pyramid?",
+            "options": [
+              "To explain every detail of the story",
+              "To reveal the lesson immediately",
+              "To make the audience stop scrolling and become interested in the story",
+              "To describe the story's background"
+            ],
+            "correct": 2,
+            "explanation": "The hook buys the reader's attention for the rest of the piece. It does not need to explain or resolve anything — it needs to make stopping worth it."
+          },
+          {
+            "prompt": "Why is the takeaway considered one of the most important parts of a story that converts?",
+            "options": [
+              "It makes the story longer and more detailed",
+              "It focuses only on the storyteller's achievements",
+              "It replaces the need for a strong hook",
+              "It gives the audience a lesson they can apply to their own lives"
+            ],
+            "correct": 3,
+            "explanation": "A story converts when the reader sees something they can use. The takeaway is where the story stops being about the writer and becomes useful to the audience."
+          }
+        ]
+      }
+    }
+  ]
+}

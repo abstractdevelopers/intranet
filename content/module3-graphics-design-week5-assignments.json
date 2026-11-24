@@ -1,0 +1,43 @@
+{
+  "courseSlug": "graphics-design",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Understanding Images",
+      "releaseDate": "2026-11-24",
+      "assignments": [
+        {
+          "title": "Practical Session — Recreate a Flyer Tutorial",
+          "description": "Your practical session this week is a flyer design tutorial.\n\nTwo tutorials are provided: a photography flyer and a birthday flyer. Choose ONE and recreate it.\n\nYou can produce a complete replication of the final design, or your own version that uses every technique the tutorial demonstrates. Both are accepted.\n\nYou must also submit a screenshot of the original final design from the tutorial you chose, so your work can be compared against it.",
+          "instructions": "CHOOSE ONE TUTORIAL\n\nOption 1 — How to design a photography flyer\nhttps://youtu.be/pBK3mbeZsIs\n\nOption 2 — How to design a Birthday Flyer\nhttps://youtu.be/mlziVVwAlJ0\n\nWatch your chosen tutorial from beginning to end before you start. Pause and rewind as you need to — flyers are built in layers, and it is easier to follow a step at a time.\n\nYOUR TASK\n\nRecreate either one of the tutorial videos.\n\n1. Capture the original.\n   Take a screenshot of the final design shown in the tutorial you chose. This is the reference your work will be compared against.\n\n2. Build your version.\n   Either replicate the design as closely as you can, or produce your own version that uses every technique explained in the video.\n\n3. Submit both.\n   Upload the screenshot of the original, and your finished design, together in one submission.\n\nUse the software for your pathway: PixelLab for smartphone graphic design, Adobe Photoshop for PC graphic design.\n\nBEFORE YOU SUBMIT\n\n- Check your design is exported at a sensible size and resolution.\n- Make sure the text is readable and the layout is deliberate.\n- Confirm both images are included: the original screenshot and your version.\n- Open the link in a private browser window to make sure it can be viewed.\n\nHOW TO SUBMIT\n\nUpload both images to Google Drive, set the sharing so anyone with the link can view, and submit the folder or document link here.",
+          "requirements": "WHAT YOU WILL BE GRADED ON\n\n1. COMPLETION — Did you submit both the original screenshot and a finished design?\n\n2. TECHNIQUE COVERAGE — Does your design use the techniques demonstrated in the tutorial?\n\n3. LAYOUT AND COMPOSITION — Is the arrangement deliberate, with a clear hierarchy and sensible spacing?\n\n4. TYPOGRAPHY AND COLOUR — Is the text readable, and do the colours work together?\n\n5. CRAFT — Is the export clean, at a proper size, without rough edges or unfinished areas?\n\n6. SUBMISSION — Are both images present and is the link openable?",
+          "releaseDate": "2026-11-24",
+          "deadlineDate": "2026-11-30",
+          "allowedTypes": [
+            "IMAGE",
+            "URL"
+          ],
+          "maxAttempts": 3,
+          "latePolicy": "PENALTY",
+          "maxScore": 100
+        },
+        {
+          "title": "Practical Session — Photo Manipulation & Graduation Flyer",
+          "description": "Tuesday's practical is a second flyer design session, this time built around photo manipulation.\n\nTwo tutorials are provided: a church flyer built with photo manipulation, and a graduation flyer. Choose ONE and recreate it.\n\nAs with Monday, you can produce a complete replication or your own version that uses every technique the tutorial demonstrates — and you must submit a screenshot of the original final design for comparison.",
+          "instructions": "CHOOSE ONE TUTORIAL\n\nOption 1 — Photo manipulation (church flyer design)\nhttps://youtu.be/yaedofkxBgw\n\nOption 2 — Graduation Flyer Design\nhttps://youtu.be/bKcyiGylM_E\n\nWatch your chosen tutorial from beginning to end before you begin. These build on the image work from Monday's lesson — cropping, composition, and preparing an image to sit inside a design.\n\nYOUR TASK\n\nRecreate either one of the tutorial videos.\n\n1. Capture the original.\n   Take a screenshot of the final design shown in the tutorial you chose. This is the reference your work will be compared against.\n\n2. Build your version.\n   Either replicate the design as closely as you can, or produce your own version that uses every technique explained in the video. Photo manipulation tutorials usually depend on careful masking and blending, so pay attention to how the subject is separated from its background.\n\n3. Submit both.\n   Upload the screenshot of the original, and your finished design, together in one submission.\n\nUse the software for your pathway: PixelLab for smartphone graphic design, Adobe Photoshop for PC graphic design.\n\nBEFORE YOU SUBMIT\n\n- Check your design is exported at a sensible size and resolution.\n- Make sure any cut-out subject blends naturally into the composition.\n- Confirm both images are included: the original screenshot and your version.\n- Open the link in a private browser window to make sure it can be viewed.\n\nHOW TO SUBMIT\n\nUpload both images to Google Drive, set the sharing so anyone with the link can view, and submit the folder or document link here.",
+          "requirements": "WHAT YOU WILL BE GRADED ON\n\n1. COMPLETION — Did you submit both the original screenshot and a finished design?\n\n2. PHOTO MANIPULATION — Is the subject cleanly separated and blended into the composition, without obvious cut-out edges?\n\n3. TECHNIQUE COVERAGE — Does your design use the techniques demonstrated in the tutorial?\n\n4. LAYOUT AND COMPOSITION — Is the arrangement deliberate, with a clear hierarchy and sensible spacing?\n\n5. TYPOGRAPHY AND COLOUR — Is the text readable, and do the colours work together?\n\n6. SUBMISSION — Are both images present and is the link openable?",
+          "releaseDate": "2026-11-25",
+          "deadlineDate": "2026-11-30",
+          "allowedTypes": [
+            "IMAGE",
+            "URL"
+          ],
+          "maxAttempts": 3,
+          "latePolicy": "PENALTY",
+          "maxScore": 100
+        }
+      ]
+    }
+  ]
+}

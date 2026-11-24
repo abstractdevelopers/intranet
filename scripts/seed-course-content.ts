@@ -22,6 +22,21 @@ const args = process.argv.slice(2);
 const APPLY = args.includes("--apply");
 const FILE = args.find((a) => !a.startsWith("--"));
 
+type SeedAssignment = {
+  title: string;
+  description: string;
+  instructions?: string;
+  requirements?: string;
+  /** "YYYY-MM-DD" — opens at 10:00 WAT on this date. Omit to inherit the week's release. */
+  releaseDate?: string;
+  /** "YYYY-MM-DD" — due 23:59 WAT on this date. */
+  deadlineDate?: string;
+  allowedTypes?: string[];
+  maxAttempts?: number;
+  latePolicy?: string;
+  maxFileSizeMb?: number;
+};
+
 /**
  * Shape of the seed file. Only `courseSlug` and `weeks` are required; everything
  * else is optional so a minimal file still seeds.
@@ -46,20 +61,13 @@ type Seed = {
       /** Attach a PDF to this lesson (embedded via the in-app reader). */
       pdf?: { title: string; documentId?: string; url?: string; localPath?: string };
     }[];
-    assignment?: {
-      title: string;
-      description: string;
-      instructions?: string;
-      requirements?: string;
-      /** "YYYY-MM-DD" — opens at 10:00 WAT on this date. Omit to inherit the week's release. */
-      releaseDate?: string;
-      /** "YYYY-MM-DD" — due 23:59 WAT on this date. */
-      deadlineDate?: string;
-      allowedTypes?: string[];
-      maxAttempts?: number;
-      latePolicy?: string;
-      maxFileSizeMb?: number;
-    };
+    assignment?: SeedAssignment;
+    /**
+     * Several assignments on one week — a Monday and a Tuesday practical.
+     * Each is matched by title, so re-running updates in place and never
+     * overwrites the other.
+     */
+    assignments?: SeedAssignment[];
     quiz?: SeedQuiz;
     /** Several quizzes on one week — Monday's and Tuesday's share a module. */
     quizzes?: SeedQuiz[];
@@ -112,14 +120,14 @@ async function main() {
     for (const l of w.lessons ?? []) {
       if (l.releaseDate) console.log(`      · ${l.title} -> ${watLabel(atWat(l.releaseDate))}`);
     }
-    if (w.assignment) {
-      const opens = w.assignment.releaseDate ? watLabel(atWat(w.assignment.releaseDate)) : "inherits the week";
-      const due = w.assignment.deadlineDate ? watLabel(atWat(w.assignment.deadlineDate, 23, 59)) : "(no deadline)";
-      console.log(`    assignment : ${w.assignment.title}`);
+    for (const spec of [...(w.assignment ? [w.assignment] : []), ...(w.assignments ?? [])]) {
+      const opens = spec.releaseDate ? watLabel(atWat(spec.releaseDate)) : "inherits the week";
+      const due = spec.deadlineDate ? watLabel(atWat(spec.deadlineDate, 23, 59)) : "(no deadline)";
+      console.log(`    assignment : ${spec.title}`);
       console.log(`      opens    : ${opens}`);
       console.log(`      due      : ${due}`);
-      console.log(`      accepts  : ${(w.assignment.allowedTypes ?? []).join(", ")}`);
-      console.log(`      late     : ${w.assignment.latePolicy ?? "ALLOW"}`);
+      console.log(`      accepts  : ${(spec.allowedTypes ?? []).join(", ")}`);
+      console.log(`      late     : ${spec.latePolicy ?? "ALLOW"}`);
     }
     for (const qz of weekQuizzes(w)) {
       const opens = qz.releaseDate ? watLabel(atWat(qz.releaseDate)) : "inherits the week";
@@ -231,22 +239,26 @@ async function main() {
       }
     }
 
-    if (w.assignment) {
-      const deadline = w.assignment.deadlineDate ? atWat(w.assignment.deadlineDate, 23, 59) : null;
+    // A week can carry one assignment (`assignment`) or several
+    // (`assignments`) — a Monday and a Tuesday practical. Each is matched by
+    // title, so re-running updates in place and two practicals on the same week
+    // never overwrite each other.
+    for (const spec of [...(w.assignment ? [w.assignment] : []), ...(w.assignments ?? [])]) {
+      const deadline = spec.deadlineDate ? atWat(spec.deadlineDate, 23, 59) : null;
       const aData = {
-        title: w.assignment.title,
-        description: w.assignment.description,
-        instructions: w.assignment.instructions ?? null,
-        requirements: w.assignment.requirements ?? null,
+        title: spec.title,
+        description: spec.description,
+        instructions: spec.instructions ?? null,
+        requirements: spec.requirements ?? null,
         deadline,
-        releaseAt: w.assignment.releaseDate ? atWat(w.assignment.releaseDate) : null,
-        allowedTypes: JSON.stringify(w.assignment.allowedTypes ?? ["PDF", "DOC", "DOCX", "ZIP", "IMAGE"]),
-        maxAttempts: w.assignment.maxAttempts ?? 3,
-        latePolicy: w.assignment.latePolicy ?? "ALLOW",
-        maxFileSizeMb: w.assignment.maxFileSizeMb ?? 10,
+        releaseAt: spec.releaseDate ? atWat(spec.releaseDate) : null,
+        allowedTypes: JSON.stringify(spec.allowedTypes ?? ["PDF", "DOC", "DOCX", "ZIP", "IMAGE"]),
+        maxAttempts: spec.maxAttempts ?? 3,
+        latePolicy: spec.latePolicy ?? "ALLOW",
+        maxFileSizeMb: spec.maxFileSizeMb ?? 10,
       };
       const existingA = await db.assignment.findFirst({
-        where: { moduleId: mod.id },
+        where: { moduleId: mod.id, title: spec.title },
         select: { id: true },
       });
       if (existingA) await db.assignment.update({ where: { id: existingA.id }, data: aData });
