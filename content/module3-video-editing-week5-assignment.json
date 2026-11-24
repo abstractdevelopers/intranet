@@ -1,0 +1,23 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Sound Design: Music Selection, Mood and Audio Balance",
+      "releaseDate": "2026-11-24",
+      "assignment": {
+        "title": "Practical Session — Recreate the Motion Graphics Tutorial",
+        "description": "Your practical session for this week is a motion graphics tutorial.\n\nWatch the tutorial, then recreate it.\n\nYou can either produce a complete replication of what the tutorial builds, or your own version that uses every technique it explains. Both are accepted — the point is to demonstrate the techniques, not to copy the exact design.\n\nThe tutorial is linked in the instructions below. Work in CapCut Mobile unless the tutorial calls for something else.",
+        "instructions": "WATCH THE TUTORIAL\n\nMotion graphics tutorial\nhttps://youtu.be/LTxWp3kaQAI\n\nWatch it from beginning to end before you start building. Pause and rewind as often as you need — motion graphics are easier to follow a step at a time than in one pass.\n\nYOUR TASK\n\nRecreate the tutorial video.\n\nYou have two options:\n\n1. A complete replicated version — follow the tutorial and rebuild what it builds, as closely as you can.\n\n2. Your own version — build something different, but use every technique explained in the video.\n\nIf you choose your own version, make sure you can point to each technique in your finished piece. A design that ignores half the tutorial is not a pass, however polished it looks.\n\nBEFORE YOU SUBMIT\n\n- Watch your export from beginning to end.\n- Check that every technique from the tutorial appears somewhere in your piece.\n- Make sure the motion is smooth and the timing feels deliberate rather than rushed.\n- Confirm the video plays correctly and can be opened from the link you submit.\n\nHOW TO SUBMIT\n\n1. Export your finished video.\n2. Upload it to Google Drive.\n3. Set the sharing so anyone with the link can view it.\n4. Copy the link and submit it here.\n\nTest the link in a private browser window before submitting. A link that only works while you are signed in cannot be reviewed.",
+        "requirements": "WHAT YOU WILL BE GRADED ON\n\n1. COMPLETION — Did you finish the piece, either as a replication or your own version?\n\n2. TECHNIQUE COVERAGE — Does every technique from the tutorial appear in your work?\n\n3. MOTION AND TIMING — Is the animation smooth, and does the timing feel controlled rather than accidental?\n\n4. CRAFT — Is the result clean and considered, without rough edges or unfinished sections?\n\n5. SUBMISSION — Did you export, share and submit a link that actually opens?",
+        "releaseDate": "2026-11-24",
+        "deadlineDate": "2026-11-30",
+        "allowedTypes": ["VIDEO", "URL"],
+        "maxAttempts": 3,
+        "latePolicy": "PENALTY",
+        "maxScore": 100
+      }
+    }
+  ]
+}

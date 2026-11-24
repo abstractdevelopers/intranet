@@ -1,0 +1,104 @@
+{
+  "courseSlug": "video-editing",
+  "weeks": [
+    {
+      "weekNumber": 5,
+      "moduleNumber": 3,
+      "title": "Sound Design: Music Selection, Mood and Audio Balance",
+      "releaseDate": "2026-11-24",
+      "quiz": {
+        "slug": "video-editing-m3-week5",
+        "title": "Module 3 — Sound Design",
+        "description": "Monday's quiz covers the three foundations of sound design, ambience and Foley, using reverb so effects sit in the scene, layering, the recommended dialogue level, why dramatic effects should be used sparingly, and building a soundscape from the foundations up.",
+        "passMark": 70,
+        "maxAttempts": 2,
+        "releaseDate": "2026-11-24",
+        "questions": [
+          {
+            "prompt": "What are the three main foundations of good sound design?",
+            "options": [
+              "Dialogue, transitions, and colour grading",
+              "Score, ambience and Foley, and creative sound design",
+              "Music, captions, and visual effects",
+              "Recording, rendering, and exporting"
+            ],
+            "correct": 1,
+            "explanation": "Score carries emotion, ambience and Foley build the world the scene sits in, and creative sound design adds the touches that make a moment distinctive."
+          },
+          {
+            "prompt": "Why is ambience important in video editing?",
+            "options": [
+              "It makes every scene louder.",
+              "It replaces background music.",
+              "It creates a realistic atmosphere by adding background sounds to locations.",
+              "It removes unwanted dialogue."
+            ],
+            "correct": 2,
+            "explanation": "Ambience is the room tone of a place — traffic, chatter, wind. Without it a scene sounds like it was recorded in a vacuum, however good the dialogue is."
+          },
+          {
+            "prompt": "What is Foley in sound design?",
+            "options": [
+              "Creating or recording sound effects that match actions on screen.",
+              "Adjusting the brightness of a video.",
+              "Adding subtitles to a scene.",
+              "Changing the speed of a video clip."
+            ],
+            "correct": 0,
+            "explanation": "Foley is performed to picture: footsteps, cloth, a cup being set down. The real sound is often lost on set, so it is rebuilt to match what the viewer sees."
+          },
+          {
+            "prompt": "Why should editors use reverberation (reverb) on sound effects?",
+            "options": [
+              "To make the audio completely silent.",
+              "To make recorded sounds fit naturally into the environment of the scene.",
+              "To remove all background music.",
+              "To increase the video resolution."
+            ],
+            "correct": 1,
+            "explanation": "A sound recorded dry in a small room sounds wrong in a cathedral. Reverb adds the reflections of the space on screen, so the effect belongs in the scene."
+          },
+          {
+            "prompt": "What is the purpose of layering sounds in sound design?",
+            "options": [
+              "To make the audio less interesting.",
+              "To remove the need for dialogue.",
+              "To create a richer and more engaging soundscape.",
+              "To ensure every sound has the same volume."
+            ],
+            "correct": 2,
+            "explanation": "Real sounds are rarely one element. Stacking a few thin layers gives a texture with depth that a single sample cannot reach."
+          },
+          {
+            "prompt": "According to the lesson, what is the recommended audio level for dialogue?",
+            "options": ["-5 dB", "-12 dB", "-25 dB", "-40 dB"],
+            "correct": 1,
+            "explanation": "Dialogue sits around -12 dB, which leaves headroom above it for effects and keeps it clear of the noise floor below."
+          },
+          {
+            "prompt": "Why is it important not to overuse dramatic sound effects?",
+            "options": [
+              "It makes the video shorter.",
+              "It prevents music from playing.",
+              "It makes every moment equally important, reducing the impact of key moments.",
+              "It removes the need for ambience."
+            ],
+            "correct": 2,
+            "explanation": "Impact depends on contrast. If every beat is underscored with a boom, none of them land — the dramatic moments stop standing out from the rest."
+          },
+          {
+            "prompt": "What is the most important principle to remember when creating good sound design?",
+            "options": [
+              "Use as many sound effects as possible.",
+              "Make every sound louder than the dialogue.",
+              "Focus only on background music.",
+              "Build the soundscape gradually, starting with the foundations and adding creative layers."
+            ],
+            "correct": 3,
+            "explanation": "Get dialogue, ambience and the essential effects right first, then layer detail on top. Adding flourish before the foundations are solid only gives you a cluttered mix."
+          }
+        ]
+      }
+    }
+  ]
+}
